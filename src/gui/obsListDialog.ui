@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>677</width>
-    <height>442</height>
+    <width>771</width>
+    <height>515</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
@@ -212,20 +212,21 @@
               <number>3</number>
              </property>
              <property name="text">
-              <string>Highlight all</string>
+              <string>Hilight</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="obsListClearHighlightButton">
-             <property name="toolTip">
-              <string>Clear all the highlight objects</string>
-             </property>
-             <property name="toolTipDuration">
-              <number>3</number>
-             </property>
+            <widget class="QPushButton" name="pushButton">
              <property name="text">
-              <string>Clear highlight(s)</string>
+              <string>Add</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_3">
+             <property name="text">
+              <string>Import</string>
              </property>
             </widget>
            </item>
@@ -242,16 +243,34 @@
              </property>
             </widget>
            </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
-            <widget class="QPushButton" name="obsListEditListButton">
+            <widget class="QPushButton" name="obsListClearHighlightButton">
              <property name="toolTip">
-              <string>Edit the selected list</string>
+              <string>Clear all the highlight objects</string>
              </property>
              <property name="toolTipDuration">
               <number>3</number>
              </property>
              <property name="text">
-              <string>Edit list</string>
+              <string>Clear</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_2">
+             <property name="text">
+              <string>Remove</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_4">
+             <property name="text">
+              <string>Export</string>
              </property>
             </widget>
            </item>
@@ -261,7 +280,7 @@
               <string>Delete the selected list</string>
              </property>
              <property name="text">
-              <string>Delete list</string>
+              <string>Delete list (!)</string>
              </property>
             </widget>
            </item>
@@ -288,7 +307,7 @@
               <string>Exit</string>
              </property>
              <property name="text">
-              <string>Exit</string>
+              <string>Close (?)</string>
              </property>
             </widget>
            </item>
