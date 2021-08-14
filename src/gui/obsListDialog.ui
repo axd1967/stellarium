@@ -145,6 +145,41 @@
         <item>
          <widget class="QComboBox" name="obsListComboBox"/>
         </item>
+        <item>
+         <widget class="QPushButton" name="obsListNewListButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="toolTip">
+           <string>Create a new observing list</string>
+          </property>
+          <property name="toolTipDuration">
+           <number>3</number>
+          </property>
+          <property name="text">
+           <string>new</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="obsListDeleteButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="toolTip">
+           <string>Delete the selected list</string>
+          </property>
+          <property name="text">
+           <string>del  (!)</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
       <item row="11" column="0">
@@ -223,26 +258,6 @@
              </property>
             </widget>
            </item>
-           <item>
-            <widget class="QPushButton" name="pushButton_3">
-             <property name="text">
-              <string>Import</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="obsListNewListButton">
-             <property name="toolTip">
-              <string>Create a new observing list</string>
-             </property>
-             <property name="toolTipDuration">
-              <number>3</number>
-             </property>
-             <property name="text">
-              <string>New list</string>
-             </property>
-            </widget>
-           </item>
           </layout>
          </item>
          <item>
@@ -267,51 +282,10 @@
              </property>
             </widget>
            </item>
-           <item>
-            <widget class="QPushButton" name="pushButton_4">
-             <property name="text">
-              <string>Export</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="obsListDeleteButton">
-             <property name="toolTip">
-              <string>Delete the selected list</string>
-             </property>
-             <property name="text">
-              <string>Delete list (!)</string>
-             </property>
-            </widget>
-           </item>
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayoutExit">
-           <item>
-            <spacer name="horizontalSpacer">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QPushButton" name="obsListExitButton">
-             <property name="toolTip">
-              <string>Exit</string>
-             </property>
-             <property name="text">
-              <string>Close (?)</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
+          <layout class="QHBoxLayout" name="horizontalLayoutExit"/>
          </item>
         </layout>
        </widget>
@@ -344,6 +318,20 @@
            </size>
           </property>
          </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_3">
+          <property name="text">
+           <string>Import</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_4">
+          <property name="text">
+           <string>Export</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
