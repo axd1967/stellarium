@@ -82,7 +82,7 @@
          <font/>
         </property>
         <property name="text">
-         <string>Observing lists</string>
+         <string>Bookmarks</string>
         </property>
        </widget>
       </item>
@@ -127,75 +127,6 @@
    <item row="1" column="0">
     <widget class="QWidget" name="widget" native="true">
      <layout class="QGridLayout" name="gridLayout">
-      <item row="5" column="0">
-       <layout class="QHBoxLayout" name="horizontalLayoutCombo">
-        <item>
-         <widget class="QLabel" name="obsListComboLabel">
-          <property name="maximumSize">
-           <size>
-            <width>50</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>List:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="obsListComboBox"/>
-        </item>
-        <item>
-         <widget class="QPushButton" name="obsListNewListButton">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="toolTip">
-           <string>Create a new observing list</string>
-          </property>
-          <property name="toolTipDuration">
-           <number>3</number>
-          </property>
-          <property name="text">
-           <string>new</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="obsListDeleteButton">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="toolTip">
-           <string>Delete the selected list</string>
-          </property>
-          <property name="text">
-           <string>del  (!)</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="11" column="0">
-       <widget class="QLabel" name="obsListTextEditLabel">
-        <property name="text">
-         <string>Observing list description:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="10" column="0">
-       <widget class="QTreeView" name="obsListTreeView">
-        <property name="toolTipDuration">
-         <number>-1</number>
-        </property>
-       </widget>
-      </item>
       <item row="12" column="0">
        <widget class="QPlainTextEdit" name="obsListDescriptionTextEdit">
         <property name="enabled">
@@ -218,6 +149,36 @@
         </property>
        </widget>
       </item>
+      <item row="5" column="0">
+       <layout class="QHBoxLayout" name="horizontalLayoutCombo">
+        <item>
+         <widget class="QLabel" name="obsListComboLabel">
+          <property name="maximumSize">
+           <size>
+            <width>50</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>List:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="obsListComboBox"/>
+        </item>
+       </layout>
+      </item>
+      <item row="10" column="0">
+       <widget class="QTreeView" name="obsListTreeView">
+        <property name="toolTipDuration">
+         <number>-1</number>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <layout class="QHBoxLayout" name="horizontalLayoutDate"/>
+      </item>
       <item row="13" column="0">
        <widget class="QFrame" name="frame">
         <property name="sizePolicy">
@@ -239,6 +200,13 @@
             <number>0</number>
            </property>
            <item>
+            <widget class="QPushButton" name="pushButton">
+             <property name="text">
+              <string>Add</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="QPushButton" name="obsListHighlightAllButton">
              <property name="toolTip">
               <string>Highlight all the objects of the selected list</string>
@@ -252,16 +220,12 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton">
+            <widget class="QPushButton" name="pushButton_3">
              <property name="text">
-              <string>Add</string>
+              <string>Import</string>
              </property>
             </widget>
            </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
             <widget class="QPushButton" name="obsListClearHighlightButton">
              <property name="toolTip">
@@ -271,14 +235,48 @@
               <number>3</number>
              </property>
              <property name="text">
+              <string>Empty (!)</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QPushButton" name="pushButton_2">
+             <property name="text">
+              <string>Remove</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_5">
+             <property name="text">
               <string>Clear</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_2">
+            <widget class="QPushButton" name="pushButton_4">
              <property name="text">
-              <string>Remove</string>
+              <string>Export</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="obsListDeleteButton">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="toolTip">
+              <string>Delete the selected list</string>
+             </property>
+             <property name="text">
+              <string>Delete  (!)</string>
              </property>
             </widget>
            </item>
@@ -290,50 +288,12 @@
         </layout>
        </widget>
       </item>
-      <item row="6" column="0">
-       <layout class="QHBoxLayout" name="horizontalLayoutDate">
-        <item>
-         <widget class="QLabel" name="creationDateLabel">
-          <property name="text">
-           <string>Creation date:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="obsListCreationDateLineEdit">
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_3">
-          <property name="text">
-           <string>Import</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_4">
-          <property name="text">
-           <string>Export</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+      <item row="11" column="0">
+       <widget class="QLabel" name="obsListTextEditLabel">
+        <property name="text">
+         <string>Description:</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
