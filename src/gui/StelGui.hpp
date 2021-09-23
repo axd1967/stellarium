@@ -42,6 +42,7 @@ class SearchDialog;
 class ViewDialog;
 class ShortcutsDialog;
 class AstroCalcDialog;
+class BookmarksDialog;
 class ObsListDialog;
 #ifdef ENABLE_SCRIPT_CONSOLE
 class ScriptConsole;
@@ -64,6 +65,7 @@ class StelGui : public QObject, public StelGuiBase
 	Q_PROPERTY(bool flagShowGotoSelectedObjectButton READ getFlagShowGotoSelectedObjectButton WRITE setFlagShowGotoSelectedObjectButton NOTIFY flagShowGotoSelectedObjectButtonChanged)
 	Q_PROPERTY(bool flagShowNightmodeButton READ getFlagShowNightmodeButton WRITE setFlagShowNightmodeButton NOTIFY  flagShowNightmodeButtonChanged)
 	Q_PROPERTY(bool flagShowFullscreenButton READ getFlagShowFullscreenButton WRITE setFlagShowFullscreenButton NOTIFY  flagShowFullscreenButtonChanged)
+	Q_PROPERTY(bool flagShowBookmarksButton READ getFlagShowBookmarksButton WRITE setFlagShowBookmarksButton NOTIFY flagShowBookmarksButtonChanged)
 	Q_PROPERTY(bool flagShowObsListButton READ getFlagShowObsListButton WRITE setFlagShowObsListButton NOTIFY flagShowObsListButtonChanged)
 	Q_PROPERTY(bool flagShowICRSGridButton READ getFlagShowICRSGridButton WRITE setFlagShowICRSGridButton NOTIFY flagShowICRSGridButtonChanged)
 	Q_PROPERTY(bool flagShowGalacticGridButton READ getFlagShowGalacticGridButton WRITE setFlagShowGalacticGridButton NOTIFY flagShowGalacticGridButtonChanged )
@@ -193,6 +195,11 @@ public slots:
 	//! Get whether the button toggling fullscreen view is visible
 	bool getFlagShowFullscreenButton() const;
 
+	//! Define whether the button toggling bookmarks should be visible
+	void setFlagShowBookmarksButton(bool b);
+	//! Get whether the button toggling bookmarks is visible
+	bool getFlagShowBookmarksButton() const;
+
 	//! Define whether the button toggling observing list should be visible
 	void setFlagShowObsListButton(bool b);
 	//! Get whether the button toggling observing list is visible
@@ -275,6 +282,7 @@ signals:
 	void flagShowGotoSelectedObjectButtonChanged(bool b);
 	void flagShowNightmodeButtonChanged(bool b);
 	void flagShowFullscreenButtonChanged(bool b);
+	void flagShowBookmarksButtonChanged(bool b);
 	void flagShowObsListButtonChanged(bool b);
 	void flagShowICRSGridButtonChanged(bool b);
 	void flagShowGalacticGridButtonChanged(bool b);
@@ -334,6 +342,7 @@ private:
 	ScriptConsole* scriptConsole;
 #endif
 	AstroCalcDialog* astroCalcDialog;
+	BookmarksDialog* bookmarksDialog;
     ObsListDialog* obsListDialog;
 
 	bool flagShowFlipButtons;
@@ -354,6 +363,9 @@ private:
 
 	bool flagShowFullscreenButton;
 	StelButton* buttonFullscreen;
+
+	bool flagShowBookmarksButton;
+	StelButton* btShowBookmarks;
 
 	bool flagShowObsListButton;
 	StelButton* btShowObsList;
