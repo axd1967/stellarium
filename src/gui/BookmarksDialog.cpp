@@ -201,7 +201,7 @@ void BookmarksDialog::addBookmarkButtonPressed()
 			if (loc.name.isEmpty())
 				Location = QString("%1, %2").arg(loc.latitude).arg(loc.longitude);
 			else
-				Location = QString("%1, %2").arg(loc.name, loc.country);
+				Location = QString("%1, %2").arg(loc.name, loc.region);
 		}
 
 		int lastRow = bookmarksListModel->rowCount();
