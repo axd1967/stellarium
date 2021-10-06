@@ -1,5 +1,9 @@
+current [2021-10-06]
+
 re-activate Bookmark feature
 - rebase on 0.21.2
+- reorder buttons (https://github.com/Stellarium/stellarium/discussions/1812)
+- prevent accidental clearing of all bookmarks (https://github.com/Stellarium/stellarium/pull/1813)
 
 0.21.2 [2021-09-27]
 The major changes of this version:
