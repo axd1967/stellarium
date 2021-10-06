@@ -47,13 +47,20 @@ Q_DECLARE_METATYPE(bookmark)
 class BookmarksDialog : public StelDialog
 {
 	Q_OBJECT
+	Q_PROPERTY(bool flagHighlighting READ getFlagHighlighting WRITE setHighlighting NOTIFY flagHighlightingChanged)
 
 public:
 	BookmarksDialog(QObject* parent);
 	virtual ~BookmarksDialog() Q_DECL_OVERRIDE;
 
+signals:
+	void flagHighlightingChanged();
+
 public slots:
 	void retranslate() Q_DECL_OVERRIDE;
+
+	void setHighlighting(bool b);
+	bool getFlagHighlighting() const { return flagHighlighting; }
 
 protected:
         //! Initialize the dialog widgets and connect the signals/slots.
@@ -66,8 +73,9 @@ private slots:
 	void goToBookmarkButtonPressed();
 	void clearBookmarksButtonPressed();
 
-	void highlightBookrmarksButtonPressed();
+	void highlightBookmarksButtonPressed();
 	void clearHighlightsButtonPressed();
+	void toggleHighlights();
 
 	void exportBookmarks();
 	void importBookmarks();
@@ -93,6 +101,8 @@ private:
 	QHash<QString, bookmark> bookmarksCollection;
 	QList<int> highlightLabelIDs;
 
+	bool flagHighlighting;
+
 	//! Update header names for bookmarks table
 	void setBookmarksHeaderNames();
 
@@ -101,6 +111,7 @@ private:
 	void loadBookmarks();
 	void saveBookmarks() const;
 	void goToBookmark(QString uuid);
+
 };
 
 

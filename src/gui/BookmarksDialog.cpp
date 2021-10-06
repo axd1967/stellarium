@@ -17,6 +17,7 @@
 */
 
 #include "StelApp.hpp"
+#include "StelActionMgr.hpp"
 #include "StelCore.hpp"
 #include "StelModuleMgr.hpp"
 #include "StelMovementMgr.hpp"
@@ -43,6 +44,7 @@
 
 BookmarksDialog::BookmarksDialog(QObject *parent)
 	: StelDialog("Bookmarks", parent)
+	, flagHighlighting(false)
 {
 	ui = new Ui_bookmarksDialogForm;
 	core = StelApp::getInstance().getCore();
@@ -83,10 +85,19 @@ void BookmarksDialog::createDialogContent()
 	connect(ui->bookmarksTreeView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(selectCurrentBookmark(QModelIndex)));
 
 	connect(ui->clearHighlightsButton, SIGNAL(clicked()), this, SLOT(clearHighlightsButtonPressed()));
-	connect(ui->highlightBookmarksButton, SIGNAL(clicked()), this, SLOT(highlightBookrmarksButtonPressed()));
+	connect(ui->highlightBookmarksButton, SIGNAL(clicked()), this, SLOT(highlightBookmarksButtonPressed()));
 
 	connect(ui->importBookmarksButton, SIGNAL(clicked()), this, SLOT(importBookmarks()));
 	connect(ui->exportBookmarksButton, SIGNAL(clicked()), this, SLOT(exportBookmarks()));
+
+	
+	StelActionMgr* actionsMgr = StelApp::getInstance().getStelActionManager();
+
+	// (un)highlight
+	const QString& group = N_("Bookmarks");
+	actionsMgr->addAction("action_toggle_highlight_bookmarks", group, N_("Toggle bookmark highlights"), this, "toggleHighlights()", "Ctrl+Alt+B");
+	// add bookmark
+	actionsMgr->addAction("action_add_bookmarks", N_(group), N_("Add bookmark"), this, "addBookmarkButtonPressed()", "Alt+Shift+B");
 
 	//Initializing the list of bookmarks
 	bookmarksListModel->setColumnCount(ColumnCount);
@@ -258,7 +269,7 @@ void BookmarksDialog::goToBookmarkButtonPressed()
 	goToBookmark(bookmarksListModel->index(ui->bookmarksTreeView->currentIndex().row(), ColumnUUID).data().toString());
 }
 
-void BookmarksDialog::highlightBookrmarksButtonPressed()
+void BookmarksDialog::highlightBookmarksButtonPressed()
 {
 	QList<Vec3d> highlights;
 	highlights.clear();
@@ -555,5 +566,28 @@ void BookmarksDialog::saveBookmarks() const
 	StelJsonParser::write(bmList, &jsonFile);
 	jsonFile.flush();
 	jsonFile.close();
+}
+
+void BookmarksDialog::setHighlighting(bool b)
+{
+	if (flagHighlighting == b) return;
+
+	flagHighlighting = b;
+
+	if (flagHighlighting) 
+	{
+		highlightBookmarksButtonPressed(); // FIXME function name: separate action from cause
+	}
+	else
+	{
+		clearHighlightsButtonPressed();
+	}
+
+	emit flagHighlightingChanged();
+}
+
+void BookmarksDialog::toggleHighlights()
+{
+	setHighlighting(not flagHighlighting);
 }
 

@@ -1,6 +1,7 @@
 current [2021-10-06]
 
 re-activate Bookmark feature
+- include (un)highlight and "add bookmark" actions
 - rebase on 0.21.2
 - reorder buttons (https://github.com/Stellarium/stellarium/discussions/1812)
 - prevent accidental clearing of all bookmarks (https://github.com/Stellarium/stellarium/pull/1813)
