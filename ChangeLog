@@ -1,3 +1,13 @@
+make shortcuts more consistent
+
+ALT+B+
+- B: open bookmark dialog
+- A: add bookmark
+- H: highlight
+- G: goto last selected bookmark
+
+re-enable WUT bookmarks (export as JSON in bookmark format)
+
 current [2021-10-06]
 
 re-activate Bookmark feature

@@ -95,9 +95,11 @@ void BookmarksDialog::createDialogContent()
 
 	// (un)highlight
 	const QString& group = N_("Bookmarks");
-	actionsMgr->addAction("action_toggle_highlight_bookmarks", group, N_("Toggle bookmark highlights"), this, "toggleHighlights()", "Ctrl+Alt+B");
+	actionsMgr->addAction("action_toggle_highlight_bookmarks", group, N_("Toggle bookmark highlights"), this, "toggleHighlights()", "Alt+B,H");
 	// add bookmark
-	actionsMgr->addAction("action_add_bookmarks", N_(group), N_("Add bookmark"), this, "addBookmarkButtonPressed()", "Alt+Shift+B");
+	actionsMgr->addAction("action_add_bookmarks", group, N_("Add bookmark"), this, "addBookmarkButtonPressed()", "Alt+B,A");
+	// goto selected bookmark
+	actionsMgr->addAction("action_go_bookmark", group, N_("Go to bookmark"), this, "goToBookmarkButtonPressed()", "Alt+B,G");
 
 	//Initializing the list of bookmarks
 	bookmarksListModel->setColumnCount(ColumnCount);
