@@ -12,7 +12,8 @@ Sometimes this can be solved by using package managers that automate the importi
 
 Sometimes this problem is then solved by manual labor: porting the external changes in Stellarium, a laborous approach prone to bugs.
 
-Usually references of some form are added to the source code, e.g. ftp, snail mail, http, ... The problem is that these references might disappear at some point in the future.
+Usually references of some form are added to the source code, e.g. ftp, snail mail, http, ... The problem is that these references might disappear at some point in the future. An example can be found in [this comment](https://github.com/Stellarium/stellarium/blob/dd006bc4095790dba6ceb7fe485284a6804a9fd4/plugins/Satellites/src/Satellites.cpp#L1929-L1931).
+
 
 ### Examples:
 
