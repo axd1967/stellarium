@@ -72,7 +72,7 @@ include the following:
 description in the main documentation (in ``docs/``) or doxygen description/comments 
 for code in the ``*.hpp`` files (commenting the code is extremely helpful for maintaining it years later!).
 
-- **User Guide**: a branch should also contain at least a basic paragraph that describes new/modified functionality (see the SUG [README](https://github.com/Stellarium/stellarium/blob/master/guide/README.md)). The Tex format is not difficult to edit, even without specialised editors.
+- **User Guide**: a branch should also contain (and ideally, development should start with) at least a basic paragraph that describes new/modified functionality (see the SUG [README](https://github.com/Stellarium/stellarium/blob/master/guide/README.md)). The Tex format is not difficult to edit, even without specialised editors. Changes in documentaion could be considered as a contract that is to be fulfilled by the branch.
 
 **Important**: when importing anything from the outside, make sure to read and understand [VENDOR BRANCHING](VENDOR_BRANCHING.md).
 
