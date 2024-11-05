@@ -6,7 +6,7 @@
 
 Stellarium is constantly benefiting from open source artifacts and being enriched with text/data/source files that are **copy-pasted** from places outside of Stellarium.
 
-The basic problem with the copy-pasting of external artifacts is **code (or data) rot** (and also: "*copy-paste is evil*"). More in detail, **external changes** will not magically appear in Stellarium.
+The basic problem with the copy-pasting of external artifacts is **code (or data) rot** (and also: "*[copy-paste is evil](https://stackoverflow.com/questions/2490884/why-is-copy-and-paste-of-code-dangerous)*"). More in detail, **external changes** will not magically appear in Stellarium.
 
 Sometimes this can be solved by using package managers that automate the importing of external "stuff" (typically code) and allow to fine tune which version is to be imported; Python's `pip -e` is a great example of this. But package managers do not allow to modify the imported code out of the box *and* benefit from external updates.
 
