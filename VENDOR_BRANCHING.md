@@ -65,6 +65,8 @@ Importing external artefacts in vendor branches will also provide insight in wha
 1. If needed (which is often the case), external information is modified *locally* (usually via a feature/master branch, but *never* in its vendor branch)
 1. Ideally, issues in the vendor artifacts should be reported to the vendor, so that updates can then be imported back via a fresh *vendor drop*. Alternatively, a developer can solve issues locally, but *never* in the vendor branch.
 
+Sometimes, conversion routines need to be written or updated so that external data fits with the project. These routines do not belong in the vendor branch, but in the project itself.
+
 ## Managing vendor artifacts
 
 Basically, two use cases exist: 
