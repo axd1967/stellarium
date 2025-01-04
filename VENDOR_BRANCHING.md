@@ -1,16 +1,16 @@
 # Vendor branching : importing external artifacts
 
-*In short: if you import anything from outside Stellarium, do not bluntly copy-paste. The following procedure looks daunting, but that is only appearance.*
+*In short: if you import anything from outside Stellarium, be it code or data, do not bluntly copy-paste; don't just create a fork if not necessary. The following procedure looks daunting, but that is only appearance.*
 
 ## Introduction
 
 Stellarium is constantly benefiting from open source artifacts and being enriched with text/data/source files that are **copy-pasted** from places outside of Stellarium.
 
-The basic problem with the copy-pasting of external artifacts is **code (or data) rot** (and also: "*[copy-paste is evil](https://stackoverflow.com/questions/2490884/why-is-copy-and-paste-of-code-dangerous)*"). More in detail, **external changes** will not magically appear in Stellarium.
+The basic problem with the copy-pasting of external artifacts is **code (or data) rot**. More in detail, **external changes** will not magically appear in Stellarium.
 
 Sometimes this can be solved by using package managers that automate the importing of external "stuff" (typically code) and allow to fine tune which version is to be imported; Python's `pip -e` is a great example of this. But package managers do not allow to modify the imported code out of the box *and* benefit from external updates.
 
-Sometimes this problem is then solved by manual labor: porting the external changes in Stellarium, a laborous approach prone to bugs.
+Sometimes this problem is then solved by manual labor: porting the external changes in Stellarium, a laborous approach prone to bugs. See also [this example](https://en.wikipedia.org/wiki/Software_rot#Forked_online_forum_example).
 
 Usually references of some form are added to the source code, e.g. ftp, snail mail, http, ... The problem is that these references might disappear at some point in the future. An example can be found in [this comment](https://github.com/Stellarium/stellarium/blob/dd006bc4095790dba6ceb7fe485284a6804a9fd4/plugins/Satellites/src/Satellites.cpp#L1929-L1931).
 
@@ -37,6 +37,7 @@ Here are several existing artifacts that have been copy-pasted in Stellarium ove
 
 Potential candidates, other examples
 
+-  Marc van der Sluys' [Constellation lines](https://github.com/MarcvdSluys/ConstellationLines) as a separate Sky Culture
 - [meshwarp sample code](http://paulbourke.net/dataformats/meshwarp/) : yes, the sample code.
 - [time ephemerides](http://timeephem.sourceforge.net/index.php)
 - although less likely, copy-pasted snippets from Qt examples *could* be candidates ([example](https://github.com/Stellarium/stellarium/blob/2db52c18bc87aaefa00d3d4a280969349634af8f/src/gui/StelGuiItems.cpp#L352))
@@ -47,9 +48,9 @@ Although some examples above are unlikely to ever change - or be very ephemeral 
 
 ### The problem
 
-Notice how it is not always obvious to trace back the original files. In the case of ephemeride routines, these reside in "ancient", core Stellarium files, it is extremely likely that they were copied (and *maybe* recent changes are incorporated in Stellarium). One aspect of the vendor branch procedure details how to include such meta information so as to help find back the source at all times.
+Notice how it is not always obvious to trace back the original files. In the case of ephemeride routines, these reside in "ancient", core Stellarium files, it is extremely likely that they were copied (and *maybe* recent changes have been manually incorporated in Stellarium). One aspect of the recommended vendor branch procedure details how to include such *meta information* so as to help find back the (original, root) source at all times.
 
-The external version of such artifacts will often continue to evolve, but these modifications obviously will not be magically reflected in our repository, thus *sometimes, if not often* leading to artifacts slowly getting totally outdated (hence the term "code rot"). 
+The external (source) version of such artifacts will often continue to evolve, but these modifications obviously will not be magically reflected in your project repository, thus *sometimes, if not often* leading to artifacts slowly getting totally outdated (hence the term "[code rot](https://en.wikipedia.org/wiki/Software_rot)").
 
 Importing external artifacts therefore requires a specific (and in this case a *simple* as well as generic) approach: the **Vendor Branch** mechanism. Other approaches exist, such as subtrees and submodules (in case Git is used for the external artifacts), but have inconveniences and are not discussed here; the proposed approach is *simple to apply to novice programmers*. The approach is valid in any VCS, such as Git, Mercurial, ClearCase, TFS, cvs, you name it.
 
@@ -59,10 +60,10 @@ Importing external artefacts in vendor branches will also provide insight in wha
 1. Keep external information alive (and updated) on a **separate** branch, called a "**vendor branch**" (e.g. ``vendor/geonames``). Every copied dataset/tool/sourcecode lives in its own vendor branch. A vendor branch tracks a *pristine* copy/mirror of the external data.
 1. Optionally, the external information is stored in a separate directory (e.g. ``external/<vendor>/<toolname>``). But the approach works just as fine for individual files.
 1. A ``VENDOR`` file explains where the external/original information can be found, so that it can be updated when necessary.
-1. **vendor tags** describe which version of the vendor artifacts has been imported (e.g. ``vendor/geonames/2021-08-21``)
+1. **vendor tags** describe which version of the vendor artifacts has been imported (e.g. ``vendor/geonames/2021-08-21``; do use the ISO date/time format.)
 1. The vendor branch is merged to wherever it is needed (normally a feature branch, which will eventually be merged to ``master``)
 1. If needed (which is often the case), external information is modified *locally* (usually via a feature/master branch, but *never* in its vendor branch)
-1. Ideally, issues in the vendor artifacts should be reported to the vendor, so that updates can then be imported via a fresh *vendor drop*. Alternatively, a developer can solve issues locally, but *never* in the vendor branch.
+1. Ideally, issues in the vendor artifacts should be reported to the vendor, so that updates can then be imported back via a fresh *vendor drop*. Alternatively, a developer can solve issues locally, but *never* in the vendor branch.
 
 ## Managing vendor artifacts
 
@@ -168,3 +169,12 @@ In such cases, the version information should be removed before committing the v
 
 The vendor branch approach also works for users that want to keep track of other user's configuration data or scripts while at the same time apply local changes. This works better for file formats that are easily merged because being insensitive to line numbers, such as YAML; a bad example is the numbering format chosen in the [Ocular config files](https://github.com/Stellarium/stellarium/blob/ba80d33d4bc83d72fc15cca53f798cd9439482cf/plugins/Oculars/resources/default_ocular.ini).
 
+
+## See also
+- https://github.com/Stellarium/stellarium/discussions/1856 and https://github.com/Stellarium/stellarium/wiki/Branching-Strategy
+- https://svnbook.red-bean.com/en/1.8/svn.advanced.vendorbr.html
+- https://blog.bigsmoke.us/2009/07/20/svn-vendor-branches
+- https://stackoverflow.com/questions/tagged/vendor-branch?sort=votes
+- https://en.wikipedia.org/wiki/Software_rot
+- https://en.wikipedia.org/wiki/Copypasta#Technology
+- "*[copy-paste is evil](https://stackoverflow.com/questions/2490884/why-is-copy-and-paste-of-code-dangerous)*")
