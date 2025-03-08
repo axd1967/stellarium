@@ -173,6 +173,7 @@ The vendor branch approach also works for users that want to keep track of other
 
 
 ## See also
+- https://github.com/brettlangdon/git-vendor
 - https://github.com/Stellarium/stellarium/discussions/1856 and https://github.com/Stellarium/stellarium/wiki/Branching-Strategy
 - https://svnbook.red-bean.com/en/1.8/svn.advanced.vendorbr.html
 - https://blog.bigsmoke.us/2009/07/20/svn-vendor-branches
