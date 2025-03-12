@@ -181,3 +181,4 @@ The vendor branch approach also works for users that want to keep track of other
 - https://en.wikipedia.org/wiki/Software_rot
 - https://en.wikipedia.org/wiki/Copypasta#Technology
 - "*[copy-paste is evil](https://stackoverflow.com/questions/2490884/why-is-copy-and-paste-of-code-dangerous)*")
+- https://www.cisa.gov/resources-tools/resources/product-security-bad-practices: _"Cache copies of all open-source dependencies within the manufacturer’s own build systems and do not update products or customer systems directly from unverified public sources."_
