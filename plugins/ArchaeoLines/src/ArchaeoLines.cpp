@@ -45,10 +45,14 @@ constexpr static
 	float mecca_lat = 21.422476,
 	float jerusalem_lon = 35.235774,
 	float jerusalem_lat = 31.778087,
+
 	float obliquity = 23.44, // 23.5?
-	double moon_tilt = 5.145396, // rather than 5.1?
 	float polar_circle = 90.0 - obliquity,
 	float default_lat = 48.0,
+	
+	double moon_tilt = 5.145396, // rather than 5.1?
+	double lowest_lunar_standstill = 16.5,
+
 	float syntactic_sugar = 666
 ;
 
@@ -121,8 +125,8 @@ ArchaeoLines::ArchaeoLines()
 	equinoxLine = new ArchaeoLine(ArchaeoLine::Equinox, 0.0);
 	northernSolsticeLine = new ArchaeoLine(ArchaeoLine::Solstices, obliquity);
 	southernSolsticeLine = new ArchaeoLine(ArchaeoLine::Solstices, -obliquity);
-	northernCrossquarterLine = new ArchaeoLine(ArchaeoLine::Crossquarters, 16.50);
-	southernCrossquarterLine = new ArchaeoLine(ArchaeoLine::Crossquarters, -16.50);
+	northernCrossquarterLine = new ArchaeoLine(ArchaeoLine::Crossquarters, lowest_lunar_standstill);
+	southernCrossquarterLine = new ArchaeoLine(ArchaeoLine::Crossquarters, -lowest_lunar_standstill);
 	northernMajorStandstillLine0 = new ArchaeoLine(ArchaeoLine::MajorStandstill, obliquity + moon_tilt);
 	northernMajorStandstillLine1 = new ArchaeoLine(ArchaeoLine::MajorStandstill, obliquity + moon_tilt);
 	northernMajorStandstillLine0->setLabelVisible(false);
