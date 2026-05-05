@@ -40,6 +40,18 @@
 #include <cmath>
 #include <stdexcept>
 
+constexpr static
+	float mecca_lon = 39.826175,
+	float mecca_lat = 21.422476,
+	float jerusalem_lon = 35.235774,
+	float jerusalem_lat = 31.778087,
+	float obliquity = 23.44, // 23.5?
+	double moon_tilt = 5.145396, // rather than 5.1?
+	float polar_circle = 90.0 - obliquity,
+	float default_lat = 48.0,
+	float syntactic_sugar = 666
+;
+
 //! This method is the one called automatically by the StelModuleMgr just
 //! after loading the dynamic library
 StelModule* ArchaeoLinesStelPluginInterface::getStelModule() const
@@ -81,11 +93,11 @@ ArchaeoLines::ArchaeoLines()
 	, flagShowCurrentMoon(false)
 	, enumShowCurrentPlanet(ArchaeoLine::CurrentPlanetNone)
 	, flagShowGeographicLocation1(false)
-	, geographicLocation1Longitude(39.8) // approx. Mecca
-	, geographicLocation1Latitude(21.4)
+	, geographicLocation1Longitude(mecca_lon)
+	, geographicLocation1Latitude(mecca_lat)
 	, flagShowGeographicLocation2(false)
-	, geographicLocation2Longitude(35.2) // approx. Jerusalem
-	, geographicLocation2Latitude(31.8)
+	, geographicLocation2Longitude(jerusalem_lon) 
+	, geographicLocation2Latitude(jerusalem_lat)
 	, flagShowCustomAzimuth1(false)
 	, flagShowCustomAzimuth2(false)
 	, flagShowCustomAltitude1(false)
@@ -107,26 +119,26 @@ ArchaeoLines::ArchaeoLines()
 
 	// optimize readability so that each upper line of the lunistice doubles is labeled.
 	equinoxLine = new ArchaeoLine(ArchaeoLine::Equinox, 0.0);
-	northernSolsticeLine = new ArchaeoLine(ArchaeoLine::Solstices, 23.50);
-	southernSolsticeLine = new ArchaeoLine(ArchaeoLine::Solstices, -23.50);
+	northernSolsticeLine = new ArchaeoLine(ArchaeoLine::Solstices, obliquity);
+	southernSolsticeLine = new ArchaeoLine(ArchaeoLine::Solstices, -obliquity);
 	northernCrossquarterLine = new ArchaeoLine(ArchaeoLine::Crossquarters, 16.50);
 	southernCrossquarterLine = new ArchaeoLine(ArchaeoLine::Crossquarters, -16.50);
-	northernMajorStandstillLine0 = new ArchaeoLine(ArchaeoLine::MajorStandstill, 23.5+5.1);
-	northernMajorStandstillLine1 = new ArchaeoLine(ArchaeoLine::MajorStandstill, 23.5+5.1);
+	northernMajorStandstillLine0 = new ArchaeoLine(ArchaeoLine::MajorStandstill, obliquity + moon_tilt);
+	northernMajorStandstillLine1 = new ArchaeoLine(ArchaeoLine::MajorStandstill, obliquity + moon_tilt);
 	northernMajorStandstillLine0->setLabelVisible(false);
-	northernMinorStandstillLine2 = new ArchaeoLine(ArchaeoLine::MinorStandstill, 23.5-5.1);
-	northernMinorStandstillLine3 = new ArchaeoLine(ArchaeoLine::MinorStandstill, 23.5-5.1);
+	northernMinorStandstillLine2 = new ArchaeoLine(ArchaeoLine::MinorStandstill, obliquity - moon_tilt);
+	northernMinorStandstillLine3 = new ArchaeoLine(ArchaeoLine::MinorStandstill, obliquity - moon_tilt);
 	northernMinorStandstillLine2->setLabelVisible(false);
-	southernMinorStandstillLine4 = new ArchaeoLine(ArchaeoLine::MinorStandstill, -23.5+5.1);
-	southernMinorStandstillLine5 = new ArchaeoLine(ArchaeoLine::MinorStandstill, -23.5+5.1);
+	southernMinorStandstillLine4 = new ArchaeoLine(ArchaeoLine::MinorStandstill, -obliquity + moon_tilt);
+	southernMinorStandstillLine5 = new ArchaeoLine(ArchaeoLine::MinorStandstill, -obliquity + moon_tilt);
 	southernMinorStandstillLine4->setLabelVisible(false);
-	southernMajorStandstillLine6 = new ArchaeoLine(ArchaeoLine::MajorStandstill, -23.5-5.1);
-	southernMajorStandstillLine7 = new ArchaeoLine(ArchaeoLine::MajorStandstill, -23.5-5.1);
+	southernMajorStandstillLine6 = new ArchaeoLine(ArchaeoLine::MajorStandstill, -obliquity - moon_tilt);
+	southernMajorStandstillLine7 = new ArchaeoLine(ArchaeoLine::MajorStandstill, -obliquity - moon_tilt);
 	southernMajorStandstillLine6->setLabelVisible(false);
-	northernPolarCircleLine = new ArchaeoLine(ArchaeoLine::PolarCircles, 66.5);
-	southernPolarCircleLine = new ArchaeoLine(ArchaeoLine::PolarCircles, -66.5);
-	zenithPassageLine  = new ArchaeoLine(ArchaeoLine::ZenithPassage, 48.0);
-	nadirPassageLine   = new ArchaeoLine(ArchaeoLine::NadirPassage, 42.0);
+	northernPolarCircleLine = new ArchaeoLine(ArchaeoLine::PolarCircles, polar_circle);
+	southernPolarCircleLine = new ArchaeoLine(ArchaeoLine::PolarCircles, -polar_circle);
+	zenithPassageLine  = new ArchaeoLine(ArchaeoLine::ZenithPassage, default_lat);
+	nadirPassageLine   = new ArchaeoLine(ArchaeoLine::NadirPassage, default_lat);
 	selectedObjectLine = new ArchaeoLine(ArchaeoLine::SelectedObject, 0.0);
 	selectedObjectAzimuthLine = new ArchaeoLine(ArchaeoLine::SelectedObjectAzimuth, 0.0);
 	selectedObjectHourAngleLine = new ArchaeoLine(ArchaeoLine::SelectedObjectHourAngle, 0.0);
@@ -332,10 +344,13 @@ void ArchaeoLines::update(double deltaTime)
 		return;
 
 	static SolarSystem *ssystem=GETSTELMODULE(SolarSystem);
-	static const double lunarI=5.145396; // inclination of lunar orbit
 	// compute min and max distance values for horizontal parallax.
 	// Meeus, AstrAlg 98, p342.
 	static const double meanDist=385000.56; // km earth-moon.
+/*
+Following constants are the amplitudes (in kilometers) for the periodic terms used to calculate the geocentric distance of the Moon.
+Specifically, they come from a simplified version of the ELP2000-82 (Éphéméride Lunaire Parisienne) lunar theory, which was popularized for amateur astronomers by Jean Meeus in his definitive book, Astronomical Algorithms
+*/
 	static const double addedValues=20905.355+3699.111+2955.968+569.925+48.888+3.149+246.158+152.138+170.733+
 			204.586+129.620+108.743+104.755+10.321+79.661+34.782+23.210+21.636+24.208+30.824+8.379+
 			16.675+12.831+10.445+11.650+14.403+7.003+10.056+6.322+9.884;
@@ -386,18 +401,20 @@ void ArchaeoLines::update(double deltaTime)
 	const bool useGeocentric = !core->getUseTopocentricCoordinates();
 	const double latRad=useGeocentric ? 0.0 : static_cast<double>(loc.getLatitude())*M_PI_180;
 	const double u=std::atan(b_over_a*std::tan(latRad));
-	const double rhoSinPhiP=useGeocentric ? 0. : b_over_a*std::sin(u)+loc.altitude/6378140.0*std::sin(latRad);
-	const double rhoCosPhiP=useGeocentric ? 1. :          std::cos(u)+loc.altitude/6378140.0*std::cos(latRad);
+	const double earth_radius = 6378140.0;
+
+	const double rhoSinPhiP=useGeocentric ? 0. : b_over_a*std::sin(u)+loc.altitude/earth_radius*std::sin(latRad);
+	const double rhoCosPhiP=useGeocentric ? 1. :          std::cos(u)+loc.altitude/earth_radius*std::cos(latRad);
 
 	QVector<double> lunarDE(8), sinPi(8);
-	lunarDE[0]=(eps+lunarI)*M_PI/180.0; // min_distance=max_parallax
-	lunarDE[1]=(eps+lunarI)*M_PI/180.0;
-	lunarDE[2]=(eps-lunarI)*M_PI/180.0;
-	lunarDE[3]=(eps-lunarI)*M_PI/180.0;
-	lunarDE[4]=(-eps+lunarI)*M_PI/180.0;
-	lunarDE[5]=(-eps+lunarI)*M_PI/180.0;
-	lunarDE[6]=(-eps-lunarI)*M_PI/180.0;
-	lunarDE[7]=(-eps-lunarI)*M_PI/180.0;
+	lunarDE[0]=(eps+moon_tilt)*M_PI/180.0; // min_distance=max_parallax
+	lunarDE[1]=(eps+moon_tilt)*M_PI/180.0;
+	lunarDE[2]=(eps-moon_tilt)*M_PI/180.0;
+	lunarDE[3]=(eps-moon_tilt)*M_PI/180.0;
+	lunarDE[4]=(-eps+moon_tilt)*M_PI/180.0;
+	lunarDE[5]=(-eps+moon_tilt)*M_PI/180.0;
+	lunarDE[6]=(-eps-moon_tilt)*M_PI/180.0;
+	lunarDE[7]=(-eps-moon_tilt)*M_PI/180.0;
 	for (int i=0; i<8; i+=2){
 		sinPi[i]=sinPiMax;
 		sinPi[i+1]=sinPiMin;
@@ -572,10 +589,11 @@ void ArchaeoLines::loadSettings()
 	setCustomDeclination1Color(     Vec3f(conf->value("ArchaeoLines/color_custom_declination_1",       "0.45,1.00,0.15").toString()));
 	setCustomDeclination2Color(     Vec3f(conf->value("ArchaeoLines/color_custom_declination_2",       "0.45,0.50,0.65").toString()));
 
-	setGeographicLocation1Longitude(conf->value("ArchaeoLines/geographic_location_1_longitude",  39.826175).toDouble());
-	setGeographicLocation1Latitude( conf->value("ArchaeoLines/geographic_location_1_latitude",   21.422476).toDouble());
-	setGeographicLocation2Longitude(conf->value("ArchaeoLines/geographic_location_2_longitude",  35.235774).toDouble());
-	setGeographicLocation2Latitude( conf->value("ArchaeoLines/geographic_location_2_latitude",   31.778087).toDouble());
+	setGeographicLocation1Longitude(conf->value("ArchaeoLines/geographic_location_1_longitude",  mecca_lon).toDouble());
+	setGeographicLocation1Latitude( conf->value("ArchaeoLines/geographic_location_1_latitude",   mecca_lat).toDouble());
+	setGeographicLocation2Longitude(conf->value("ArchaeoLines/geographic_location_2_longitude",  jerusalem_lon).toDouble());
+	setGeographicLocation2Latitude( conf->value("ArchaeoLines/geographic_location_2_latitude",   jerusalem_lat).toDouble());
+
 	StelLocation loc=core->getCurrentLocation();
 	double azi=loc.getAzimuthForLocation(geographicLocation1Longitude, geographicLocation1Latitude);
 	if (azFromSouth) azi+=180.0;
