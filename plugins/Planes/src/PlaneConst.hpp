@@ -12,6 +12,9 @@ constexpr double kMaxDeadReckoningSeconds = 30.0;
 constexpr double kTrackingProbeSeconds = 1.0;
 constexpr double kMetersToFeet = 3.280839895;
 constexpr double kNauticalMilesToMeters = 1852.0;
+
+// why pull out a calculator or look uop an pbscure conversion constant when the compiler can do it for you?
+
 constexpr double kMetersPerSecondToKnots = 60.0 * 60.0 / kNauticalMilesToMeters;
 constexpr double kMetersPerSecondToFeetPerMinute = 60.0 * kMetersToFeet;
 constexpr float kPlaneSpriteSize = 16.0f;
