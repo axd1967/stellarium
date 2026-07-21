@@ -18,6 +18,7 @@
  */
 
 #include "AircraftObject.hpp"
+#include "PlaneConst.hpp"
 
 #include "StelCore.hpp"
 #include "StelLocation.hpp"
@@ -31,18 +32,6 @@
 
 namespace
 {
-constexpr double kEarthFlattening = 1.0 / 298.257223563;
-constexpr double kEarthRadiusMeters = 6378137.0;
-constexpr double kSecondsPerDay = 24 * 60 * 60;
-constexpr double kMaxDeadReckoningSeconds = 30.0;
-constexpr double kTrackingProbeSeconds = 1.0;
-constexpr double kMetersToFeet = 3.280839895;
-constexpr double kNauticalMilesToMeters = 1852.0;
-constexpr double kMetersPerSecondToKnots = 60.0 * 60.0 / kNauticalMilesToMeters;
-constexpr double kMetersPerSecondToFeetPerMinute = 60.0 * kMetersToFeet;
-constexpr float kPlaneSpriteSize = 16.0f;
-constexpr float kSpriteTrackingOffsetDegrees = -180.0f;
-
 Vec3d toEcef(double latitudeRad, double longitudeRad, double altitudeMeters)
 {
 	const double sinLat = std::sin(latitudeRad);
@@ -78,6 +67,7 @@ QString headingToCompass(double degrees)
 	static const char* labels[] = {"N", "NE", "E", "SE", "S", "SW", "W", "NW"};
 	const int index = static_cast<int>(std::floor((normalizeDegrees(degrees) + 22.5) / 45.0)) % 8;
 	return QString::fromLatin1(labels[index]);
+}
 }
 
 const QString AircraftObject::STEL_TYPE = QStringLiteral("Flight");

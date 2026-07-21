@@ -18,6 +18,7 @@
  */
 
 #include "Planes.hpp"
+#include "PlaneConst.hpp"
 
 #include "StelApp.hpp"
 #include "StelCore.hpp"
@@ -67,20 +68,6 @@ const QString kAdsbFiTemplate = QStringLiteral("https://opendata.adsb.fi/api/v2/
 const QString kAirplanesLiveTemplate = QStringLiteral("https://api.airplanes.live/v2/point/%1/%2/%3");
 
 const QString kPluginVersion = QStringLiteral("0.1.0");
-constexpr int kLabelModeFlightNumber = 0;
-constexpr int kLabelModeAircraftModel = 1;
-constexpr int kDefaultFetchIntervalSec = 15;
-constexpr int kMinFetchIntervalSec = 15;
-constexpr int kMaxFetchIntervalSec = 60;
-constexpr int kDefaultRadiusNm = 250;
-constexpr int kMinRadiusNm = 25; // why should there be a mimimum distance? if the user decides for '0', that's his choice...
-constexpr int kMaxRadiusNm = 500; // probably not realistic
-constexpr int kMaxPublishedAircraft = 200;
-
-// FIXME duplicated consts
-constexpr double kFeetToMeters = 0.3048;
-constexpr double kKnotsToMetersPerSecond = 0.514444;
-constexpr double kFeetPerMinuteToMetersPerSecond = 0.00508;
 
 const QString kRealtimeOnlyStatus = QStringLiteral("Live aircraft are shown only in real-time mode.");
 
