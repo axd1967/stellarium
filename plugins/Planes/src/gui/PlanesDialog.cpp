@@ -91,8 +91,8 @@ void PlanesDialog::createDialogContent()
 	ui->refreshIntervalSpinBox->setMinimum(15);
 	ui->refreshIntervalSpinBox->setMaximum(60);
 	ui->refreshIntervalSpinBox->setSingleStep(5);
-	ui->radiusSpinBox->setMinimum(25);
-	ui->radiusSpinBox->setMaximum(500);
+	ui->radiusSpinBox->setMinimum(25); // why?
+	ui->radiusSpinBox->setMaximum(500); // possibly not realistic; a/c at 60kft sit on a horizon of about 300nm
 	ui->radiusSpinBox->setSingleStep(25);
 	ui->providerComboBox->clear();
 	ui->providerComboBox->addItem(QStringLiteral("adsb.fi"), QStringLiteral("adsb_fi"));
@@ -230,6 +230,7 @@ void PlanesDialog::setFetchInterval(int seconds)
 
 void PlanesDialog::triggerRefresh()
 {
+	// FIXME: avoid refreshing when less than 15s! this might cause a temporary IP address restriction for the user
 	if (planes)
 		planes->refreshNow();
 }
@@ -247,10 +248,11 @@ void PlanesDialog::setAboutHtml()
 	html += "<tr><td><strong>" + q_("License") + ":</strong></td><td>GPL v2 or later</td></tr>";
 	html += "<tr><td><strong>" + q_("Authors") + ":</strong></td><td>Felix Zeltner, Georg Zotti, Kamil Zaraś (astronow.pl)</td></tr>";
 	html += "</table>";
-	html += "<p>" + q_("This plug-in shows live ADS-B aircraft as native Stellarium objects.") + "</p>";
+	html += "<p>" + q_("This plug-in shows live ADS-B data as native Stellarium objects.") + "</p>";
 	html += "<p>" + q_("It provides basic visibility, label, and refresh controls for a live aircraft feed around the current observer location.") + "</p>";
 	html += "<p>" + q_("Live requests remain disabled until you enable aircraft display. When enabled, the plugin sends the current observer latitude, longitude, and search radius to the configured data source.") + "</p>";
 	html += "<p>" + q_("The plugin is not loaded at Stellarium startup unless you explicitly enable it in the plug-in manager.") + "</p>";
+	html += "<p>" + q_("Note: this plugin does not make sense unless Stellarium is rnning in real time...?") + "</p>";
 	html += "</body></html>";
 
 	StelGui* gui = dynamic_cast<StelGui*>(StelApp::getInstance().getGui());

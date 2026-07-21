@@ -33,14 +33,15 @@ namespace
 {
 constexpr double kEarthFlattening = 1.0 / 298.257223563;
 constexpr double kEarthRadiusMeters = 6378137.0;
-constexpr double kSecondsPerDay = 86400.0;
+constexpr double kSecondsPerDay = 24 * 60 * 60;
 constexpr double kMaxDeadReckoningSeconds = 30.0;
-constexpr double kHeadingProbeSeconds = 1.0;
+constexpr double kTrackingProbeSeconds = 1.0;
 constexpr double kMetersToFeet = 3.280839895;
-constexpr double kMetersPerSecondToKnots = 1.943844492;
-constexpr double kMetersPerSecondToFeetPerMinute = 196.8503937;
+constexpr double kNauticalMilesToMeters = 1852.0;
+constexpr double kMetersPerSecondToKnots = 60.0 * 60.0 / kNauticalMilesToMeters;
+constexpr double kMetersPerSecondToFeetPerMinute = 60.0 * kMetersToFeet;
 constexpr float kPlaneSpriteSize = 16.0f;
-constexpr float kSpriteHeadingOffsetDegrees = -180.0f;
+constexpr float kSpriteTrackingOffsetDegrees = -180.0f;
 
 Vec3d toEcef(double latitudeRad, double longitudeRad, double altitudeMeters)
 {
@@ -78,7 +79,6 @@ QString headingToCompass(double degrees)
 	const int index = static_cast<int>(std::floor((normalizeDegrees(degrees) + 22.5) / 45.0)) % 8;
 	return QString::fromLatin1(labels[index]);
 }
-}
 
 const QString AircraftObject::STEL_TYPE = QStringLiteral("Flight");
 
@@ -99,14 +99,14 @@ QString AircraftObject::getObjectTypeI18n() const
 
 QString AircraftObject::getID() const
 {
-	return aircraftRecord.icao24;
+	return aircraftRecord.hex;
 }
 
 QString AircraftObject::getEnglishName() const
 {
 	if (!aircraftRecord.callsign.isEmpty())
 		return aircraftRecord.callsign;
-	return aircraftRecord.icao24;
+	return QString("[%1]").arg(aircraftRecord.hex);
 }
 
 QString AircraftObject::getNameI18n() const
@@ -119,8 +119,8 @@ QString AircraftObject::labelText() const
 	if (!aircraftRecord.callsign.isEmpty())
 		return aircraftRecord.callsign;
 	if (!aircraftRecord.aircraftType.isEmpty())
-		return QString("%1 (%2)").arg(aircraftRecord.icao24, aircraftRecord.aircraftType);
-	return aircraftRecord.icao24;
+		return QString("%1 (%2)").arg(aircraftRecord.hex, aircraftRecord.aircraftType);
+	return aircraftRecord.hex;
 }
 
 QString AircraftObject::displayLabelText(int labelMode) const
@@ -146,13 +146,14 @@ AircraftRecord AircraftObject::getExtrapolatedRecord(double elapsedSeconds) cons
 	AircraftRecord record = aircraftRecord;
 	if (elapsedSeconds <= 0.0 || record.groundSpeedMs <= 0.0)
 	{
-		record.altitudeMeters = qMax(0.0, record.altitudeMeters + record.verticalRateMs * elapsedSeconds);
+		// altitude can be negative. eg AMS
+		record.altitudeMeters = record.altitudeMeters + record.verticalRateMs * elapsedSeconds;
 		return record;
 	}
 
 	const double lat1 = record.latitude * M_PI / 180.0;
 	const double lon1 = record.longitude * M_PI / 180.0;
-	const double bearing = normalizeDegrees(record.trackDegrees) * M_PI / 180.0;
+	const double tracking = normalizeDegrees(record.trackDegrees) * M_PI / 180.0;
 	const double angularDistance = (record.groundSpeedMs * elapsedSeconds) / kEarthRadiusMeters;
 
 	const double sinLat1 = std::sin(lat1);
@@ -161,13 +162,14 @@ AircraftRecord AircraftObject::getExtrapolatedRecord(double elapsedSeconds) cons
 	const double cosAngularDistance = std::cos(angularDistance);
 
 	const double lat2 = std::asin(sinLat1 * cosAngularDistance +
-		cosLat1 * sinAngularDistance * std::cos(bearing));
-	const double lon2 = lon1 + std::atan2(std::sin(bearing) * sinAngularDistance * cosLat1,
+		cosLat1 * sinAngularDistance * std::cos(tracking));
+	const double lon2 = lon1 + std::atan2(std::sin(tracking) * sinAngularDistance * cosLat1,
 		cosAngularDistance - sinLat1 * std::sin(lat2));
 
 	record.latitude = lat2 * 180.0 / M_PI;
 	record.longitude = normalizeLongitudeRadians(lon2) * 180.0 / M_PI;
-	record.altitudeMeters = qMax(0.0, record.altitudeMeters + record.verticalRateMs * elapsedSeconds);
+	// altitude can be negative
+	record.altitudeMeters = record.altitudeMeters + record.verticalRateMs * elapsedSeconds;
 	return record;
 }
 
@@ -182,8 +184,9 @@ QString AircraftObject::getInfoString(const StelCore* core, const InfoStringGrou
 
 	if (flags & CatalogNumber)
 	{
-		// TRANSLATORS: International Civil Aviation Organization (ICAO) 24-bit identifier
-		stream << QString("%1: %2").arg(q_("ICAO Identifier"), aircraftRecord.icao24.toHtmlEscaped());
+		// how about a friendlier string such as "(callsign) [hex] is a (type)"... eg "RYR3349 [a2d4b5] is a B737"
+		// TRANSLATORS: International Civil Aviation Organization (ICAO) 24-bit hexadecimal identifier
+		stream << QString("%1: %2").arg(q_("ICAO identifier"), aircraftRecord.hex.toHtmlEscaped());
 		if (!aircraftRecord.callsign.isEmpty())
 			stream << QString("; %1: %2").arg(q_("Flight"), aircraftRecord.callsign.toHtmlEscaped());
 		if (!aircraftRecord.aircraftType.isEmpty())
@@ -201,14 +204,14 @@ QString AircraftObject::getInfoString(const StelCore* core, const InfoStringGrou
 		const bool withTables = StelApp::getInstance().getFlagUseFormattingOutput();
 		// TRANSLATORS: Unit of measure for distance - meters
 		QString m = qc_("m", "distance");
-		// TRANSLATORS: Unit of measure for distance - feets
-		QString ft = qc_("ft", "distance");
+		// TRANSLATORS: Unit of measure for altitude - feets
+		QString ft = qc_("ft", "altitude");
 		// TRANSLATORS: Unit of measure for speed - meters per second
 		QString mps = qc_("m/s", "speed");
 		// TRANSLATORS: Unit of measure for speed - knots
 		QString kt = qc_("kt", "speed");
-		// TRANSLATORS: Unit of measure for speed - feets per minute
-		QString ftpm = qc_("ft/min", "speed");
+		// TRANSLATORS: Unit of measure for climb rate - feets per minute
+		QString ftpm = qc_("ft/min", "climb rate");
 		// TRANSLATORS: Unit of measure for time - seconds
 		QString s = qc_("s", "time");
 
@@ -221,7 +224,7 @@ QString AircraftObject::getInfoString(const StelCore* core, const InfoStringGrou
 		const QString verticalRate = QString("%1 %2 (%3 %4)").arg(QString::number(currentRecord.verticalRateMs, 'f', 1), mps,
 		                                                          QString::number(currentRecord.verticalRateMs * kMetersPerSecondToFeetPerMinute, 'f', 0), ftpm);
 
-		const QString heading = QString("%1° (%2)").arg(QString::number(normalizeDegrees(currentRecord.trackDegrees), 'f', 0), qc_(headingToCompass(currentRecord.trackDegrees), "compass direction"));
+		const QString tracking = QString("%1° (%2)").arg(QString::number(normalizeDegrees(currentRecord.trackDegrees), 'f', 0), qc_(headingToCompass(currentRecord.trackDegrees), "compass direction"));
 
 		const double dataAgeSeconds = getElapsedSeconds();
 		const QString dataAge = QString("%1 %2").arg(QString::number(dataAgeSeconds, 'f', dataAgeSeconds < 10.0 ? 1 : 0), s);
@@ -232,7 +235,7 @@ QString AircraftObject::getInfoString(const StelCore* core, const InfoStringGrou
 			stream << QString("<tr><td>%1:</td><td style='text-align:right;'>%2</td></tr>").arg(q_("Altitude"), altitude);
 			stream << QString("<tr><td>%1:</td><td style='text-align:right;'>%2</td></tr>").arg(q_("Ground speed"), groundSpeed);
 			stream << QString("<tr><td>%1:</td><td style='text-align:right;'>%2</td></tr>").arg(q_("Vertical rate"), verticalRate);
-			stream << QString("<tr><td>%1:</td><td style='text-align:right;'>%2</td></tr>").arg(q_("Track"), heading);
+			stream << QString("<tr><td>%1:</td><td style='text-align:right;'>%2</td></tr>").arg(q_("Track"), tracking); // TODO zero filled in aeronautical speak
 			stream << QString("<tr><td>%1:</td><td style='text-align:right;'>%2</td></tr>").arg(q_("Data age"), dataAge);
 			stream << "</table><br/>";
 		}
@@ -241,7 +244,7 @@ QString AircraftObject::getInfoString(const StelCore* core, const InfoStringGrou
 			stream << QString("%1: %2<br/>").arg(q_("Altitude"), altitude);
 			stream << QString("%1: %2<br/>").arg(q_("Ground speed"), groundSpeed);
 			stream << QString("%1: %2<br/>").arg(q_("Vertical rate"), verticalRate);
-			stream << QString("%1: %2<br/>").arg(q_("Track"), heading);
+			stream << QString("%1: %2<br/>").arg(q_("Track"), tracking); // TODO 000 format
 			stream << QString("%1: %2<br/>").arg(q_("Data age"), dataAge);
 		}
 	}
@@ -315,19 +318,19 @@ bool AircraftObject::isAboveHorizon(const StelCore* core) const
 float AircraftObject::getScreenRotationDegrees(StelCore* core, const StelProjectorP& projector, const Vec3d& currentScreenPos) const
 {
 	if (!projector)
-		return static_cast<float>(normalizeDegrees(aircraftRecord.trackDegrees) + kSpriteHeadingOffsetDegrees);
+		return static_cast<float>(normalizeDegrees(aircraftRecord.trackDegrees) + kSpriteTrackingOffsetDegrees);
 
 	Vec3d futureScreenPos;
-	if (!projector->project(getAltAzPos(core, getElapsedSeconds() + kHeadingProbeSeconds), futureScreenPos))
-		return static_cast<float>(normalizeDegrees(aircraftRecord.trackDegrees) + kSpriteHeadingOffsetDegrees);
+	if (!projector->project(getAltAzPos(core, getElapsedSeconds() + kTrackingProbeSeconds), futureScreenPos))
+		return static_cast<float>(normalizeDegrees(aircraftRecord.trackDegrees) + kSpriteTrackingOffsetDegrees);
 
 	const double dx = futureScreenPos[0] - currentScreenPos[0];
 	const double dy = futureScreenPos[1] - currentScreenPos[1];
 	if (std::abs(dx) < 0.01 && std::abs(dy) < 0.01)
-		return static_cast<float>(normalizeDegrees(aircraftRecord.trackDegrees) + kSpriteHeadingOffsetDegrees);
+		return static_cast<float>(normalizeDegrees(aircraftRecord.trackDegrees) + kSpriteTrackingOffsetDegrees);
 
 	const double angleDeg = std::atan2(dy, dx) * 180.0 / M_PI;
-	return static_cast<float>(angleDeg + kSpriteHeadingOffsetDegrees);
+	return static_cast<float>(angleDeg + kSpriteTrackingOffsetDegrees);
 }
 
 void AircraftObject::draw(StelCore* core, StelPainter* painter, bool drawLabels, int labelMode) const

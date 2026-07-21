@@ -61,8 +61,11 @@ struct ProviderDefinition
 	int maxRadiusNm;
 };
 
+// FIXME v2 deprecated? use API v3? see https://github.com/adsbfi/opendata
 const QString kAdsbFiTemplate = QStringLiteral("https://opendata.adsb.fi/api/v2/lat/%1/lon/%2/dist/%3");
+
 const QString kAirplanesLiveTemplate = QStringLiteral("https://api.airplanes.live/v2/point/%1/%2/%3");
+
 const QString kPluginVersion = QStringLiteral("0.1.0");
 constexpr int kLabelModeFlightNumber = 0;
 constexpr int kLabelModeAircraftModel = 1;
@@ -70,12 +73,15 @@ constexpr int kDefaultFetchIntervalSec = 15;
 constexpr int kMinFetchIntervalSec = 15;
 constexpr int kMaxFetchIntervalSec = 60;
 constexpr int kDefaultRadiusNm = 250;
-constexpr int kMinRadiusNm = 25;
-constexpr int kMaxRadiusNm = 500;
+constexpr int kMinRadiusNm = 25; // why should there be a mimimum distance? if the user decides for '0', that's his choice...
+constexpr int kMaxRadiusNm = 500; // probably not realistic
 constexpr int kMaxPublishedAircraft = 200;
+
+// FIXME duplicated consts
 constexpr double kFeetToMeters = 0.3048;
 constexpr double kKnotsToMetersPerSecond = 0.514444;
 constexpr double kFeetPerMinuteToMetersPerSecond = 0.00508;
+
 const QString kRealtimeOnlyStatus = QStringLiteral("Live aircraft are shown only in real-time mode.");
 
 ProviderDefinition providerDefinition(const QString& providerId)
@@ -86,8 +92,8 @@ ProviderDefinition providerDefinition(const QString& providerId)
 			QStringLiteral("airplanes_live"),
 			QStringLiteral("airplanes.live"),
 			kAirplanesLiveTemplate,
-			QStringLiteral("https://airplanes.live/api-guide/"),
-			250
+			QStringLiteral("https://airplanes.live/api-guide/"), //
+			250 // kMaxRadiusNm ?
 		};
 	}
 
@@ -144,16 +150,19 @@ bool shouldSkipAircraft(const QJsonObject& object)
 AircraftRecord parseAircraftRecord(const QJsonObject& object, double snapshotJd)
 {
 	AircraftRecord record;
-	record.icao24 = object.value("hex").toString().trimmed().toLower();
-	record.callsign = object.value("flight").toString().trimmed();
-	record.aircraftType = object.value("t").toString().trimmed();
-	record.latitude = object.value("lat").toDouble();
-	record.longitude = object.value("lon").toDouble();
-	record.altitudeMeters = object.value("alt_baro").toDouble() * kFeetToMeters;
-	record.groundSpeedMs = object.value("gs").toDouble() * kKnotsToMetersPerSecond;
-	record.trackDegrees = object.value("track").toDouble();
-	record.verticalRateMs = object.value("baro_rate").toDouble() * kFeetPerMinuteToMetersPerSecond;
-	record.snapshotJd = snapshotJd;
+
+	record.hex 		= object.value("hex").toString().trimmed().toLower();
+	record.callsign 	= object.value("flight").toString().trimmed();
+	record.aircraftType 	= object.value("t").toString().trimmed();
+	record.latitude 	= object.value("lat").toDouble();
+	record.longitude 	= object.value("lon").toDouble();
+	record.altitudeMeters 	= object.value("alt_baro").toDouble() * kFeetToMeters;
+	record.groundSpeedMs 	= object.value("gs").toDouble() * kKnotsToMetersPerSecond;
+	record.trackDegrees 	= object.value("track").toDouble();
+	record.verticalRateMs 	= object.value("baro_rate").toDouble() * kFeetPerMinuteToMetersPerSecond;
+
+	record.snapshotJd 	= snapshotJd;
+
 	return record;
 }
 
@@ -169,7 +178,7 @@ QVector<AircraftRecord> parseAircraftRecords(const QJsonArray& aircraftArray, do
 			continue;
 
 		const AircraftRecord record = parseAircraftRecord(object, snapshotJd);
-		if (record.icao24.isEmpty())
+		if (record.hex.isEmpty())
 			continue;
 
 		nextRecords.append(record);
@@ -206,7 +215,7 @@ StelPluginInfo PlanesStelPluginInterface::getPluginInfo() const
 	info.displayedName = N_("Planes");
 	info.authors = QStringLiteral("Felix Zeltner, Georg Zotti, Kamil Zaraś (astronow.pl)");
 	info.contact = STELLARIUM_DEV_URL;
-	info.description = N_("Display live ADS-B aircraft in the sky.");
+	info.description = N_("Display live aircraft based on ADS-B data");
 	info.version = kPluginVersion;
 	info.license = QStringLiteral("GPL v2 or later");
 	return info;
@@ -477,7 +486,7 @@ void Planes::onReply(QNetworkReply* reply)
 	nextAircraft.reserve(records.size());
 	for (const AircraftRecord& record : records)
 	{
-		const auto it = existingById.constFind(record.icao24);
+		const auto it = existingById.constFind(record.hex);
 		if (it != existingById.constEnd())
 		{
 			it.value()->updateRecord(record);

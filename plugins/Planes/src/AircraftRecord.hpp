@@ -22,9 +22,12 @@
 
 #include <QString>
 
+
+// see also https://gateway.adsbexchange.com/api/aircraft/v2/docs/index.html?url=/api/aircraft/v2/docs/openapi.json
+
 struct AircraftRecord
 {
-	QString icao24;
+	QString hex;
 	QString callsign;
 	QString aircraftType;
 	double latitude = 0.0;
