@@ -13,6 +13,9 @@ Follow these steps in order to import external artefacts.
 1. unzip/copy/import/**explode**... the external data ito the vendor directory. This is called a *vendor drop*.
 1. Make sure that file/directory *names* do not contain version information as a kind of implicit versioning scheme. Rename when needed. (Example: ``geonames.2.3.tgz`` might untar into ``geonames-2.3/ ``)
 1. **Commit** the vendor branch. make sure to add the vendor version in the commit message
+
+	``git add -A && git commit``
+
 1. **Tag** the vendor branch, e.g. ``vendor/geonames/1.0``. If the vendor does not provide a clear version number, use the UTC date/time of the drop, formatted as ISO: ``vendor/geonames/2021-09-09T1200``
 1. **Switch** to your task branch
 1. **merge** the vendor branch
@@ -148,6 +151,10 @@ Importing external artefacts in vendor branches will also provide insight in wha
 Sometimes, conversion routines need to be written or updated so that external data fits with the project. These routines do not belong in the vendor branch, but in the project itself.
 
 ## Notes
+
+### endline conversions
+
+TODO: add directives how to deal wth exterbnal artefacts originating from DOS enviromnments.
 
 ### Schema
 Sometimes a format is accomapied by a metadata section describing the format of the data. This metadata is an important artefact to commit to an vendor branch.
