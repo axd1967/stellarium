@@ -152,9 +152,9 @@ Sometimes, conversion routines need to be written or updated so that external da
 
 ## Notes
 
-### endline conversions
+### dealing with trailing whitespacea and platform end of line issues
 
-TODO: add directives how to deal wth exterbnal artefacts originating from DOS enviromnments.
+TODO: add directives how to deal with external artefacts originating from other platform environments.
 
 ### Schema
 Sometimes a format is accomapied by a metadata section describing the format of the data. This metadata is an important artefact to commit to an vendor branch.
