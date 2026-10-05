@@ -69,8 +69,8 @@ This is not discussed for now.
 This branch (``alex/gh/contrib/docs/vendor-branching``) contains an example how to import the Celstrak artefacts in Stellarium.
 It demonstrates
 - a vendor creation
-- a fictive vendor update (pending a real update)
-- a local modification
+- a vendor update (pending a real update)
+- a local modification (remove trailing whitespaces)
 
 To make a more clear eample how source code can move, we import ONLY the SGP4 from following two locations:
 - https://celestrak.org/publications/AIAA/2006-6753/AIAA-2006-6753.zip (Assuming it holds an older version)
