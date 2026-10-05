@@ -2,6 +2,10 @@
 
 *In short: if you import anything from outside Stellarium, be it code or data, do not bluntly copy-paste; don't just create a fork if not necessary. The following procedure looks daunting, but that is only appearance.*
 
+TODO: simplify into a howto and move the arguments lower.
+TODO: migrate to asciidoc
+TODO: see git/Documentation/user-manual.adoc on vendor
+
 ## Introduction
 
 Stellarium is constantly benefiting from open source artifacts and being enriched with text/data/source files that are **copy-pasted** from places outside of Stellarium.
@@ -33,7 +37,8 @@ Here are several existing artifacts that have been copy-pasted in Stellarium ove
 		- https://github.com/magnific0/SGP4
 		- https://github.com/aholinch/sgp4
 		Even minor changes should receive the vendor treatment: https://github.com/Stellarium/stellarium/blob/9910a2f05c52d4d9f351ff490c9bc4d99670df1f/plugins/Satellites/README#L61-L63
-- and, of course, how could we forget: the [various ephemeris algorithms](https://github.com/Stellarium/stellarium/commits/master/src/core/planetsephems) (a good example is `jpleph.cpp` and `vsop87.c`). Their true source is [JPL](https://ssd.jpl.nasa.gov/planets/eph_export.html) and VSOP ([FTP](ftp://ftp.imcce.fr/pub/ephem/planets/vsop87)). Some random googling shows that the problem exists elsewhere too (e.g. Celestia):
+	- elp82b.h, gust86.h, htc20b.c
+- and, of course, how could we forget: the [various ephemeris algorithms](https://github.com/Stellarium/stellarium/commits/master/src/core/planetsephems) (examples are also `jpleph.cpp`, `elp82b.h`, `gust86.h`, `htc20b.c` and `vsop87.c`). Their true source is [JPL](https://ssd.jpl.nasa.gov/planets/eph_export.html) and VSOP ([FTP](ftp://ftp.imcce.fr/pub/ephem/planets/vsop87)). Some random googling shows that the problem exists elsewhere too (e.g. Celestia):
 	- https://github.com/Bill-Gray/jpl_eph/blob/master/jpleph.h
 	- [Stanford JSOC](http://jsoc.stanford.edu/cvs/JSOC/proj/timed/apps/Attic/jpleph.c?hidecvsroot=1&search=None&hideattic=1&sortby=rev&logsort=date&rev=1.1&content-type=text%2Fvnd.viewcvs-markup&diff_format=h)
 	- https://apollo.astro.amu.edu.pl/PAD/pmwiki.php?n=Dybol.JPLEph 
@@ -41,13 +46,13 @@ Here are several existing artifacts that have been copy-pasted in Stellarium ove
 - [SOFA sourcecode](https://www.iausofa.org/) (*Standards Of Fundamental Astronomy*), also mentioned in [Planet.cpp](https://github.com/Stellarium/stellarium/blob/ba80d33d4bc83d72fc15cca53f798cd9439482cf/src/core/modules/Planet.cpp#L1648): see the [recent changes](https://www.iausofa.org/current.html) (especially the [C library](https://www.iausofa.org/current_C.html), and the [archive](https://www.iausofa.org/archive.html))
 - tons of tools imported for the web version (https://github.com/Stellarium/stellarium-web-engine/tree/master/ext_src)
 
-Potential candidates, other examples
+Potential candidates for dropping in vendor branching, other examples
 
 -  Marc van der Sluys' [Constellation lines](https://github.com/MarcvdSluys/ConstellationLines) as a separate Sky Culture
 - [meshwarp sample code](http://paulbourke.net/dataformats/meshwarp/) : yes, the sample code.
 - [time ephemerides](http://timeephem.sourceforge.net/index.php)
 - although less likely, copy-pasted snippets from Qt examples *could* be candidates ([example](https://github.com/Stellarium/stellarium/blob/2db52c18bc87aaefa00d3d4a280969349634af8f/src/gui/StelGuiItems.cpp#L352))
-- [DASTCOM](https://ssd.jpl.nasa.gov/horizons/manual.html#dastcom) documentation and Fortran code
+- [DASTCOM](https://ssd.jpl.nasa.gov/horizons/manual.html#dastcom): documentation and Fortran code
 - API documentation, e.g. for [HORIZONS](https://ssd-api.jpl.nasa.gov/doc/horizons_file.html)
 
 Although some examples above are unlikely to ever change - or be very ephemeral (sic) - the reasoning is always: prevent rather than cure, and exercise a lot, until it becomes second nature. Just keep Murphy's Law in mind...
@@ -56,20 +61,20 @@ Although some examples above are unlikely to ever change - or be very ephemeral 
 
 Notice how it is not always obvious to trace back the original files. In the case of ephemeride routines, these reside in "ancient", core Stellarium files, it is extremely likely that they were copied (and *maybe* recent changes have been manually incorporated in Stellarium). One aspect of the recommended vendor branch procedure details how to include such *meta information* so as to help find back the (original, root) source at all times.
 
-The external (source) version of such artifacts will often continue to evolve, but these modifications obviously will not be magically reflected in your project repository, thus *sometimes, if not often* leading to artifacts slowly getting totally outdated (hence the term "[code rot](https://en.wikipedia.org/wiki/Software_rot)").
+The external (source) version of such artifacts will often continue to evolve, but these modifications obviously will not be magically reflected in the project repository, thus *sometimes, if not often* leading to artifacts slowly getting totally outdated (hence the term "[code rot](https://en.wikipedia.org/wiki/Software_rot)").
 
-Importing external artifacts therefore requires a specific (and in this case a *simple* as well as generic) approach: the **Vendor Branch** mechanism. Other approaches exist, such as subtrees and submodules (in case Git is used for the external artifacts), but have inconveniences and are not discussed here; the proposed approach is *simple to apply to novice programmers*. The approach is valid in any VCS, such as Git, Mercurial, ClearCase, TFS, cvs, you name it.
+Importing external artifacts therefore requires a specific (and in this case a *simple* - believe me, it is not rocket science - as well as generic) approach: the **Vendor Branch** approach. Other approaches exist, such as subtrees (but this is not part of core Git) and submodules (in case the external artifacts are versioned under Git), but have inconveniences and are not discussed here; the proposed approach is KISS: *simple to apply to novice programmers*. By the way, the approach is valid in any VCS, such as SVN (where it seems to have emerged), Git, Mercurial, ClearCase, TFS, cvs, you name it.
 
-Importing external artefacts in vendor branches will also provide insight in what changed in those artefacts, just by inspecting the "diff" between successive vendor versions. Normally such changes should also be announced the vendor.
+Importing external artefacts in vendor branches will also provide insight in what changed in those artefacts, just by inspecting the "diff" between successive vendor versions. Normally such changes should also be announced by the vendor.
 
 ## The solution
-1. Keep external information alive (and updated) on a **separate** branch, called a "**vendor branch**" (e.g. ``vendor/geonames``). Every copied dataset/tool/sourcecode lives in its own vendor branch. A vendor branch tracks a *pristine* copy/mirror of the external data.
-1. Optionally, the external information is stored in a separate directory (e.g. ``external/<vendor>/<toolname>``). But the approach works just as fine for individual files.
-1. A ``VENDOR`` file explains where the external/original information can be found, so that it can be updated when necessary.
-1. **vendor tags** describe which version of the vendor artifacts has been imported (e.g. ``vendor/geonames/2021-08-21``; do use the ISO date/time format.)
+1. Keep external information alive (and updated) on a **separate** branch, called a "**vendor branch**" (e.g. ``vendor/geonames``). Every copied dataset/tool/sourcecode lives in its own vendor branch (and in its own (sub)directory). A vendor branch tracks a *pristine* copy/mirror of the external data.
+1. Ideally, the external information is stored in a separate directory (e.g. ``external/<vendor>/<toolname>``). But the approach works just as fine for individual files.
+1. A ``VENDOR`` file - which is added in our ``master`` version of the vendor data - explains where the external/original information can be found, so that it can be updated when necessary.
+1. **vendor tags** describe which version of the vendor artifacts has been imported (e.g. ``vendor/geonames/2021-08-21``; do use the ISO date/time format; if possible, also include the vendor's tag info.)
 1. The vendor branch is merged to wherever it is needed (normally a feature branch, which will eventually be merged to ``master``)
 1. If needed (which is often the case), external information is modified *locally* (usually via a feature/master branch, but *never* in its vendor branch)
-1. Ideally, issues in the vendor artifacts should be reported to the vendor, so that updates can then be imported back via a fresh *vendor drop*. Alternatively, a developer can solve issues locally, but *never* in the vendor branch.
+1. Ideally, issues in the vendor artifacts should be reported to the vendor, so that updates can then be imported back via a fresh *vendor drop*. Alternatively, a developer can solve issues locally, but *never* in the vendor branch. Alternatively, a fix branch can be created from the vendor branch and a patch transmited to the vendor as well as merged in ``master`1.
 
 Sometimes, conversion routines need to be written or updated so that external data fits with the project. These routines do not belong in the vendor branch, but in the project itself.
 
@@ -84,11 +89,13 @@ Basically, two use cases exist:
 
 ## case 1 - initialising a vendor branch: importing new artifacts from scratch
 
+Let's assume we want to import from an external project called ``geonames``.
+
 1. checkout the feature branch that will import the data in the project
-1. if needed (in order to ingest many files), create a directory for the vendor artifacts, e.g. ``external/geonames``
+1. create a directory for the vendor artifacts, e.g. ``external/geonames``
 1. create and checkout a vendor branch, e.g. ``vendor/geonames``
 1. unzip/copy/import/... the external data. This is called a *vendor drop*.
-1. Make sure that file/directory *names* do not contain version information as a kind of implicit versioning scheme. Rename when needed.
+1. Make sure that file/directory *names* do not contain version information as a kind of implicit versioning scheme. Rename when needed. (Example: geonames.2.3.tgz might untar into ``geonames-2.3/ ``)
 1. Commit the vendor data
 1. Tag the vendor branch, e.g. ``vendor/geonames/1.0``. If the vendor does not provide a clear version number, use the UTC date/time of the drop, formatted as ISO: ``vendor/geonames/2021-09-09T1200``
 1. Switch to the feature/master/whatever local branch
@@ -97,7 +104,7 @@ Basically, two use cases exist:
 EITHER 
 	- create (add) a ``VENDOR`` file *in* the vendor directory (or a similar name, in the unlikely chance that the file name is already in use), OR 
 	- edit an existing vendor file (e.g. when only 1 file has been copied, rather than a directory)
-1. If needed, do whatever is needed to transform the data *in the feature branch*. Try to provide a scripted way to transform data, rather than rely on manual operations, so that this can be run again whenever the external data is re-imported.
+1. If needed, do whatever is needed to transform the data *in the feature branch* to accomodate for local needs. Try to provide a scripted way to transform data, rather than rely on manual operations, so that this can be run again whenever the external data is re-imported.
 
 For prolific vendors (offering many independent tools/data, typically offered as separate packages), it might be necessary to create subdirectory and separate (sub)branches per product: `vendor/<vendor name>/<vendor product>`.
 
@@ -118,7 +125,7 @@ Now it becomes easy to update external information. Whenever the external inform
 
 1. Tag the vendor branch with a vendor tag (`vendor/<vendor name>/<vendor product>/<tag>`) where `<tag>` is either a tag available from the vendor, or otherwise the ISO date/time of the vendor drop.
 1. Merge the updated vendor branch to ``master`` (or via an intermediate feature/bugfix branch, often in order to update local stuff)
-1. Deal with conflicts when needed. Such conflicts are expected to arise when the vendor changed something that was also changed locally.
+1. Deal with conflicts when needed. Such conflicts are expected to arise when the vendor changed something that was also changed locally. No conflicts should arise 
 
 This is also needed when the external data disappears: in that case, mention that the external data is no longer available to the public to avoid developers searching for it (or even worse, continue with a copy that still exists elsewhere!! Such a copy does not belong on the vendor branch).
 
@@ -126,7 +133,7 @@ This is also needed when the external data disappears: in that case, mention tha
 
 ### When conflicts are no longer manageable
 
-In some cases, merging vendor updates may become too difficult if not impossible. Nevertheless, vendor drops will continue to provide the means to port changes, by allowing the developer to study what changed in the vendor branch, and apply those changes manually.
+In some cases, merging vendor updates may become too difficult if not impossible. Nevertheless, vendor drops will continue to provide the means to port changes, by allowing the developer to study at least what changed in the vendor branch, and apply those changes manually...
 
 ### Importing vendor code written in other languages
 
@@ -146,7 +153,7 @@ Should any of those "other readers" be used in any way in Stellarium, then these
 
 VSOP87 is outdated, but the approach remains the same for VSOP2013 (as well as JPL).
 
-The data available as VSOP [FTP](ftp://ftp.imcce.fr/pub/ephem/planets/vsop87) has - a long time ago - been manually (and heroically) merged/transformed into a [sourcecode file](https://github.com/Stellarium/stellarium/blob/v0.21.2/src/core/planetsephems/vsop87.c). Such a transformed file is very difficult to update should a change appeaqr in the original. Note that the current VSOP87 artifacts seem to be the ultimate (maybe only) version (and at first sight there were no modifications *- wow, code without bugs...*), later ephemeris iterations seem to take a different approach (eg VSOP2010, VSOP2013 using Chebyshev polynomials rather than elliptic elements). In 2013 (after VSOP2013), a small change happened in VSOP2010; such a change could have been identified with correct vendor branching (but was also [announced](ftp://ftp.imcce.fr/pub/ephem/planets/vsop2010/revision-notice.pdf).
+The data available as VSOP [FTP](ftp://ftp.imcce.fr/pub/ephem/planets/vsop87) has - a long time ago - been manually (and heroically) merged/transformed into a [sourcecode file](https://github.com/Stellarium/stellarium/blob/v0.21.2/src/core/planetsephems/vsop87.c). Such a transformed file is very difficult to update should a change appear in the original. Note that the current VSOP87 artifacts seem to be the ultimate (maybe only) version (and at first sight there were no modifications *- wow, code without bugs...*), later ephemeris iterations seem to take a different approach (eg VSOP2010, VSOP2013 using Chebyshev polynomials rather than elliptic elements). In 2013 (after VSOP2013), a small change happened in VSOP2010; such a change could have been identified with correct vendor branching (but was also [announced](ftp://ftp.imcce.fr/pub/ephem/planets/vsop2010/revision-notice.pdf).
 
 Including the raw data files would be ideal, but a massive overkill with an unacceptable impact on executable size as well as startup time. 
 
@@ -177,10 +184,11 @@ In such cases, the version information should be removed before committing the v
 
 The vendor branch approach also works for users that want to keep track of other user's configuration data or scripts while at the same time apply local changes. This works better for file formats that are easily merged because being insensitive to line numbers, such as YAML; a bad example is the numbering format chosen in the [Ocular config files](https://github.com/Stellarium/stellarium/blob/ba80d33d4bc83d72fc15cca53f798cd9439482cf/plugins/Oculars/resources/default_ocular.ini).
 
-
 ## See also
 - https://github.com/brettlangdon/git-vendor
-- https://github.com/Stellarium/stellarium/discussions/1856 and https://github.com/Stellarium/stellarium/wiki/Branching-Strategy
+- In the Stellarium project:
+	- https://github.com/Stellarium/stellarium/discussions/1856
+	- https://github.com/Stellarium/stellarium/wiki/Branching-Strategy
 - https://svnbook.red-bean.com/en/1.8/svn.advanced.vendorbr.html
 - https://blog.bigsmoke.us/2009/07/20/svn-vendor-branches
 - https://stackoverflow.com/questions/tagged/vendor-branch?sort=votes
