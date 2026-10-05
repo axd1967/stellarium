@@ -29,6 +29,7 @@ For <a href="http://doc.qt.io/qtcreator/index.html">QtCreator</a> IDE you can fi
  - <a href="https://github.com/Stellarium/stellarium/blob/master/.clang-format">ClangFormat config file</a> for QtCreator ≥ 13,
  - <a href="stellarium-ide.xml">Legacy XML file</a> for the built-in indentor of QtCreator < 13.
 
+<b>Please note: these directives do not apply to vendor branches. Instead, follow the coding style of the vendor.</b>
 
 @section stylistic_conventions_sec Stylistic Conventions
  - Source code should use the ASCII character set. Characters such as '&egrave;'

@@ -152,12 +152,16 @@ Sometimes, conversion routines need to be written or updated so that external da
 
 ## Notes
 
-### dealing with trailing whitespacea and platform end of line issues
+### coding style/conventions
+
+When modifying vendor code, try to keep the vendor coding style/conventions in order to minimize massive conflicts that **will** result after a vendor drop.
+
+### dealing with trailing whitespace and platform end of line issues
 
 TODO: add directives how to deal with external artefacts originating from other platform environments.
 
 ### Schema
-Sometimes a format is accomapied by a metadata section describing the format of the data. This metadata is an important artefact to commit to an vendor branch.
+Sometimes a format is accompanied by a metadata section describing the format of the data. This metadata is an important artefact to commit to an vendor branch.
 
 ### When conflicts are no longer manageable
 
