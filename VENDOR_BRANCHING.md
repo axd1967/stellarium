@@ -2,7 +2,7 @@
 
 *In short: if you import anything from outside Stellarium, be it code or data, do not bluntly copy-paste; don't just create a fork if not necessary. The following procedure looks daunting, but that is only appearance.*
 
-## SHORT HOW TO
+## SHORT HOW-TO
 
 ### 1. define a **new vendor**
 
@@ -65,7 +65,7 @@ Local *adaptations* are not meant to be shared with the vendor.
 This is not discussed for now.
 
 ## Examples
-### . SGP4 from Vallado/Celestrak (https://github.com/CelesTrak/fundamentals-of-astrodynamics
+### 1. SGP4 from Vallado/Celestrak (https://github.com/CelesTrak/fundamentals-of-astrodynamics
 This branch (``alex/gh/contrib/docs/vendor-branching``) contains an example how to import the Celstrak artefacts in Stellarium.
 It demonstrates
 - a vendor creation
@@ -77,9 +77,6 @@ To make a more clear eample how source code can move, we import ONLY the SGP4 fr
 - https://github.com/CelesTrak/fundamentals-of-astrodynamics/tree/main/software/cpp/SGP4/SGP4 (assuming this is the latest version; as there are no tags, we use a specific version)
 
 Consult the git notes for comments on the vendor drop
-
-## Other examples
-### . OMM schema (https://spacedatastandards.org/#/schemas/OMM)
 
 ## Discussion
 
@@ -126,7 +123,8 @@ Potential candidates for dropping in vendor branching, other examples
 - although less likely, copy-pasted snippets from Qt examples *could* be candidates ([example](https://github.com/Stellarium/stellarium/blob/2db52c18bc87aaefa00d3d4a280969349634af8f/src/gui/StelGuiItems.cpp#L352))
 - [DASTCOM](https://ssd.jpl.nasa.gov/horizons/manual.html#dastcom): documentation and Fortran code
 - API documentation, e.g. for [HORIZONS](https://ssd-api.jpl.nasa.gov/doc/horizons_file.html)
-- (SPICE)[https://naif.jpl.nasa.gov/naif/] data
+- [SPICE](https://naif.jpl.nasa.gov/naif/) data
+- upcoming [OMM schema](https://spacedatastandards.org/#/schemas/OMM)
 
 Although some examples above are unlikely to ever change - or be very ephemeral (sic) - the reasoning is always: prevent rather than cure, and exercise a lot, until it becomes second nature. Just keep Murphy's Law in mind...
 
