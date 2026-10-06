@@ -1,16 +1,16 @@
 # Vendor branching : importing external artifacts
 
-This file is WIP. The branch is slated for rebasing in the near future.
+**This file is WIP.**
 
 *In short: if you import anything from outside Stellarium, be it code or data, do not bluntly copy-paste; don't just create a fork if not necessary. The following procedure looks daunting, but that is only appearance.*
 
 ## SHORT HOW-TO
 
-### 1. define a **new vendor**
+### 1/ define a **new vendor**
 
 Follow these steps in order to import external artefacts.
 
-1. **create a vendor branch** to import the vendor (e.g. ``vendor/CELESTRAK``). If the vendor provides multiple products, create the needed subbranches. (e.g. ``vendor/CELESTRAK/SGP4``)
+1. **create a vendor branch** to import the vendor (e.g. ``vendor/CELESTRAK``). If the vendor provides multiple products, create the needed subbranches. (e.g. ``vendor/CELESTRAK/SGP4``). The vendor directory can also reside inside a normal directory, such as e.g. [this directory](https://github.com/axd1967/stellarium/tree/b4343449a1d4e66dcc4c2a468dfa068282519687/plugins/Satellites/src/gsatellite).
 1. create a suitable **directory** tree (e.g. ``vendors/CELESTRAK``, plurial) that will hold the external vendor artefacts.
 1. unzip/copy/import/**explode**... the external data ito the vendor directory. This is called a *vendor drop*.
 1. Make sure that file/directory *names* do not contain version information as a kind of implicit versioning scheme. Rename when needed. (Example: ``geonames.2.3.tgz`` might untar into ``geonames-2.3/ ``)
@@ -22,39 +22,39 @@ Follow these steps in order to import external artefacts.
 1. **Switch** to your task branch
 1. **merge** the vendor branch
 1. Add and commit a ``VENDOR.txt`` file to ``vendor/CELESTRAK/`` that contains relevant **metadata** to help finding back the source: detailed source location data, and if needed, instructions how to find back the data. Avoid top-level (domain) adresses, try to make life easy for anyone wanting to update the data. Consider includingthe keyword "VENDOR" somewhere so that it can be found if needed.
-1. Do whatever is needed to **massage** the vendor artefacts (source code, data, ...)  into your project. Often, source code will not run or compile completely. Sometimes, data needs to be transformed; include scripts to run these migrations, because future vendor drops might require them. 
+1. Do whatever is needed to **localise** the vendor artefacts (source code, data, ...) into your project. Often, source code will not run or compile completely. Sometimes, data needs to be transformed; include scripts to run these migrations, because future vendor drops might require them.
 1. **Integrate** your task branch into your main branch. Your project now contains folowing:
 	- a new vendor directory
 	- a vendor branch
 	- optionally, modified code to make the vendor work seamlessly in your project
-1. Do not delete the vendor branch! It is needed for future vendor drops.
+Please note: do not delete the vendor branch as it will be needed for future vendor drops.
 
-### 2. perform a **vendor drop**
+### 2/ perform a **vendor drop**
  When the vendor publishes an update folowing these steps to ingest those changes.
 
-1. Perform a fresh **vendor drop**:
+1. **empty** the vendor folder
 
-	1/ **empty** the vendor folder
+```
+		git ls-files -z | xargs -0 rm -f
+```
+	(see ``git help git-rm`` for details, search for "vendor".)
+1. replace/**explode**/unzip/untar/...
 
-		``git ls-files -z | xargs -0 rm -f``
+4. Commit the vendor drop
 
-		(see ``git help git-rm`` for details, search for "vendor".)
+```
+	git add -A && git commit
+```
 
-	2/ replace/**explode**/unzip/untar/...
-
-1. Commit the vendor drop
-
-	``git add -A && git commit``
-
-1. **Tag** the vendor branch with a vendor tag (``vendor/<vendor name>/<vendor product>/<tag>``) where `<tag>` is either a tag available from the vendor, or otherwise the ISO date/time of the vendor drop.
-1. Merge the updated vendor branch to ``master`` (or, more probably, via an intermediate task/feature/bugfix branch, often in order to update local stuff). Run migration scripts if needed.
-1. Deal with conflicts when needed. Such conflicts are expected to arise when the vendor changed something that was also changed locally, or when your project contributed to the vendor.
+5. **Tag** the vendor branch with a vendor tag (``vendor/<vendor name>/<vendor product>/<tag>``) where `<tag>` is either a tag available from the vendor, or otherwise the ISO date/time of the vendor drop.
+6. Merge the updated vendor branch to ``master`` (or, more probably, via an intermediate task/feature/bugfix branch, often in order to update local stuff). Run migration scripts if needed.
+7. Deal with conflicts when needed. Such conflicts are expected to arise when the vendor changed something that was also changed locally, or when your project contributed to the vendor.
 
 This is also needed when the external data disappears: in that case, mention that the external data is no longer available to the public to avoid developers searching for it (or even worse, continue with a copy that still exists elsewhere!! Such a copy does not belong on the vendor branch).
 
-### 3. contribute to the vendor project
+### 3/ contribute to the vendor project
 
-It may happen that you find a bug in the vendor artefacts and can provide a fix. 
+It may happen that you find a bug in the vendor artefacts and can provide a fix.
 Here are the steps to follow.
 Local *adaptations* are not meant to be shared with the vendor.
 
@@ -63,22 +63,21 @@ Local *adaptations* are not meant to be shared with the vendor.
 1. send the contribution branch to the vendor (as a patch, push, bundle, ...)
 1. merge the contribution branch to your local branches (task branch, manin, ...)
 
-### 4. converting existing copy-pasted artefacts to their original vendor status
+### 4/ converting existing copy-pasted artefacts to their original vendor status
 This is not discussed for now.
 
 ## Examples
-### 1. SGP4 from Vallado/Celestrak (https://github.com/CelesTrak/fundamentals-of-astrodynamics
-This branch (``alex/gh/contrib/docs/vendor-branching``) contains an example how to import the Celstrak artefacts in Stellarium.
+### 1. SGP4 from Vallado/Celestrak (https://github.com/CelesTrak/fundamentals-of-astrodynamics)
+This document's branch (``alex/gh/contrib/docs/vendor-branching``) contains an example how to import Celestrak artefacts in Stellarium.
 It demonstrates
 - a vendor creation
 - a vendor update (pending a real update)
 - a local modification (remove trailing whitespaces)
 
 To make a more clear eample how source code can move, we import ONLY the SGP4 from following two locations:
-- https://celestrak.org/publications/AIAA/2006-6753/AIAA-2006-6753.zip (Assuming it holds an older version)
-- https://github.com/CelesTrak/fundamentals-of-astrodynamics/tree/main/software/cpp/SGP4/SGP4 (assuming this is the latest version; as there are no tags, we use a specific version)
 
-Consult the git notes for comments on the vendor drop
+1. https://celestrak.org/publications/AIAA/2006-6753/AIAA-2006-6753.zip (Assuming it holds an older version)
+1. https://github.com/CelesTrak/fundamentals-of-astrodynamics/tree/main/software/cpp/SGP4/SGP4 (assuming this is the latest version; as there are no tags, we use a specific version)
 
 ## Discussion
 
@@ -105,10 +104,8 @@ Here are several existing artifacts that have been copy-pasted in Stellarium ove
 - the [gsatellite directory](https://github.com/Stellarium/stellarium/tree/master/plugins/Satellites/src/gsatellite) seems to contain a lot of external code that has been modified locally.
 - The SPG4 algorithm (see also [WP](https://en.wikipedia.org/wiki/Simplified_perturbations_models) updated 2020-03-12)
 	- used in the [satellite plugin](https://github.com/Stellarium/stellarium/blob/e75b00e6c249747c198fe0e2badd77a4adab9415/plugins/Satellites/src/Satellites.hpp#L56-L57) ). 
-	- It should be replaced by vendor dropped and then adapted code
-		- https://github.com/magnific0/SGP4
-		- https://github.com/aholinch/sgp4
-		Even minor changes should receive the vendor treatment: https://github.com/Stellarium/stellarium/blob/9910a2f05c52d4d9f351ff490c9bc4d99670df1f/plugins/Satellites/README#L61-L63
+	- It should be replaced by vendor dropped and then adapted  (See Vallado link above)
+	- Even minor changes should receive the vendor treatment: https://github.com/Stellarium/stellarium/blob/9910a2f05c52d4d9f351ff490c9bc4d99670df1f/plugins/Satellites/README#L61-L63
 - and, of course, how could we forget: the [various ephemeris algorithms](https://github.com/Stellarium/stellarium/commits/master/src/core/planetsephems) (examples are also `jpleph.cpp`, `elp82b.h`, `gust86.h`, `htc20b.c` and `vsop87.c`). Their true source is [JPL](https://ssd.jpl.nasa.gov/planets/eph_export.html) and VSOP ([FTP](ftp://ftp.imcce.fr/pub/ephem/planets/vsop87)). Some random googling shows that the problem exists elsewhere too (e.g. Celestia):
 	- https://github.com/Bill-Gray/jpl_eph/blob/master/jpleph.h
 	- [Stanford JSOC](http://jsoc.stanford.edu/cvs/JSOC/proj/timed/apps/Attic/jpleph.c?hidecvsroot=1&search=None&hideattic=1&sortby=rev&logsort=date&rev=1.1&content-type=text%2Fvnd.viewcvs-markup&diff_format=h)
@@ -117,7 +114,7 @@ Here are several existing artifacts that have been copy-pasted in Stellarium ove
 - [SOFA sourcecode](https://www.iausofa.org/) (*Standards Of Fundamental Astronomy*), also mentioned in [Planet.cpp](https://github.com/Stellarium/stellarium/blob/ba80d33d4bc83d72fc15cca53f798cd9439482cf/src/core/modules/Planet.cpp#L1648): see the [recent changes](https://www.iausofa.org/current.html) (especially the [C library](https://www.iausofa.org/current_C.html), and the [archive](https://www.iausofa.org/archive.html))
 - tons of tools imported for the web version (https://github.com/Stellarium/stellarium-web-engine/tree/master/ext_src)
 
-Potential candidates for dropping in vendor branching, other examples
+Potential candidates for using vendor branching, other examples
 
 -  Marc van der Sluys' [Constellation lines](https://github.com/MarcvdSluys/ConstellationLines) as a separate Sky Culture
 - [meshwarp sample code](http://paulbourke.net/dataformats/meshwarp/) : yes, the sample code.
@@ -126,13 +123,13 @@ Potential candidates for dropping in vendor branching, other examples
 - [DASTCOM](https://ssd.jpl.nasa.gov/horizons/manual.html#dastcom): documentation and Fortran code
 - API documentation, e.g. for [HORIZONS](https://ssd-api.jpl.nasa.gov/doc/horizons_file.html)
 - [SPICE](https://naif.jpl.nasa.gov/naif/) data
-- upcoming [OMM schema](https://spacedatastandards.org/#/schemas/OMM)
+- upcoming [OMM schema](https://spacedatastandards.org/#/schemas/OMM) (although this will be less trivial to deal with : TODO)
 
 Although some examples above are unlikely to ever change - or be very ephemeral (sic) - the reasoning is always: prevent rather than cure, and exercise a lot, until it becomes second nature. Just keep Murphy's Law in mind...
 
 ### The problem
 
-Notice how it is not always obvious to trace back the original files. In the case of ephemeride routines, these reside in "ancient", core Stellarium files, it is extremely likely that they were copied (and *maybe* recent changes have been manually incorporated in Stellarium). One aspect of the recommended vendor branch procedure details how to include such *meta information* so as to help find back the (original, root) source at all times.
+Notice how it is not always obvious to trace back the original files. In the case of ephemeride routines, these reside in "ancient", core Stellarium files, it is extremely likely that they were copied (and *maybe* recent changes have been manually  and painfully incorporated in Stellarium). One aspect of the recommended vendor branch procedure details how to include such *meta information* so as to help find back the (original, root) source at all times.
 
 The external (source) version of such artifacts will often continue to evolve, but these modifications obviously will not be magically reflected in the project repository, thus *sometimes, if not often* leading to artifacts slowly getting totally outdated (hence the term "[code rot](https://en.wikipedia.org/wiki/Software_rot)").
 
@@ -147,7 +144,7 @@ Importing external artefacts in vendor branches will also provide insight in wha
 1. **vendor tags** describe which version of the vendor artifacts has been imported (e.g. ``vendor/geonames/2021-08-21``; do use the ISO date/time format; if possible, also include the vendor's tag info.)
 1. The vendor branch is merged to wherever it is needed (normally a feature branch, which will eventually be merged to ``master``)
 1. If needed (which is often the case), external information is modified *locally* (usually via a feature/master branch, but *never* in its vendor branch)
-1. Ideally, issues in the vendor artifacts should be reported to the vendor, so that updates can then be imported back via a fresh *vendor drop*. Alternatively, a developer can solve issues locally, but *never* in the vendor branch. Alternatively, a fix branch can be created from the vendor branch and a patch transmited to the vendor as well as merged in ``master`1.
+1. Ideally, issues in the vendor artifacts should be reported to the vendor, so that updates can then be imported back via a fresh *vendor drop*. Alternatively, a developer can solve issues locally, but *never* in the vendor branch. Alternatively, a fix branch can be created from the vendor branch and a patch transmited to the vendor as well as merged in ``master``.
 
 Sometimes, conversion routines need to be written or updated so that external data fits with the project. These routines do not belong in the vendor branch, but in the project itself.
 
@@ -155,11 +152,45 @@ Sometimes, conversion routines need to be written or updated so that external da
 
 ### coding style/conventions
 
-When modifying vendor code, try to keep the vendor coding style/conventions in order to minimize massive conflicts that **will** result after a vendor drop.
+When modifying vendor code, stick to the vendor coding style/conventions. Rewriting for readbility etc. will likely lead to massive conflicts at the next vendor drop.
 
-### dealing with trailing whitespace and platform end of line issues
+### dealing with trailing whitespace
 
 TODO: add directives how to deal with external artefacts originating from other platform environments.
+
+Git tips (TO CONFIRM):
+
+- check your current global/local/worktree whitespace handling
+```
+	git config --get-all --show-origin core.whitespace
+	git config --global core.whitespace trailing-space,-space-before-tab,indent-with-non-tab,cr-at-eol
+```
+- enable your repo's pre-commit hook (it checks for various whitespace issues. See also ``git help hooks``
+
+### ...and platform end of line issues
+
+TODO: replace with ``.gitattributes`` ?
+
+- check line ending handling
+```
+	git config --get-all --show-origin core.autocrlf # empty == 'false'
+	git config --get-all --show-origin core.safecrlf # empty == 'false'
+	git config --get-all --show-origin core.eol # empty = 'native'
+```
+- make sure...
+- as a **Windows** developer, that CRLF is converted to LF when comitting:
+```
+	$ git config --global core.autocrlf true
+```
+- as a **Linux** dev, ensure that
+```
+	git config --global core.autocrlf input
+```
+ See also
+- ``git help config``
+- https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration
+- https://adaptivepatchwork.com/2012/03/01/mind-the-end-of-your-line/
+- https://docs.github.com/en/get-started/git-basics/configuring-git-to-handle-line-endings
 
 ### Schema
 Sometimes a format is accompanied by a metadata section describing the format of the data. This metadata is an important artefact to commit to an vendor branch.
@@ -167,6 +198,8 @@ Sometimes a format is accompanied by a metadata section describing the format of
 ### When conflicts are no longer manageable
 
 In some cases, merging vendor updates may become too difficult if not impossible. Nevertheless, vendor drops will continue to provide the means to port changes, by allowing the developer to study at least what changed in the vendor branch, and apply those changes manually...
+
+``git rerere`` might become helpful.
 
 ### Importing vendor code written in other languages
 
