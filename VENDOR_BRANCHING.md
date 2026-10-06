@@ -126,6 +126,7 @@ Potential candidates for dropping in vendor branching, other examples
 - although less likely, copy-pasted snippets from Qt examples *could* be candidates ([example](https://github.com/Stellarium/stellarium/blob/2db52c18bc87aaefa00d3d4a280969349634af8f/src/gui/StelGuiItems.cpp#L352))
 - [DASTCOM](https://ssd.jpl.nasa.gov/horizons/manual.html#dastcom): documentation and Fortran code
 - API documentation, e.g. for [HORIZONS](https://ssd-api.jpl.nasa.gov/doc/horizons_file.html)
+- (SPICE)[https://naif.jpl.nasa.gov/naif/] data
 
 Although some examples above are unlikely to ever change - or be very ephemeral (sic) - the reasoning is always: prevent rather than cure, and exercise a lot, until it becomes second nature. Just keep Murphy's Law in mind...
 
@@ -220,6 +221,8 @@ The vendor branch approach also works for users that want to keep track of other
 - https://github.com/brettlangdon/git-vendor
 - In the Stellarium project:
 	- https://github.com/Stellarium/stellarium/discussions/1856
+	- https://github.com/Stellarium/stellarium/pull/1906
+	- https://github.com/axd1967/stellarium/tree/contrib/docs/vendor-branching
 	- https://github.com/Stellarium/stellarium/wiki/Branching-Strategy (defunct but a copy exists)
 	- https://github.com/CelesTrak/fundamentals-of-astrodynamics/discussions/173
 - https://svnbook.red-bean.com/en/1.8/svn.advanced.vendorbr.html
