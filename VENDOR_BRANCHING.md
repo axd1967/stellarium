@@ -1,6 +1,6 @@
 # Vendor branching : importing external artifacts
 
-This file is WIP
+This file is WIP. The branch is slated for rebasing in the near future.
 
 *In short: if you import anything from outside Stellarium, be it code or data, do not bluntly copy-paste; don't just create a fork if not necessary. The following procedure looks daunting, but that is only appearance.*
 
