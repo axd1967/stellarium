@@ -262,6 +262,7 @@ The vendor branch approach also works for users that want to keep track of other
 
 ## See also
 - https://github.com/brettlangdon/git-vendor
+- https://github.com/cpm-cmake/CPM.cmake/discussions/720
 - In the Stellarium project:
 	- https://github.com/Stellarium/stellarium/discussions/1856
 	- https://github.com/Stellarium/stellarium/pull/1906
