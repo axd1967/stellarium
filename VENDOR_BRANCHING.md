@@ -2,7 +2,7 @@
 
 **This file is WIP.**
 
-*In short: if you import anything from outside Stellarium, be it code or data, do not bluntly copy-paste; don't just create a fork of the foreign artefacts if not necessary. The following procedure looks daunting, but that is only appearance.*
+*In short: if you import anything from outside Stellarium, be it code or data, do not bluntly copy-paste; don't just create a fork of the foreign artefacts if not necessary. For some applications, this is the recommended way to import artefacts. The following procedure looks daunting, but that is only appearance.*
 
 ## SHORT HOW-TO
 
@@ -122,6 +122,7 @@ Here are several existing artifacts that have been copy-pasted in Stellarium ove
 	- https://apollo.astro.amu.edu.pl/PAD/pmwiki.php?n=Dybol.JPLEph
 	- [Celestia](http://celestia.simulatorlabbs.com/CelSL/src/celephem/)
 - [SOFA sourcecode](https://www.iausofa.org/) (*Standards Of Fundamental Astronomy*), also mentioned in [Planet.cpp](https://github.com/Stellarium/stellarium/blob/ba80d33d4bc83d72fc15cca53f798cd9439482cf/src/core/modules/Planet.cpp#L1648).
+- [CPM.cmake](https://github.com/cpm-cmake/CPM.cmake) [cmake/modules/CPM.cmake)](cmake/modules/CPM.cmake)
 - tons of tools imported for the web version (https://github.com/Stellarium/stellarium-web-engine/tree/master/ext_src)
 
 Potential candidates for using vendor branching, other examples

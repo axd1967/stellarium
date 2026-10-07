@@ -75,6 +75,7 @@ include the following:
 - **User Guide**: a branch should also contain (and ideally, development should start with) at least a basic paragraph that describes new/modified functionality (see the SUG [README](https://github.com/Stellarium/stellarium/blob/master/guide/README.md)). The LaTex format is not difficult to edit, even without specialised editors. Changes in documentation could be considered as a contract that is to be fulfilled by the branch.
 
 - **Changelog**: add a line in the main changelog: "[x.y.z]+<branch>: comment". Upon integration, this changelog will contain the merged changelog lines of all contributed branches (and will be massaged by the maintainers)
+
 - **README**: add DONE/BUSY/TODO sections to track your work. Float the lines through those sections as the implementation progresses.
 
 Thanks!
