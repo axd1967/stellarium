@@ -2,7 +2,7 @@
 
 Stellarium uses [CPM](https://github.com/cpm-cmake/CPM.cmake) to automatically
 download several dependencies during build process, if they are missing from
-the target system. Follow that page for more details, but here's summary.
+the target system. Follow that page for more details, but here's a summary.
 
 ### Developer point of view
 
@@ -23,6 +23,10 @@ necessary, use `DOWNLOAD_ONLY YES` option, and use the files from
 alias for the library to match the name exported by `find_package(Foo)`, so
 that the rest of cmake config doesn't need to care whether the dependency was
 found locally, or downloaded automatically.
+
+### Vendor branching
+
+Sometimes you don't need the complexity of CPM
 
 ### Distributions / packaging point of view
 
