@@ -107,16 +107,16 @@ Here are several existing artifacts that have been copy-pasted in Stellarium ove
 
 - the [JSON parser](https://github.com/Stellarium/stellarium/blob/74b6264d6541f261840a771820262b884a905249/src/core/StelJsonParser.hpp#L28)
 - geonames data ([external changes](https://www.geonames.org/recent-changes.html)), stored in [Stellarium data repository](https://github.com/Stellarium/stellarium-data/tags)
-- [quasar data](https://github.com/Stellarium/stellarium/blob/master/plugins/Quasars/util/quasars.tsv)
+- [quasar data](plugins/Quasars/util/quasars.tsv)
 - Almagest data (minor fixes, of course - this is essentially frozen data)
 - HTC algorithms (Helene, Telesto, and Calypso (Lagrangian satellites of Dione) - taken from [IMCCE](ftp://ftp.imcce.fr/pub/ephem/satel/htc20/htc20.f) ? )
-- various libraries under [src/external](https://github.com/Stellarium/stellarium/tree/master/src/external):
-- the [gsatellite directory](https://github.com/Stellarium/stellarium/tree/master/plugins/Satellites/src/gsatellite) seems to contain a lot of external code that has been modified locally.
+- various libraries under [src/external](src/external):
+- the [gsatellite directory](plugins/Satellites/src/gsatellite) seems to contain a lot of external code that has been modified locally.
 - The SPG4 algorithm (see also [WP](https://en.wikipedia.org/wiki/Simplified_perturbations_models) updated 2020-03-12)
 	- used in the [satellite plugin](https://github.com/Stellarium/stellarium/blob/e75b00e6c249747c198fe0e2badd77a4adab9415/plugins/Satellites/src/Satellites.hpp#L56-L57) ). 
 	- It should be replaced by vendor dropped and then adapted  (See Vallado link above)
 	- Even minor changes should receive the vendor treatment: https://github.com/Stellarium/stellarium/blob/9910a2f05c52d4d9f351ff490c9bc4d99670df1f/plugins/Satellites/README#L61-L63
-- and, of course, how could we forget: the [various ephemeris algorithms](https://github.com/Stellarium/stellarium/commits/master/src/core/planetsephems) (examples are also `jpleph.cpp`, `elp82b.h`, `gust86.h`, `htc20b.c` and `vsop87.c`). Their true source is [JPL](https://ssd.jpl.nasa.gov/planets/eph_export.html) and VSOP ([FTP](ftp://ftp.imcce.fr/pub/ephem/planets/vsop87)). Some random googling shows that the problem exists elsewhere too (e.g. Celestia):
+- and, of course, how could we forget: the [various ephemeris algorithms](src/core/planetsephems) (examples are also `jpleph.cpp`, `elp82b.h`, `gust86.h`, `htc20b.c` and `vsop87.c`). Their true source is [JPL](https://ssd.jpl.nasa.gov/planets/eph_export.html) and VSOP ([FTP](ftp://ftp.imcce.fr/pub/ephem/planets/vsop87)). Some random googling shows that the problem exists elsewhere too (e.g. Celestia):
 	- https://github.com/Bill-Gray/jpl_eph/blob/master/jpleph.h
 	- [Stanford JSOC](http://jsoc.stanford.edu/cvs/JSOC/proj/timed/apps/Attic/jpleph.c?hidecvsroot=1&search=None&hideattic=1&sortby=rev&logsort=date&rev=1.1&content-type=text%2Fvnd.viewcvs-markup&diff_format=h)
 	- https://apollo.astro.amu.edu.pl/PAD/pmwiki.php?n=Dybol.JPLEph
