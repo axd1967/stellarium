@@ -44,7 +44,7 @@ We are very much open to applications and extensions into cultural astronomy as 
 However, we have no knowledge, motivation, or will, to extend Stellarium with purely astrological, religious or political material. 
 Any such requests will be rejected, and insistence will quickly lead to you being excluded. Don't waste our time!
 
-## Pull Requests (Contributing code)
+## Pull Requests (contributing code)
 So you're interested in contributing code to Stellarium? Excellent!
 
 Most contributions to Stellarium are done via pull requests from GitHub users'
@@ -62,19 +62,20 @@ include the following:
 - **Code**: the code you are adding, which should follow as much as possible
   our [coding guidelines](http://stellarium.org/doc/head/codingStyle.html).
 
+- **External artefacts**: when importing *anything* from the outside, do not copy-paste as such; instead, make sure to read and understand [VENDOR BRANCHING](VENDOR_BRANCHING.md).
+
 - **Tests**: these are usually tests to ensure that code that previously already
   worked now does not fail (regression tests) or tests that cover as much as possible
   of the new functionality to make sure it doesn't break in future, and also
   returns consistent results on all platforms (since we run these tests on many
   platforms/configurations). 
 
-- **Documentation**: if you are adding new functionality, be sure to include a 
-description in the main documentation (in ``docs/``) or doxygen description/comments 
-for code in the ``*.hpp`` files (commenting the code is extremely helpful for maintaining it years later!).
+- **Documentation**: if you are adding new functionality, be sure to include a description in the main documentation (in ``docs/``) or doxygen description/comments for code in the ``*.hpp`` files (commenting the code is extremely helpful for maintaining it years later!).
 
-- **User Guide**: a branch should also contain (and ideally, development should start with) at least a basic paragraph that describes new/modified functionality (see the SUG [README](https://github.com/Stellarium/stellarium/blob/master/guide/README.md)). The Tex format is not difficult to edit, even without specialised editors. Changes in documentation could be considered as a contract that is to be fulfilled by the branch.
+- **User Guide**: a branch should also contain (and ideally, development should start with) at least a basic paragraph that describes new/modified functionality (see the SUG [README](https://github.com/Stellarium/stellarium/blob/master/guide/README.md)). The LaTex format is not difficult to edit, even without specialised editors. Changes in documentation could be considered as a contract that is to be fulfilled by the branch.
 
-**Important**: when importing anything from the outside, make sure to read and understand [VENDOR BRANCHING](VENDOR_BRANCHING.md).
+- **Changelog**: add a line in the main changelog: "[x.y.z]+<branch>: comment". Upon integration, this changelog will contain the merged changelog lines of all contributed branches (and will be massaged by the maintainers)
+- **README**: add DONE/BUSY/TODO sections to track your work. Float the lines through those sections as the implementation progresses.
 
 Thanks!
 

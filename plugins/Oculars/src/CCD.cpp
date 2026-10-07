@@ -26,7 +26,7 @@
 
 #include <cmath>
 
-#define RADIAN_TO_DEGREES 57.2957795131
+#define RADIAN_TO_DEGREES (57.2957795131)
 
 CCD::CCD()
 	: m_resolutionX(4096)

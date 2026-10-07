@@ -2,7 +2,7 @@
 
 **This file is WIP.**
 
-*In short: if you import anything from outside Stellarium, be it code or data, do not bluntly copy-paste; don't just create a fork if not necessary. The following procedure looks daunting, but that is only appearance.*
+*In short: if you import anything from outside Stellarium, be it code or data, do not bluntly copy-paste; don't just create a fork of the foreign artefacts if not necessary. The following procedure looks daunting, but that is only appearance.*
 
 ## SHORT HOW-TO
 
@@ -11,43 +11,53 @@
 Follow these steps in order to import external artefacts.
 
 1. **create a vendor branch** to import the vendor (e.g. ``vendor/CELESTRAK``). If the vendor provides multiple products, create the needed subbranches. (e.g. ``vendor/CELESTRAK/SGP4``). The vendor directory can also reside inside a normal directory, such as e.g. [this directory](https://github.com/axd1967/stellarium/tree/b4343449a1d4e66dcc4c2a468dfa068282519687/plugins/Satellites/src/gsatellite).
-1. create a suitable **directory** tree (e.g. ``vendors/CELESTRAK``, plurial) that will hold the external vendor artefacts.
-1. unzip/copy/import/**explode**... the external data ito the vendor directory. This is called a *vendor drop*.
+1. create a suitable **vendor directory** tree (e.g. ``vendor/CELESTRAK``) that will hold the external vendor artefacts.
+1. unzip/copy/import/**explode**... the external data ito the (until now empty) vendor directory. This is called a *vendor drop*.
 1. Make sure that file/directory *names* do not contain version information as a kind of implicit versioning scheme. Rename when needed. (Example: ``geonames.2.3.tgz`` might untar into ``geonames-2.3/ ``)
-1. **Commit** the vendor branch. make sure to add the vendor version in the commit message
+1. **Commit** the vendor branch. make sure to add at least some information on the vendor version in the commit message
 
 	``git add -A && git commit``
 
 1. **Tag** the vendor branch, e.g. ``vendor/geonames/1.0``. If the vendor does not provide a clear version number, use the UTC date/time of the drop, formatted as ISO: ``vendor/geonames/2021-09-09T1200``
 1. **Switch** to your task branch
-1. **merge** the vendor branch
-1. Add and commit a ``VENDOR.txt`` file to ``vendor/CELESTRAK/`` that contains relevant **metadata** to help finding back the source: detailed source location data, and if needed, instructions how to find back the data. Avoid top-level (domain) adresses, try to make life easy for anyone wanting to update the data. Consider includingthe keyword "VENDOR" somewhere so that it can be found if needed.
-1. Do whatever is needed to **localise** the vendor artefacts (source code, data, ...) into your project. Often, source code will not run or compile completely. Sometimes, data needs to be transformed; include scripts to run these migrations, because future vendor drops might require them.
-1. **Integrate** your task branch into your main branch. Your project now contains folowing:
+1. **merge** the vendor branch. *Do not delete the vendor branch.*
+1. Add and commit a ``VENDOR.md`` file to ``vendor/CELESTRAK/`` that contains relevant **metadata** and instructions to help finding back the source. Avoid top-level (domain) adresses, try to make life easy for anyone wanting to update the data. Consider including the keyword "VENDOR" somewhere so that it can be grepped if needed.
+1. Do whatever is needed to **localise** the vendor artefacts (source code, data, ...) into your project. This must be done in your task branch, never in the vendor branch. Often, source code will not run or compile completely. Sometimes, data needs to be transformed; include scripts to run migrations/conversions, because future vendor drops might require them.
+1. Have your task branch **integrated** into your main branch. Your project now contains folowing:
 	- a new vendor directory
 	- a vendor branch
-	- optionally, modified code to make the vendor work seamlessly in your project
-Please note: do not delete the vendor branch as it will be needed for future vendor drops.
+	- optionally, modified vendor code to make the vendor work seamlessly in your project
 
 ### 2/ perform a **vendor drop**
- When the vendor publishes an update folowing these steps to ingest those changes.
+ When the vendor publishes an update, follow these steps to ingest those changes.
 
-1. **empty** the vendor folder
+*FIXME: markdown item numbering issues here, due to code blocks...*
 
-```
-		git ls-files -z | xargs -0 rm -f
-```
-	(see ``git help git-rm`` for details, search for "vendor".)
-1. replace/**explode**/unzip/untar/...
-
-4. Commit the vendor drop
+1: **Switch** to the vendor branch
 
 ```
-	git add -A && git commit
+git switch branch
 ```
+2: **empty** the vendor directory  
 
-5. **Tag** the vendor branch with a vendor tag (``vendor/<vendor name>/<vendor product>/<tag>``) where `<tag>` is either a tag available from the vendor, or otherwise the ISO date/time of the vendor drop.
-6. Merge the updated vendor branch to ``master`` (or, more probably, via an intermediate task/feature/bugfix branch, often in order to update local stuff). Run migration scripts if needed.
+```
+cd vendor directory
+git ls-files -z | xargs -0 rm -f
+```
+(see ``git help git-rm`` for details, search for "vendor".)  
+
+3: replace/**explode**/unzip/untar/...  
+
+4: **Commit** the vendor drop  
+
+```
+   git add -A
+   git commit
+```
+5: **Tag** the vendor branch with a vendor tag (``vendor/<vendor name>/<vendor product>/<tag>``) where `<tag>` is either a tag available from the vendor, or otherwise the ISO date/time of the vendor drop.
+
+6: Merge the updated vendor branch to ``master`` (or, more probably, via an intermediate task/feature/bugfix branch, often in order to update local stuff). Run migration scripts if needed.
+
 7. Deal with conflicts when needed. Such conflicts are expected to arise when the vendor changed something that was also changed locally, or when your project contributed to the vendor.
 
 This is also needed when the external data disappears: in that case, mention that the external data is no longer available to the public to avoid developers searching for it (or even worse, continue with a copy that still exists elsewhere!! Such a copy does not belong on the vendor branch).
@@ -74,7 +84,7 @@ It demonstrates
 - a vendor update (pending a real update)
 - a local modification (remove trailing whitespaces)
 
-To make a more clear eample how source code can move, we import ONLY the SGP4 from following two locations:
+To make a more clear example how source code can move, we import ONLY the SGP4 from following two locations:
 
 1. https://celestrak.org/publications/AIAA/2006-6753/AIAA-2006-6753.zip (Assuming it holds an older version)
 1. https://github.com/CelesTrak/fundamentals-of-astrodynamics/tree/main/software/cpp/SGP4/SGP4 (assuming this is the latest version; as there are no tags, we use a specific version)
@@ -111,7 +121,7 @@ Here are several existing artifacts that have been copy-pasted in Stellarium ove
 	- [Stanford JSOC](http://jsoc.stanford.edu/cvs/JSOC/proj/timed/apps/Attic/jpleph.c?hidecvsroot=1&search=None&hideattic=1&sortby=rev&logsort=date&rev=1.1&content-type=text%2Fvnd.viewcvs-markup&diff_format=h)
 	- https://apollo.astro.amu.edu.pl/PAD/pmwiki.php?n=Dybol.JPLEph
 	- [Celestia](http://celestia.simulatorlabbs.com/CelSL/src/celephem/)
-- [SOFA sourcecode](https://www.iausofa.org/) (*Standards Of Fundamental Astronomy*), also mentioned in [Planet.cpp](https://github.com/Stellarium/stellarium/blob/ba80d33d4bc83d72fc15cca53f798cd9439482cf/src/core/modules/Planet.cpp#L1648): see the [recent changes](https://www.iausofa.org/current.html) (especially the [C library](https://www.iausofa.org/current_C.html), and the [archive](https://www.iausofa.org/archive.html))
+- [SOFA sourcecode](https://www.iausofa.org/) (*Standards Of Fundamental Astronomy*), also mentioned in [Planet.cpp](https://github.com/Stellarium/stellarium/blob/ba80d33d4bc83d72fc15cca53f798cd9439482cf/src/core/modules/Planet.cpp#L1648).
 - tons of tools imported for the web version (https://github.com/Stellarium/stellarium-web-engine/tree/master/ext_src)
 
 Potential candidates for using vendor branching, other examples

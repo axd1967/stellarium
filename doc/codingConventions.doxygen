@@ -160,6 +160,13 @@ Use C++ replacement for C functions and %Qt replacements for C++ functions/STL w
 #define RADIUS 12 // Bad 
 static const int RADIUS = 12; // Good
  @endcode
+ - Use @c constexpr as much as possible: let the compiler compute other constants that actually are <b>related</b> to each other
+ @code
+ static constexpr
+ 	double SIMPLE_PI = 3.1415;
+	double TWO_SPI = 6.28; // Bad
+	double TWO_SIMPLE_PI = 2 * SIMPLE_PI; // Good
+ @endcode
  - Use stdc++ math functions instead of C ones. They're more portable and are also overridden for float, thus may be faster.
  @code
 double cosLat = cos(lat);     // Bad 
