@@ -142,6 +142,7 @@ Potential candidates for using vendor branching, other examples
 - API documentation, e.g. for [HORIZONS](https://ssd-api.jpl.nasa.gov/doc/horizons_file.html)
 - [SPICE](https://naif.jpl.nasa.gov/naif/) data
 - upcoming [OMM schema](https://spacedatastandards.org/#/schemas/OMM) (although this will be less trivial to deal with : TODO)
+- contributed scripts, see https://stellarium.org/scripts.html. These are very likely to change over time...
 
 Although some examples above are unlikely to ever change - or be very ephemeral (sic) - the reasoning is always: prevent rather than cure, and exercise a lot, until it becomes second nature. Just keep Murphy's Law in mind...
 
