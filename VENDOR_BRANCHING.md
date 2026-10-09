@@ -113,7 +113,10 @@ Usually references of some form are added to the source code, e.g. ftp, snail ma
 Here are several existing artifacts that have been copy-pasted in Stellarium over the years:
 
 - [CPM.cmake](https://github.com/cpm-cmake/CPM.cmake) [cmake/modules/CPM.cmake)](cmake/modules/CPM.cmake). This is a simple example where vendoring can further simplify things. For example, the history of [CPM.cmake](https://github.com/Stellarium/stellarium/commits/master/cmake/modules/CPM.cmake) is no more than a series of *manual* updates that can perfectly be done with successive vendor drops.
-- "stealing" code (see [this comment](https://github.com/Stellarium/stellarium/blob/e0750c36b5becfe8704424edb6fd40e5c51531af/ChangeLog#L1444))
+- copying code
+	- from [Celestia](https://github.com/Stellarium/stellarium/blob/e0750c36b5becfe8704424edb6fd40e5c51531af/ChangeLog#L1444) (TODO: find out which code that is)
+	- src/external/qtcompress/qzip.cpp (sic) is a copy from QtGui 2013 and which has been modified
+	- ... and (sic) copied themselve parts from [zlib](src/external/zlib)
 - the [JSON parser](https://github.com/Stellarium/stellarium/blob/74b6264d6541f261840a771820262b884a905249/src/core/StelJsonParser.hpp#L28)
 - geonames data ([external changes](https://www.geonames.org/recent-changes.html)), stored in [Stellarium data repository](https://github.com/Stellarium/stellarium-data/tags)
 - [quasar data](plugins/Quasars/util/quasars.tsv)
