@@ -227,3 +227,5 @@ QString errorMessage(q_("Loading failed."));
    - In <tt>.ui</tt> files, for every property that holds a user-visible string, there's a "disambiguation" sub-property that can be used to indicate the context. It will be extracted together with the message (see above).
    - The <tt>qc_()</tt> macro can be used in the cases when context needs to be handled in the code itself. It is analogous to the <tt>q_()</tt> macro, but with two parameters - the second parameter is the context string.
 */
+
+Finally, keep an eye on [Stellarium Codefactor](https://www.codefactor.io/repository/github/stellarium/stellarium/issues#)
