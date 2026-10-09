@@ -283,18 +283,18 @@ In such cases, the version information should be removed before committing the v
 
 ### Using data from other users
 
-The vendor branch approach also works for users that want to keep track of other user's configuration data or scripts while at the same time apply local changes. This works better for file formats that are easily merged because being insensitive to line numbers, such as YAML or - even better, but neither are supported by Qt - KVN; a bad example is the INI numbering format chosen in the [Ocular config files](https://github.com/Stellarium/stellarium/blob/ba80d33d4bc83d72fc15cca53f798cd9439482cf/plugins/Oculars/resources/default_ocular.ini).
+The vendor branch approach also works for users that want to keep track of other user's configuration data or scripts while at the same time apply local changes. This works better for file formats that are easily merged because being insensitive to line numbers, such as YAML or - even better, but neither are supported by Qt - KVN; a bad example is the INI numbering format (e.g. [Ocular config files](https://github.com/Stellarium/stellarium/blob/ba80d33d4bc83d72fc15cca53f798cd9439482cf/plugins/Oculars/resources/default_ocular.ini)).
 
 ## See also
-- https://github.com/brettlangdon/git-vendor
-- https://github.com/cpm-cmake/CPM.cmake/discussions/720
+- external discussions
+	- https://github.com/cpm-cmake/CPM.cmake/discussions/720
+	- https://github.com/CelesTrak/fundamentals-of-astrodynamics/discussions/173
 - In the Stellarium project:
 	- https://github.com/Stellarium/stellarium/discussions/1856
 	- https://github.com/Stellarium/stellarium/pull/1906
 	- https://github.com/axd1967/stellarium/tree/contrib/docs/vendor-branching
 	- https://github.com/Stellarium/stellarium/wiki/Branching-Strategy (defunct but a copy exists)
-	- https://github.com/CelesTrak/fundamentals-of-astrodynamics/discussions/173
-- https://svnbook.red-bean.com/en/1.8/svn.advanced.vendorbr.html
+- Where vendoring branches started (AFAIK): https://svnbook.red-bean.com/en/1.8/svn.advanced.vendorbr.html
 - https://blog.bigsmoke.us/2009/07/20/svn-vendor-branches
 - https://stackoverflow.com/questions/tagged/vendor-branch?sort=votes
 - https://en.wikipedia.org/wiki/Branching_%28version_control%29#Motivations_for_branching
@@ -302,6 +302,7 @@ The vendor branch approach also works for users that want to keep track of other
 - https://en.wikipedia.org/wiki/Copypasta#Technology
 - "*[copy-paste is evil](https://stackoverflow.com/questions/2490884/why-is-copy-and-paste-of-code-dangerous)*")
 - https://www.cisa.gov/resources-tools/resources/product-security-bad-practices: _"Cache copies of all open-source dependencies within the manufacturer’s own build systems and do not update products or customer systems directly from unverified public sources."_
+- to be evaluated: https://github.com/brettlangdon/git-vendor
 
 Think vendor branching is difficult? Eat [this](https://www.refontelearning.com/blog/tle-to-omm-six-digit-catalog-migration)!
 
