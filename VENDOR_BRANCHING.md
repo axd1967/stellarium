@@ -275,7 +275,7 @@ The basic idea is to create a vendor branch with the new artifact, and do some m
 
 ### Version information in vendor file/directory paths
 
-Sometimes, developers add directories/files with path names containing version information. An example is the FAQ file of [this landscape](http://www.alienbasecamp.com/Stellarium/sun.htm). 
+Sometimes, developers add directories/files with path names containing version information. An example is the FAQ file of [this landscape](http://www.alienbasecamp.com/Stellarium/sun.htm).
 
 This is a bad practice, usually done by developers that do not have access to a good VCS.
 
