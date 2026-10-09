@@ -2,11 +2,14 @@
 
 **This file is WIP.**
 
-*This file is huge due the the resistance against vendor branching. It should be cut in pieces.*
+*This file is huge due to the resistance against vendor branching. It should be cut in pieces.*
 
 *In short: if you import anything from outside Stellarium, be it code or data, do not bluntly copy-paste; don't just create a fork of the foreign artefacts if not necessary. For some applications, this is the recommended way to import artefacts. The following procedure looks daunting, but that is only appearance.*
 
 Artefacts can be source code, data files, PDF files, ...
+
+Artefacts that can be managed by package managers are not discussed here. The only inconvenience of package managers might be that local modifications might be more difficult to manage.
+
 
 ## SHORT HOW-TO
 
@@ -115,13 +118,13 @@ Here are several existing artifacts that have been copy-pasted in Stellarium ove
 - [quasar data](plugins/Quasars/util/quasars.tsv)
 - Almagest data (minor fixes, of course - this is essentially frozen data)
 - HTC algorithms (Helene, Telesto, and Calypso (Lagrangian satellites of Dione) - taken from [IMCCE](ftp://ftp.imcce.fr/pub/ephem/satel/htc20/htc20.f) ? )
-- various libraries under [src/external](src/external):
+- various libraries under [src/external](src/external)
 - the [gsatellite directory](plugins/Satellites/src/gsatellite) seems to contain a lot of external code that has been modified locally.
 - The SPG4 algorithm (see also [WP](https://en.wikipedia.org/wiki/Simplified_perturbations_models) updated 2020-03-12)
-	- used in the [satellite plugin](https://github.com/Stellarium/stellarium/blob/e75b00e6c249747c198fe0e2badd77a4adab9415/plugins/Satellites/src/Satellites.hpp#L56-L57) ). 
+	- used in the [satellite plugin](https://github.com/Stellarium/stellarium/blob/e75b00e6c249747c198fe0e2badd77a4adab9415/plugins/Satellites/src/Satellites.hpp#L56-L57).
 	- It should be replaced by vendor dropped and then adapted  (See Vallado link above)
 	- Even minor changes should receive the vendor treatment: https://github.com/Stellarium/stellarium/blob/9910a2f05c52d4d9f351ff490c9bc4d99670df1f/plugins/Satellites/README#L61-L63
-- and, of course, how could we forget: the [various ephemeris algorithms](src/core/planetsephems) (examples are also `jpleph.cpp`, `elp82b.h`, `gust86.h`, `htc20b.c` and `vsop87.c`). Their true source is [JPL](https://ssd.jpl.nasa.gov/planets/eph_export.html) and VSOP ([FTP](ftp://ftp.imcce.fr/pub/ephem/planets/vsop87)). Some random googling shows that the problem exists elsewhere too (e.g. Celestia):
+- and, of course, how could we forget: the [various ephemeris algorithms](src/core/planetsephems) (examples are also `jpleph.cpp`, `elp82b.h`, `gust86.h`, `htc20b.c` and `vsop87.c`). Their true source is [JPL](https://ssd.jpl.nasa.gov/planets/eph_export.html) and VSOP ([FTP](ftp://ftp.imcce.fr/pub/ephem/planets/vsop87)). Some random googling shows that this problem exists in other projects too (e.g. Celestia):
 	- https://github.com/Bill-Gray/jpl_eph/blob/master/jpleph.h
 	- [Stanford JSOC](http://jsoc.stanford.edu/cvs/JSOC/proj/timed/apps/Attic/jpleph.c?hidecvsroot=1&search=None&hideattic=1&sortby=rev&logsort=date&rev=1.1&content-type=text%2Fvnd.viewcvs-markup&diff_format=h)
 	- https://apollo.astro.amu.edu.pl/PAD/pmwiki.php?n=Dybol.JPLEph
@@ -179,6 +182,8 @@ The idea is to store the PDF in the vendor branch, then painfully (yes...) extra
 In such cases, as there are no tarballs to explode, do not empty the vendor directory, but manually update what changed.
 
 And then only merge to main/master/...
+
+Remember: anything that comes from the outside can change over time; to be prepared for those changes, vendor branches are the solution.
 
 ### coding style/conventions
 
