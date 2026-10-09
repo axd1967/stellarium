@@ -2,7 +2,11 @@
 
 **This file is WIP.**
 
+*This file is huge due the the resistance against vendor branching. It should be cut in pieces.*
+
 *In short: if you import anything from outside Stellarium, be it code or data, do not bluntly copy-paste; don't just create a fork of the foreign artefacts if not necessary. For some applications, this is the recommended way to import artefacts. The following procedure looks daunting, but that is only appearance.*
+
+Artefacts can be source code, data files, PDF files, ...
 
 ## SHORT HOW-TO
 
@@ -21,7 +25,7 @@ Follow these steps in order to import external artefacts.
 1. **Tag** the vendor branch, e.g. ``vendor/geonames/1.0``. If the vendor does not provide a clear version number, use the UTC date/time of the drop, formatted as ISO: ``vendor/geonames/2021-09-09T1200``
 1. **Switch** to your task branch
 1. **merge** the vendor branch. *Do not delete the vendor branch.*
-1. Add and commit a ``VENDOR.md`` file to ``vendor/CELESTRAK/`` that contains relevant **metadata** and instructions to help finding back the source. Avoid top-level (domain) adresses, try to make life easy for anyone wanting to update the data. Consider including the keyword "VENDOR" somewhere so that it can be grepped if needed.
+1. Add and commit a ``VENDOR.md`` file to ``vendor/CELESTRAK/`` that contains relevant **metadata** and instructions to help finding back the source. Avoid top-level (domain) adresses, try to make life easy for anyone wanting to update the data. Consider including the keyword "VENDOR" somewhere so that it can be grepped if needed. Make sure to include any PDF or comparable document that documents the vendor artefact, as well as where that PDF,data file, ... can be found.
 1. Do whatever is needed to **localise** the vendor artefacts (source code, data, ...) into your project. This must be done in your task branch, never in the vendor branch. Often, source code will not run or compile completely. Sometimes, data needs to be transformed; include scripts to run migrations/conversions, because future vendor drops might require them.
 1. Have your task branch **integrated** into your main branch. Your project now contains folowing:
 	- a new vendor directory
@@ -105,6 +109,7 @@ Usually references of some form are added to the source code, e.g. ftp, snail ma
 
 Here are several existing artifacts that have been copy-pasted in Stellarium over the years:
 
+- [CPM.cmake](https://github.com/cpm-cmake/CPM.cmake) [cmake/modules/CPM.cmake)](cmake/modules/CPM.cmake). This is a simple example where vendoring can further simplify things. For example, the history of [CPM.cmake](https://github.com/Stellarium/stellarium/commits/master/cmake/modules/CPM.cmake) is no more than a series of *manual* updates that can perfectly be done with successive vendor drops.
 - the [JSON parser](https://github.com/Stellarium/stellarium/blob/74b6264d6541f261840a771820262b884a905249/src/core/StelJsonParser.hpp#L28)
 - geonames data ([external changes](https://www.geonames.org/recent-changes.html)), stored in [Stellarium data repository](https://github.com/Stellarium/stellarium-data/tags)
 - [quasar data](plugins/Quasars/util/quasars.tsv)
@@ -122,7 +127,6 @@ Here are several existing artifacts that have been copy-pasted in Stellarium ove
 	- https://apollo.astro.amu.edu.pl/PAD/pmwiki.php?n=Dybol.JPLEph
 	- [Celestia](http://celestia.simulatorlabbs.com/CelSL/src/celephem/)
 - [SOFA sourcecode](https://www.iausofa.org/) (*Standards Of Fundamental Astronomy*), also mentioned in [Planet.cpp](https://github.com/Stellarium/stellarium/blob/ba80d33d4bc83d72fc15cca53f798cd9439482cf/src/core/modules/Planet.cpp#L1648).
-- [CPM.cmake](https://github.com/cpm-cmake/CPM.cmake) [cmake/modules/CPM.cmake)](cmake/modules/CPM.cmake)
 - tons of tools imported for the web version (https://github.com/Stellarium/stellarium-web-engine/tree/master/ext_src)
 
 Potential candidates for using vendor branching, other examples
@@ -160,6 +164,21 @@ Importing external artefacts in vendor branches will also provide insight in wha
 Sometimes, conversion routines need to be written or updated so that external data fits with the project. These routines do not belong in the vendor branch, but in the project itself.
 
 ## Notes
+
+### what about `git submodules` and `git subtree`?
+These do not provide the flexibility of vendor branching.
+To expand further.
+
+### what if external data is not available as text files
+Sometimes, artefacts are not available as ready to ingest source code. But as a Stack Overflow discussion. An email. A PDF that contains (parts of) source code.
+
+Such artefacts cannot magically be turned into source code.
+
+The idea is to store the PDF in the vendor branch, then painfully (yes...) extract the code into the vendor branch. And/or ask the author to please provide a git repo, a file, archive, ...
+
+In such cases, as there are no tarballs to explode, do not empty the vendor directory, but manually update what changed.
+
+And then only merge to main/master/...
 
 ### coding style/conventions
 
