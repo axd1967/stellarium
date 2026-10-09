@@ -2,7 +2,7 @@
 
 **This file is WIP.**
 
-*This file is huge due to the resistance against vendor branching. It should be cut in pieces.*
+*This file is huge due to the resistance against vendor branching. It should be cut in pieces and moved to the wiki.*
 
 *In short: if you import anything from outside Stellarium, be it code or data, do not bluntly copy-paste; don't just create a fork of the foreign artefacts if not necessary. For some applications, this is the recommended way to import artefacts. The following procedure looks daunting, but that is only appearance.*
 
