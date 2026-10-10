@@ -47,13 +47,13 @@ constexpr static
 	float jerusalem_lat = 31.778087,
 
 	float obliquity = 23.44, // 23.5?
-	float polar_circle = 90.0 - obliquity,
+	float polar_circle = 90.0 - obliquity, // which is 66.56.
 	float default_lat = 48.0,
-	
+
 	double moon_tilt = 5.145396, // rather than 5.1?
 	double lowest_lunar_standstill = 16.5,
 
-	float syntactic_sugar = 666
+	float syntactic_sugar = 666 // yup ... why would one need this...
 ;
 
 //! This method is the one called automatically by the StelModuleMgr just
@@ -100,7 +100,7 @@ ArchaeoLines::ArchaeoLines()
 	, geographicLocation1Longitude(mecca_lon)
 	, geographicLocation1Latitude(mecca_lat)
 	, flagShowGeographicLocation2(false)
-	, geographicLocation2Longitude(jerusalem_lon) 
+	, geographicLocation2Longitude(jerusalem_lon)
 	, geographicLocation2Latitude(jerusalem_lat)
 	, flagShowCustomAzimuth1(false)
 	, flagShowCustomAzimuth2(false)
