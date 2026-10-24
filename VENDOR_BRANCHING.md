@@ -1,16 +1,18 @@
 # Vendor branching : importing external artifacts
 
-**This file is WIP.**
+**This project is WIP.**
 
 *This file is huge due to the resistance against vendor branching. It should be cut in pieces and moved to the wiki.*
 
-*In short: copy-pasting artefacts is a seemingly easy way to get things imported in a project. The problem is the maintainance effort that will follow after you. Do not assume the data will never change any more (be it inside your project or externally). Instead, every time you import anything from outside Stellarium, be it code or data, ***do not bluntly copy-paste***; don't just create a "fork" of foreign artefacts unless there really is no other way. Following describes the recommended way to import such external artefacts. The procedure looks daunting, but that is only appearance.*
+*In short: copy-pasting artefacts is a seemingly easy way to get things imported in a project. The problem is the maintainance effort that will follow after you. Do not assume the data is "written in stone" and will never change any more (be it inside your project or externally). Instead, every time you import anything from outside Stellarium, be it code or data, ***do not bluntly copy-paste***; don't just create a "fork" of foreign artefacts unless there really is no other way. Following describes the recommended way to import such external artefacts. The procedure looks daunting, but that is only appearance.*
 
 Artefacts can be source code, data files, PDF files, ...
 
 Artefacts that can be managed by package managers are not discussed here. An inconvenience of package managers might be that local modifications might be more difficult to manage. This is precisely what vendor branching has been designed for.
 
-If you don't know about vendor branching, skip following section and go straight to the "Discussion" section 
+Some artefacts are not available as text but in binary formats (eg [Yale Bright Star Catalog](http://tdc-www.harvard.edu/catalogs/catalogsb.html)). Binary artefacts cannot be merged normally and therefore need to be converted first to text (and then put in the vendor branch) before local changes can be applied (after the merge to the local branch).
+
+If you don't know about vendor branching, skip following section and go straight to the "Discussion" section.
 
 
 ## SHORT HOW-TO
@@ -102,7 +104,7 @@ To make a more clear example how source code can move, we import ONLY the SGP4 f
 
 Stellarium is constantly benefiting from open source artifacts and being enriched with text/data/source files that are **copy-pasted** from places outside Stellarium.
 
-The basic problem with copy-pasting of external artifacts is **code (or data) rot and local adaptations**. More in detail, **external changes** will not magically appear in Stellarium. But they *might* be updated outside of Stellarium. *And often do.*
+The basic problem with copy-pasting of external artifacts is **code (or data) rot and local adaptations**. More in detail, **external changes** will not magically appear in Stellarium. But they *might* be updated outside of Stellarium. *And often do.* Unless they are written in stone.
 
 Sometimes this can be solved by using package managers that automate the importing and updating of external "stuff" (typically code) and - important - allow to fine tune which version is to be imported; Python's `pip -e` is a great example of this. But package managers do not allow to modify the imported code out of the box *and* benefit from external updates. Also, package managers are not always the easiest way to deal with vendors, sometimes due to a lack of experience of contributing C++ developers. **Vendor branching is far easier to work with** than configuring package managers, as all the required knowledge resides in how to deal with branching. For example, read the root [MAINTAINER_BUSINESS.md](MAINTAINER_BUSINESS.md); notice that the proposed approach becomes complicated when changes need to be made.
 
@@ -124,12 +126,12 @@ Here are several existing artifacts that (still) get copy-pasted in Stellarium:
 - Almagest data (minor fixes, of course - this is essentially frozen data)
 - HTC algorithms (Helene, Telesto, and Calypso (Lagrangian satellites of Dione) - taken from [IMCCE](ftp://ftp.imcce.fr/pub/ephem/satel/htc20/htc20.f) ? )
 - various libraries under [src/external](src/external)
-- The SPG4 algorithm (see also [WP](https://en.wikipedia.org/wiki/Simplified_perturbations_models) updated 2020-03-12)
+- The SPG4 library (see also [WP](https://en.wikipedia.org/wiki/Simplified_perturbations_models) updated 2020-03-12)
 	- the [gsatellite directory](plugins/Satellites/src/gsatellite) seems to contain a lot of external code that has been modified locally.
 	- used in the [satellite plugin](https://github.com/Stellarium/stellarium/blob/e75b00e6c249747c198fe0e2badd77a4adab9415/plugins/Satellites/src/Satellites.hpp#L56-L57).
 	- It should be replaced by vendor dropped and then adapted  (See Vallado link above)
 	- Even minor changes should receive the vendor treatment: https://github.com/Stellarium/stellarium/blob/9910a2f05c52d4d9f351ff490c9bc4d99670df1f/plugins/Satellites/README#L61-L63
-- and, of course, how could we forget: the [various ephemeris algorithms](src/core/planetsephems) (examples are also `jpleph.cpp`, `elp82b.h`, `gust86.h`, `htc20b.c` and `vsop87.c`). Their true source is [JPL](https://ssd.jpl.nasa.gov/planets/eph_export.html) and VSOP ([FTP](ftp://ftp.imcce.fr/pub/ephem/planets/vsop87)). 
+- and, of course, how could we forget: the [various ephemeris algorithms](src/core/planetsephems) (examples are also `jpleph.cpp`, `elp82b.h`, `gust86.h`, `htc20b.c` and `vsop87.c`). Their true source is [JPL](https://ssd.jpl.nasa.gov/planets/eph_export.html) and VSOP ([FTP](ftp://ftp.imcce.fr/pub/ephem/planets/vsop87)).
 - [SOFA sourcecode](https://www.iausofa.org/) (*Standards Of Fundamental Astronomy*), also mentioned in [Planet.cpp](https://github.com/Stellarium/stellarium/blob/ba80d33d4bc83d72fc15cca53f798cd9439482cf/src/core/modules/Planet.cpp#L1648).
 - tons of tools imported for the web version (https://github.com/Stellarium/stellarium-web-engine/tree/master/ext_src)
 
@@ -147,6 +149,9 @@ Potential candidates for using vendor branching, other examples
 
 Some random googling shows that this problem exists in other projects too (e.g. Celestia):
 
+- star catalogs are being corrected after publication (even if they are unlikely to be updated from within Stellarium, so an update might be no more than a basic copy-paste...):
+	- [Gaia DR3](stars/hip_gaia3/) (see the [release notes](https://www.cosmos.esa.int/web/gaia-users/archive/release-notes), look for "VERSION 3.2.1 [2023-02-07]")
+	- JWST Star Catalog ([documentation](https://jwst-docs.stsci.edu/jwst-observatory-characteristics/jwst-pointing-performance/jwst-guide-stars/jwst-guide-star-catalog-updates))
 - [Celestia](http://celestia.simulatorlabbs.com/CelSL/src/celephem/)
 - QtQui contains (sic) copied `parts from [zlib](src/external/zlib) (which is also copied into Stellarium...)
 - https://github.com/Bill-Gray/jpl_eph/blob/master/jpleph.h
