@@ -1,3 +1,6 @@
+various places that need some DRY/WET refacgtoring
+See also https://github.com/Stellarium/stellarium/issues/2932
+
 26.1 [2026-04-05]
 Glad to announce the release of Stellarium 26.1 for all platforms. 
 This is our first release in 2026 with exciting features and many 
