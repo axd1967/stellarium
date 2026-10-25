@@ -320,6 +320,7 @@ struct Star
       {
          data_epoch = STAR_CATALOG_JDEPOCH;  // by default assume the date is the same as the catalog epoch
       }
+      // universal const -> StelUtils.hpp ?
       const double G = 4.49850215e-15;  // Gravitational constant in parsec^3 / (M_sun * yr^2)
 
       double dyrs = (epoch - data_epoch) / 365.25;

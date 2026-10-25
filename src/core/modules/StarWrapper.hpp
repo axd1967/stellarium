@@ -463,7 +463,7 @@ protected:
 		{
 			map.insert("parallax", 0.001*s->getPlx());
 			map.insert("absolute-mag", getVMagnitude(core)+5.f*(std::log10(0.001*s->getPlx())));
-			map.insert("distance-ly", (AU/(SPEED_OF_LIGHT*86400*365.25)) / (s->getPlx()*((0.001/3600)*(M_PI/180))));
+			map.insert("distance-ly", (AU/(SPEED_OF_LIGHT*86400*365.25)) / (s->getPlx()*((0.001/3600)*(M_PI/180 /**/))));
 		}
 
 		if (vPeriod>0)

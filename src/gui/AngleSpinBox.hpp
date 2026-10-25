@@ -103,23 +103,23 @@ public:
 	//! Set the minimum value.
 	//! @param min the new minimum value
 	//! @param isDegrees true if the new minimum value is given in degrees, else min is understood as radians.
-	void setMinimum(const double min, const bool isDegrees=false) {minRad = min * (isDegrees? M_PI/180.0 : 1.); }
+	void setMinimum(const double min, const bool isDegrees=false) {minRad = min * (isDegrees? M_PI/180.0 /**/ : 1.); }
 	//! Get the minimum value.
 	//! @return the current minimum value
 	//! @param isDegrees true if the minimum value is required in degrees, else min is returned as radians.
-	double getMinimum(const bool isDegrees) const { return minRad * (isDegrees ? 180.0/M_PI : 1.0); }
+	double getMinimum(const bool isDegrees) const { return minRad * (isDegrees ? 180.0/M_PI /**/ : 1.0); }
 
 	//! Set the maximum value.
 	//! @param max the new maximum value
 	//! @param isDegrees true if the new maximum value is given in degrees, else max is understood as radians.
-	void setMaximum(const double max, const bool isDegrees=false) {maxRad = max * (isDegrees? M_PI/180.0 : 1.); }
+	void setMaximum(const double max, const bool isDegrees=false) {maxRad = max * (isDegrees? M_PI/180.0 /**/ : 1.); }
 	//! Get the maximum value.
 	//! @return the current maximum value
 	//! @param isDegrees true if the maximum value is required in degrees, else max is returned as radians.
-	double getMaximum(const bool isDegrees) const { return maxRad * (isDegrees ? 180.0/M_PI : 1.0); }
+	double getMaximum(const bool isDegrees) const { return maxRad * (isDegrees ? 180.0/M_PI /**/ : 1.0); }
 
 	QSize minimumSizeHint() const override;
-	
+
 public slots:
 	//! Set the value to default 0 angle.
 	void clear() override;

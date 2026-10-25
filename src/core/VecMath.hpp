@@ -277,7 +277,7 @@ public:
 	//! Compact comma-separated string without brackets and spaces.
 	//! The result can be restored into a Vector3 by the Vector3(QString s) constructors.
 	QString toStr() const;
-	inline QString toStringLonLat() const {return QString("[") + QString::number(longitude()*180./M_PI, 'g', 12) + "," + QString::number(latitude()*180./M_PI, 'g', 12)+"]";}
+	inline QString toStringLonLat() const {return QString("[") + QString::number(longitude()*180./M_PI /**/, 'g', 12) + "," + QString::number(latitude()*180./M_PI, 'g', 12)+"]";}
 	//! Convert a Vec3i/Vec3f/Vec3d to HTML color notation. In case of Vec3i, components are 0...255, else 0...1
 	QString toHtmlColor() const;
 	//! Convert to a QColor.

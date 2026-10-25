@@ -24,8 +24,8 @@
 #include <QPair>
 #include <QJsonArray>
 
-constexpr double D2R = M_PI / 180.0;
-constexpr double R2D = 180.0 / M_PI;
+constexpr double D2R = M_PI / 180.0; // already  exists in StelUtils.hpp
+constexpr double R2D = 180.0 / M_PI; //
 
 class SkyCoords
 {

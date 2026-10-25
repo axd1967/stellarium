@@ -138,7 +138,7 @@ public:
 	// Get orbital inclination in degrees
 	double getInclination() const
 	{
-		return satrec.inclo*180./M_PI;
+		return satrec.inclo*180./M_PI; //
 	}
 
 	Vec2d getPerigeeApogee() const

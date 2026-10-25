@@ -52,6 +52,7 @@
 // julian year in seconds that is 365.25 * 86400.
 #define JYEAR_SECONDS 31557600.0
 
+// good examples of DRY / WET!
 // Add a few frequently used extra math-type literals
 #ifndef M_PI_180
 	#define M_PI_180    (M_PI/180.)

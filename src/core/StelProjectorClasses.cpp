@@ -571,7 +571,7 @@ bool StelProjectorMollweide::forward(Vec3f &v) const
     }
 
     const float cosTheta = cos(theta);
-    v[0] = (2.0f * M_SQRT2 / M_PIf) * lambda * cosTheta * widthStretch;
+    v[0] = (2.0f * M_SQRT2 / M_PI) * lambda * cosTheta * widthStretch;
     v[1] = M_SQRT2 * sin(theta);
     v[2] = r;
     return true;
@@ -654,6 +654,9 @@ QByteArray StelProjectorMollweide::getBackwardTransformShader() const
 uniform float PROJECTOR_FWD_widthStretch;
 vec3 projectorBackwardTransform(vec3 v, out bool ok)
 {
+    const float M_SQRT2 = 1.41421356;
+    const float PI = 3.14159265;
+
     float widthStretch = PROJECTOR_FWD_widthStretch;
     v[0] /= widthStretch;
     float x = v[0];
@@ -661,8 +664,8 @@ vec3 projectorBackwardTransform(vec3 v, out bool ok)
 
     ok = (x*x + 4.0*y*y <= 8.0);
 
-    float y_clamped = clamp(y, -1.41421356, 1.41421356);
-    float theta = asin(y_clamped / 1.41421356);
+    float y_clamped = clamp(y, -M_SQRT2, M_SQRT2);
+    float theta = asin(y_clamped / M_SQRT2);
 
     float cosTheta = cos(theta);
 
@@ -673,10 +676,10 @@ vec3 projectorBackwardTransform(vec3 v, out bool ok)
         lambda = 0.0; // arbitrary value when at poles
     } else
     {
-        lambda = (x * 3.14159265) / (2.0 * 1.41421356 * cosTheta);
+        lambda = (x * PI) / (2.0 * M_SQRT2 * cosTheta);
     }
 
-    float sinDelta = (2.0*theta + sin(2.0*theta)) / 3.14159265;
+    float sinDelta = (2.0*theta + sin(2.0*theta)) / PI;
     float delta = asin(sinDelta);
 
     float cosDelta = cos(delta);
