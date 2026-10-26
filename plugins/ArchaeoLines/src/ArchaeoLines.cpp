@@ -48,15 +48,11 @@ constexpr static float
 
 	obliquity = EPS_0, //23.44, // 23.5?
 	polar_circle = 90.0 - obliquity, // which is 66.56.
-	default_lat = 45.0,
+	default_lat = 45.0;
 
 constexpr static double
 	moon_tilt = 5.145396, // rather than 5.1?
-	lowest_lunar_standstill = 16.5,
-
-constexpr static auto
-	syntactic_sugar = 666 // yup ... why would one need this...
-;
+	lowest_lunar_standstill = 16.5;
 
 //! This method is the one called automatically by the StelModuleMgr just
 //! after loading the dynamic library
