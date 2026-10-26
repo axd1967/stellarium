@@ -40,20 +40,22 @@
 #include <cmath>
 #include <stdexcept>
 
-constexpr static
-	float mecca_lon = 39.826175,
-	float mecca_lat = 21.422476,
-	float jerusalem_lon = 35.235774,
-	float jerusalem_lat = 31.778087,
+constexpr static float
+	mecca_lon = 39.826175,
+	mecca_lat = 21.422476,
+	jerusalem_lon = 35.235774,
+	jerusalem_lat = 31.778087,
 
-	float obliquity = 23.44, // 23.5?
-	float polar_circle = 90.0 - obliquity, // which is 66.56.
-	float default_lat = 48.0,
+	obliquity = EPS_0, //23.44, // 23.5?
+	polar_circle = 90.0 - obliquity, // which is 66.56.
+	default_lat = 45.0,
 
-	double moon_tilt = 5.145396, // rather than 5.1?
-	double lowest_lunar_standstill = 16.5,
+constexpr static double
+	moon_tilt = 5.145396, // rather than 5.1?
+	lowest_lunar_standstill = 16.5,
 
-	float syntactic_sugar = 666 // yup ... why would one need this...
+constexpr static auto
+	syntactic_sugar = 666 // yup ... why would one need this...
 ;
 
 //! This method is the one called automatically by the StelModuleMgr just

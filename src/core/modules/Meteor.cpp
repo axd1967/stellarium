@@ -27,8 +27,11 @@
 
 #include <QtMath>
 
-#define MAX_ALTITUDE 120.f           //! max meteor altitude in km
-#define MIN_ALTITUDE 80.f            //! min meteor altitude in km
+static constexpr float
+	max_altitude_km = 120,
+	min_altitude_km = 80,
+	max_slant_range_km = sqrt(sqr(EARTH_RADIUS + max_altitude_km) - sqr(EARTH_RADIUS)),
+	_unused = 0;
 
 Meteor::Meteor(const StelCore* core, const StelTextureSP& bolideTexture)
 	: m_core(core)
@@ -75,8 +78,8 @@ void Meteor::init(const float& radiantAlpha, const float& radiantDelta,
 	// rotation matrix to align z axis with radiant
 	m_matAltAzToRadiant = Mat4d::zrotation(static_cast<double>(radiantAz)) * Mat4d::yrotation(M_PI_2 - static_cast<double>(radiantAlt));
 
-	// select a random initial meteor altitude in the horizontal system [MIN_ALTITUDE, MAX_ALTITUDE]
-	float initialAlt = MIN_ALTITUDE + (MAX_ALTITUDE - MIN_ALTITUDE) * StelApp::getInstance().getRandF();
+	// select a random initial meteor altitude in the horizontal system [min_altitude_km, max_altitude_km]
+	float initialAlt = min_altitude_km + (max_altitude_km - min_altitude_km) * StelApp::getInstance().getRandF();
 	// calculates the max z-coordinate for the current radiant
 	float maxZ = meteorZ(M_PI_2f - radiantAlt, initialAlt);
 
@@ -104,13 +107,13 @@ void Meteor::init(const float& radiantAlpha, const float& radiantDelta,
 
 	// this meteor should not be visible if it is above the maximum altitude
 	// or if it's below the horizon!
-	if (positionAltAz[2] > static_cast<double>(MAX_ALTITUDE) || meteorAlt <= 0.f)
+	if (positionAltAz[2] > static_cast<double>(max_altitude_km) || meteorAlt <= 0.f)
 	{
 		return;
 	}
 
 	// determine the final z-component and the min distance between meteor and observer
-	if (radiantAlt < 0.0262f) // (<1.5 degrees) earth grazing meteor ?
+	if (radiantAlt < 0.0262f) // M_PI/180*1.5 (<1.5 degrees) earth grazing meteor ?
 	{
 		// earth-grazers are rare!
 		// introduce a probabilistic factor just to make them a bit harder to occur
@@ -128,14 +131,14 @@ void Meteor::init(const float& radiantAlpha, const float& radiantDelta,
 	else
 	{
 		// limit lifetime to 12sec
-		m_finalZ = meteorZ(M_PI_2f - meteorAlt, MIN_ALTITUDE);
+		m_finalZ = meteorZ(M_PI_2f - meteorAlt, min_altitude_km);
 		m_finalZ = qMax(static_cast<float>(m_position[2]) - static_cast<float>(m_speed) * 12.0f, m_finalZ);
 
 		m_minDist = sqrt(m_finalZ * m_finalZ + xyDist * xyDist);
 	}
 
 	// a meteor cannot hit the observer!
-	if (m_minDist < MIN_ALTITUDE) {
+	if (m_minDist < min_altitude_km) {
 		return;
 	}
 
@@ -293,10 +296,10 @@ float Meteor::meteorZ(float zenithAngle, float altitude)
 {
 	float distance;
 
-	if (zenithAngle > 1.13446401f) // > 65 degrees?
+	if (zenithAngle > 1.13446401f) // M_PI/180*65 > 65 degrees?
 	{
 		const float zcos = cos(zenithAngle);
-        constexpr auto R = static_cast<float>(EARTH_RADIUS);
+		constexpr auto R = static_cast<float>(EARTH_RADIUS);
 		distance = sqrt(pow(R * zcos, 2) + 2 * R * altitude + pow(altitude, 2));
 		distance -= R * zcos;
 	}
@@ -312,7 +315,7 @@ float Meteor::meteorZ(float zenithAngle, float altitude)
 Vec3d Meteor::altAzToRadiant(Vec3d position)
 {
 	position.transfo4d(m_matAltAzToRadiant.transpose());
-	position *= 1242;
+	position *= 1242; // magic. this is probaly max_slant_range, the max slant range at 120k alt: sqrt( sqr(EARTH_RADIUS+max_altitude_km) -sqr(EARTH_RADIUS))
 	return position;
 }
 
