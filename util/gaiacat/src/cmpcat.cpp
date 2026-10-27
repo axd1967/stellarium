@@ -259,7 +259,9 @@ static void writeOnlyA(const std::unordered_map<uint64_t, PhysStar>& map_a,
 
 static void printSummary(const CompareResult& result)
 {
-	std::cout << "\nOnly in A:        " << result.only_a << "\n";
+	// note the subtle indentation?
+	std::cout << "\n";
+	std::cout << "Only in A:        " << result.only_a << "\n";
 	std::cout << "  (no BV):         " << result.only_a_no_bv << "\n";
 	std::cout << "Only in B:        " << result.only_b << "\n";
 	std::cout << "  (no BV):         " << result.only_b_no_bv << "\n";

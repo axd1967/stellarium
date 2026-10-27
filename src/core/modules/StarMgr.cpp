@@ -67,8 +67,8 @@ Q_GLOBAL_STATIC(QStringList, component_array);
 Q_GLOBAL_STATIC(QStringList, objtype_array);
 
 // This number must be incremented each time the content or file format of the stars catalogs change
-// It can also be incremented when the defaultStarsConfig.json file change.
-// It should always match the version field of the defaultStarsConfig.json file
+// It can also be incremented when the default starsConfig.json file change.
+// It should always match the version field of the default starsConfig.json file
 static const int StarCatalogFormatVersion = 27;
 
 // Initialise statics
@@ -1493,7 +1493,7 @@ QList<StelObjectP > StarMgr::searchAround(const Vec3d& vv, double limFov, const 
 	}
 
 	// Iterate over the stars inside the region.
-	double f = cos(limFov * M_PI/180.);
+	double f = cos(limFov * M_PI_180.);
 	for (auto* z : gridLevels)
 	{
 		//qDebug() << "search inside(" << it->first << "):";
@@ -1657,7 +1657,7 @@ StelObjectP StarMgr::searchGaia(StarId source_id) const
 	const int maxSearchLevel = maxGeodesicGridLevel;
 	int matched = 0;
 	// get the level 12 HEALPix index of the source
-	int lv12_pix = source_id / 34359738368;
+	int lv12_pix = source_id / 1<<35; // the magic divisor used to extract the Level 12 HEALPix index from a ESA Gaia source_id
 	Vec3d v;
 	StelObjectP so;
 	healpix_pix2vec(int(pow(2., 12.)), lv12_pix, v.v);  // search which pixel the source is in and turn to coordinates

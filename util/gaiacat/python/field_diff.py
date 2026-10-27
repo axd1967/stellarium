@@ -14,6 +14,7 @@ import re
 from collections import defaultdict
 import pandas as pd
 
+######### ?? these probably need to be turned into relative paths?
 OFFICIAL = r"C:\Users\13308\CLionProjects\stellarium\stars\hip_gaia3"
 OURS = r"F:\gaiahip2cat_out"
 SIMBAD = r"C:\Users\13308\CLionProjects\stellarium_star_catalogs\simbad_query_results\hip_processed_with_binary.dat"

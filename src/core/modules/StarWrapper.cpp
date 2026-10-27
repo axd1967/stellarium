@@ -54,7 +54,7 @@ QString StarWrapperBase::getInfoString(const StelCore *core, const InfoStringGro
 
 	if (flags&Extra)
 		oss << (hasBV() ? getB_VInfoString(getBV()) : getB_VMissingInfoString()) << "<br />";
-	
+
 	oss << getCommonInfoString(core, flags);
 	oss << getSolarLunarInfoString(core, flags);
 
@@ -601,7 +601,7 @@ QString StarWrapper2::getInfoString(const StelCore *core, const InfoStringGroup&
 		oss << (hasBV() ? getB_VInfoString(getBV()) : getB_VMissingInfoString());
 		oss << getVariabilityRangeInfoString(core, flags);
 	}
-	
+
 	oss << getCommonInfoString(core, flags);
 
 	oss << getDistanceInfoString(core, flags, Plx, PlxErr);
@@ -800,7 +800,7 @@ QString StarWrapper3::getNarration(const StelCore *core, const InfoStringGroup& 
 		if (hasBV()) oss << getB_VNarration(getBV()) << ". ";
 		oss << getVariabilityRangeNarration(core, flags);
 	}
-	
+
 	oss << getCommonNarration(core, flags);
 
 	if (flags&Extra) // Spectral Type, period

@@ -151,7 +151,7 @@ static bool searchGaiaInZones(SpecialZoneArray<Star2>* cat, StarId gid,
 static int runPhase2(SpecialZoneArray<Star2>* cat, StelGeodesicGrid* grid,
 		     int level, int maxSearchLevel, StarId gid)
 {
-	int hp = static_cast<int>(gid / 34359738368ULL);
+	int hp = static_cast<int>(gid / 34359738368ULL); // 2^35
 	Vec3d v;
 	healpix_pix2vec(static_cast<int>(std::pow(2., 12.)), hp, v.v);
 	// HEALPix Level 12 pixel center-to-corner distance is about 50" on sky.
@@ -239,13 +239,13 @@ static void analyzeOneStar(SpecialZoneArray<Star2>* cat, StelGeodesicGrid* grid,
 	// the star's actual catalog position. Also check whether the position
 	// maps back to the same HEALPix pixel.
 	{
-		int hpFromId = static_cast<int>(gid / 34359738368ULL);
+		int hpFromId = static_cast<int>(gid / 34359738368ULL); // 2^35
 		Vec3d hpCenter;
 		healpix_pix2vec(static_cast<int>(std::pow(2., 12.)), hpFromId, hpCenter.v);
 		Vec3d starDir;
 		StelUtils::spheToRect(star.getX0(), star.getX1(), starDir);
 		const double offRad = std::acos(std::min(1.0, std::max(-1.0, hpCenter.dot(starDir))));
-		const double offArcsec = offRad * 206264.80624709636;
+		const double offArcsec = offRad / M_RAD_ARCSECOND;
 		if (offArcsec > stats.maxPixelOffsetArcsec)
 		{
 			stats.maxPixelOffsetArcsec = offArcsec;
@@ -261,7 +261,7 @@ static void analyzeOneStar(SpecialZoneArray<Star2>* cat, StelGeodesicGrid* grid,
 		// Reverse check: does the star's position map back to the same pixel?
 		const double starTheta = std::acos(std::min(1.0, std::max(-1.0, starDir[2])));
 		const double starPhi = std::atan2(starDir[1], starDir[0]);
-		const long long hpFromPos = healpix_ang2pix_nest(4096, starTheta, starPhi);
+		const long long hpFromPos = healpix_ang2pix_nest(1<<12, starTheta, starPhi);
 		if (hpFromPos != hpFromId)
 			stats.hpMismatch++;
 
@@ -294,7 +294,7 @@ static void analyzeOneStar(SpecialZoneArray<Star2>* cat, StelGeodesicGrid* grid,
 	if (absZones > stats.phase2Max) stats.phase2Max = absZones;
 
 	const float mag = star.getMag() * 0.001f;
-	if (matched && loggedCount < 10 && mag >= 17.0f && mag <= 17.5f)
+	if (matched && loggedCount < 10 && 17.0f <= mag && mag <= 17.5f)
 	{
 		logBuf[loggedCount] = { gid, z, i, mag, absZones };
 		++loggedCount;

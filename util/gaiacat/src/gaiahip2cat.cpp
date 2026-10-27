@@ -37,6 +37,30 @@
 #include <unistd.h>
 #endif
 
+// some stars need patching...
+// DRY: need something twice or more? put it here.
+// DO NOT CHANGE unless you know exactly what you are doing.
+static constexpr auto
+	HIP_36850_B = 36850,
+	HIP_55987_A = 55987, /* => */ GAIA_HIP_55987A_SID = 5236791746461774080,
+	HIP_81693_B = 81693,
+	HIP_84012_B = 84012,
+	HIP_84345 = 84345,
+
+	HIP_36850_B_SID = 892348694913501952,
+	HIP_81693_B_SID = 1312665361414730624,
+	HIP_84012_B_SID = 4136366183978856960,
+	HIP_95759B_SID = 2051732716553182336,
+
+	GAIA_STAR_1_MISSING_SID = 3683687763520080256,
+	GAIA_STAR_2_MISSING_SID = 756853643637996160,
+
+	// special interest star
+	ROSS_248_SID = 1926461164913660160,
+	ROSS_248_FAKE_HIP = 9999999,
+
+	_syntactic_sugar = 0;
+
 // Run a command line without a shell (avoids CWE-78 shell injection).
 // Windows: CreateProcessA (no cmd.exe); POSIX: fork + execvp with quoted split.
 static std::string quote_arg(const std::string& s)
@@ -89,8 +113,8 @@ static int run_command_line(const std::string& cmdline)
 
 namespace fs = std::filesystem;
 
-static constexpr double D2R = M_PI / 180.0;
-static constexpr double R2D = 180.0 / M_PI;
+static constexpr double D2R = M_PI / 180.0; // Stellarium M_PI_180
+static constexpr double R2D = 180.0 / M_PI; // M_180_PI
 static constexpr double MAS2RAD = 4.8481368110953594e-9;  // mas to radians
 static constexpr double CATALOG_EPOCH_JD = 2457389.0;   // J2016.0
 
@@ -124,7 +148,8 @@ struct alignas(1) BinRec {
 	float   g, bprp, rv, rve;
 };
 #pragma pack(pop)
-static_assert(sizeof(BinRec) == 68, "bin record must be 68 bytes");
+static constexpr REC_SZ = 68;
+static_assert(sizeof(BinRec) == REC_SZ, "bin record must be " + REC_SZ + " bytes");
 
 // ------------------------------------------------------------------ star row
 struct StarRow {
@@ -331,9 +356,9 @@ static void iau_starpm(double ra_deg, double dec_deg,
 // ------------------------------------------------------------------ patches (henrysky lv0_6 cell 2)
 static void apply_pre_fusion_patches(std::vector<StarRow>& rows)
 {
-	// delete HIP 55987B (way too dim)
+	// delete HIP 55987B (or A??) (way too dim)
 	rows.erase(std::remove_if(rows.begin(), rows.end(),
-	                          [](const StarRow& r) { return r.hip == 55987 && r.comp == 2; }),
+	                          [](const StarRow& r) { return r.hip == HIP_55987_A && r.comp == 2; }),
 	           rows.end());
 
 	auto has_sid = [&](int64_t sid) {
@@ -341,21 +366,21 @@ static void apply_pre_fusion_patches(std::vector<StarRow>& rows)
 		return false;
 	};
 	// add HIP 81693 B
-	if (!has_sid(1312665361414730624))
-		rows.push_back({1312665361414730624, 81693, 2, 0, 0, 0, 0, 93.32, 0.47, 0, NAN, NAN, 20000, "", "*"});
+	if (!has_sid())
+		rows.push_back({HIP_81693_B_SID, HIP_81693_B, 2, 0, 0, 0, 0, 93.32, 0.47, 0, NAN, NAN, 20000, "", "*"});
 	// add HIP 84012 B
-	if (!has_sid(4136366183978856960))
-		rows.push_back({4136366183978856960, 84012, 2, 0, 0, 0, 0, 36.91, 0.80, 0, NAN, NAN, 20000, "", "*"});
+	if (!has_sid(HIP_84012_B_SID))
+		rows.push_back({HIP_84012_B_SID, HIP_84012_B, 2, 0, 0, 0, 0, 36.91, 0.80, 0, NAN, NAN, 20000, "", "*"});
 	// add HIP 36850 B
-	if (!has_sid(892348694913501952))
-		rows.push_back({892348694913501952, 36850, 2, 0, 0, 0, 0, 66.356, 0.041, 0, NAN, NAN, 20000, "", "*"});
+	if (!has_sid(HIP_36850_B_SID))
+		rows.push_back({HIP_36850_B_SID, HIP_36850_B, 2, 0, 0, 0, 0, 66.356, 0.041, 0, NAN, NAN, 20000, "", "*"});
 	// HD 183559B (formerly "HIP 95759B" in the official-era SIMBAD snapshot):
 	// SIMBAD dropped the HIP alias for this component, and its Gaia DR3 source
 	// has no G-band photometry (close-double blend), so neither the SIMBAD path
 	// (renamed away) nor the Gaia-only path (requires G) can reach it. Re-add
 	// manually: astrometry from Gaia DR3, photometry from the official record.
-	if (!has_sid(2051732716553182336))
-		rows.push_back({2051732716553182336, 95759, 2,
+	if (!has_sid(HIP_95759B_SID))
+		rows.push_back({HIP_95759B_SID, 95759, 2,
 		                292.15690538984126, 37.18856842370232,
 		                4.491698373297273, -21.449247959590082,
 		                4.0750884647101415, 0.08124616742134094,
@@ -363,12 +388,12 @@ static void apply_pre_fusion_patches(std::vector<StarRow>& rows)
 
 	// HIP 84345: existing single becomes B component; add A component manually
 	for (auto& r : rows)
-		if (r.hip == 84345 && (r.comp == 0 || r.comp == 1)) r.comp = 2;
+		if (r.hip == HIP_84345 && (r.comp == 0 || r.comp == 1)) r.comp = 2;
 	bool has84345A = false;
-	for (const auto& r : rows) if (r.hip == 84345 && r.comp == 1) has84345A = true;
+	for (const auto& r : rows) if (r.hip == HIP_84345 && r.comp == 1) has84345A = true;
 	if (!has84345A) {
 		StarRow a;
-		a.source_id = 0; a.hip = 84345; a.comp = 1;
+		a.source_id = 0; a.hip = HIP_84345; a.comp = 1;
 		a.ra = 258.661886421; a.dec = 14.390371047;
 		a.plx = 9.08; a.plxe = 1.32;
 		a.pmra = -17.0; a.pmdec = 47.0;
@@ -385,8 +410,8 @@ static void apply_post_fusion_patches(std::vector<StarRow>& rows)
 	// HIP 55987A: SIMBAD has no source_id; fill with Gaia DR3 5236791746461774080 data.
 	// (henrysky sets "pndec" instead of "pmdec" by typo: pmdec stays unset; reproduced.)
 	for (auto& r : rows) {
-		if (r.hip == 55987 && r.comp == 1) {
-			r.source_id = 5236791746461774080;
+		if (r.hip == HIP_55987_A && r.comp == 1) {
+			r.source_id = GAIA_HIP_55987A_SID;
 			r.vmag = 15.843829;
 			r.bv = 16.615616 - 15.843829;
 			r.ra = 172.11765151979628; r.dec = -66.48608788896621;
@@ -398,11 +423,11 @@ static void apply_post_fusion_patches(std::vector<StarRow>& rows)
 	}
 	// HIP 81693A source_id + component A
 	for (auto& r : rows)
-		if (r.hip == 81693 && r.comp == 0) { r.source_id = 1312665361415345920; r.comp = 1; }
+		if (r.hip == HIP_81693_B && r.comp == 0) { r.source_id = 1312665361415345920; r.comp = 1; }
 	// HIP 84012 / 36850 -> A components
 	for (auto& r : rows) {
-		if (r.hip == 84012 && r.comp == 0) r.comp = 1;
-		if (r.hip == 36850 && r.comp == 0) r.comp = 1;
+		if (r.hip == HIP_84012_B && r.comp == 0) r.comp = 1;
+		if (r.hip == HIP_36850_B && r.comp == 0) r.comp = 1;
 	}
 }
 
@@ -410,26 +435,28 @@ static void apply_final_patches(std::vector<StarRow>& rows)
 {
 	// Ross 248 is of interest in the future solar neighborhood: force into first 3 catalogs
 	for (auto& r : rows) {
-		if (r.source_id == 1926461164913660160) {
-			r.hip = 9999999; r.otype = "BY*"; r.sp = "M5.0V";
+		if (r.source_id == ROSS_248_SID) {
+			r.hip = ROSS_248_FAKE_HIP; r.otype = "BY*"; r.sp = "M5.0V";
 		}
 	}
 	auto fix_plx = [&](int hip, double plx, double plxe) {
 		for (auto& r : rows) if (r.hip == hip) { r.plx = plx; r.plxe = plxe; }
 	};
-	fix_plx(36850, 64.12, 3.75);
-	fix_plx(84345, 9.07, 1.32);
+	fix_plx(HIP_36850_B, 64.12, 3.75);
+	fix_plx(HIP_84345, 9.07, 1.32);
 	fix_plx(110900, 14.5943, 0.1562);
 	fix_plx(54844, 18.35, 0.96);
 	fix_plx(55203, 114.4867, 0.4316);
 	// two Gaia stars missing astrometry in the ADQL extract
+	// what if they are included in future updates? shouldn't we check if they finally DO exist?
+	// in general: shouldn't the patches in this file be future proof by checking if something changed meanwhile?
 	for (auto& r : rows) {
-		if (r.source_id == 756853643637996160) {
+		if (r.source_id == GAIA_STAR_2_MISSING_SID) {
 			r.plx = 114.4867; r.plxe = 0.4316;
 			r.pmra = -339.398; r.pmdec = -607.892;
 			r.rv = -15.9; r.sp = "G2V"; r.bv = 5.41 - 4.77;
 		}
-		if (r.source_id == 3683687763520080256) {
+		if (r.source_id == GAIA_STAR_1_MISSING_SID) {
 			r.plx = 78.5233; r.plxe = 1.3879;
 			r.pmra = -534.318; r.pmdec = -64.270;
 			r.rv = -19.8; r.sp = "F0mF2V"; r.bv = 3.85 - 3.49;
@@ -459,6 +486,18 @@ int main(int argc, char** argv)
 	long max_files = -1;
 	std::string erfa_python;
 	int level_lo = 0, level_hi = 3;   // default: lv0-3 (Star1), gaiahip2cat's primary purpose
+
+// TODO
+	/*
+		a nice task for joining developers:
+		rewrite following using GNU getopt_long()
+
+		#include <unistd.h>
+		#include <getopt.h>
+
+		int getopt_long(int argc, char * const argv[], const char *optstring, const struct option *longopts, int *longindex);
+	*/
+
 	for (int i = 1; i < argc; ++i) {
 		std::string a = argv[i];
 		if      (a == "--simbad"    && i + 1 < argc) simbad_path = argv[++i];
@@ -480,6 +519,7 @@ int main(int argc, char** argv)
 			}
 		}
 		else {
+			/* basename(argv[0]) ... */
 			std::cerr << "Usage: gaiahip2cat --simbad <dat> --gaia-bin <dir> --out-dir <dir> --otype <dat>"
 				" [--sp-table f] [--workers n] [--levels 0-3] [--max-files n] [--erfa-python <path>]\n";
 			return 1;
@@ -640,7 +680,7 @@ int main(int argc, char** argv)
 						// (v == final vmag for Gaia-only rows). Exception: Ross 248
 						// (V=12.4) is forced into lv0-2 by henrysky with a fake HIP,
 						// so it must survive even the lv0-3 collection cut.
-						if (v > collect_hi && rec.sid != 1926461164913660160) continue;
+						if (v > collect_hi && rec.sid != ROSS_248_SID) continue;
 						GaiaRow gr;
 						gr.source_id = rec.sid;
 						gr.ra = rec.ra; gr.dec = rec.dec;
@@ -665,12 +705,12 @@ int main(int argc, char** argv)
 		std::thread prog([&]() {
 			while (done.load() < (int)bin_files.size()) {
 				std::this_thread::sleep_for(std::chrono::seconds(5));
-				double el = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
+				double time_s = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
 				size_t nh = 0, ng = 0;
 				for (auto& h : hits) nh += h.size();
 				for (auto& g : gaia_only) ng += g.size();
 				std::cout << "  [scan " << done.load() << "/" << bin_files.size() << "] "
-					  << el << "s, hits=" << nh << ", gaia-only=" << ng << std::endl;
+					  << time_s << "s, hits=" << nh << ", gaia-only=" << ng << std::endl;
 			}
 		});
 		for (auto& th : pool) th.join();
@@ -756,15 +796,15 @@ int main(int argc, char** argv)
 
 	// Ross 248 has no HIP number, so it normally arrives via the Gaia-only
 	// container rather than the SIMBAD rows. Move it into rows so the
-	// apply_final_patches renaming (fake HIP 9999999) and the lv2 all-HIP
+	// apply_final_patches renaming (ROSS_248_FAKE_HIP 9999999) and the lv2 all-HIP
 	// inclusion rule apply to it.
 	{
 		bool in_rows = false;
-		for (const auto& r : rows) if (r.source_id == 1926461164913660160) { in_rows = true; break; }
+		for (const auto& r : rows) if (r.source_id == ROSS_248_SID) { in_rows = true; break; }
 		if (!in_rows) {
 			for (auto& w : gaia_only) {
 				auto it = std::find_if(w.begin(), w.end(), [](const GaiaRow& g) {
-					return g.source_id == 1926461164913660160;
+					return g.source_id == ROSS_248_SID;
 				});
 				if (it == w.end()) continue;
 				StarRow r;
@@ -774,11 +814,11 @@ int main(int argc, char** argv)
 				r.plx = it->plx; r.plxe = it->plxe;
 				r.rv = it->rv; r.vmag = it->vmag; r.bv = it->bv;
 				r.epoch_x10 = 20160;
-				r.hip = 9999999; r.otype = "BY*"; r.sp = "M5.0V";
+				r.hip = FAKE_HIP; r.otype = "BY*"; r.sp = "M5.0V";
 				rows.push_back(r);
 				w.erase(it);
 				n_gaia_only--;
-				std::cout << "Ross 248: moved from Gaia-only to rows (fake HIP)\n";
+				std::cout << "Ross 248: moved from Gaia-only to rows (fake HIP " + ROSS_248_FAKE_HIP + ")\n";
 				break;
 			}
 		}
@@ -790,11 +830,11 @@ int main(int argc, char** argv)
 	// rows with the same patched values (also carries its spectral type).
 	{
 		bool in_rows = false;
-		for (const auto& r : rows) if (r.source_id == 3683687763520080256) { in_rows = true; break; }
+		for (const auto& r : rows) if (r.source_id == GAIA_STAR_1_MISSING_SID) { in_rows = true; break; }
 		if (!in_rows) {
 			for (auto& w : gaia_only) {
 				auto it = std::find_if(w.begin(), w.end(), [](const GaiaRow& g) {
-					return g.source_id == 3683687763520080256;
+					return g.source_id == GAIA_STAR_1_MISSING_SID;
 				});
 				if (it == w.end()) continue;
 				StarRow r;
@@ -809,7 +849,7 @@ int main(int argc, char** argv)
 				rows.push_back(r);
 				w.erase(it);
 				n_gaia_only--;
-				std::cout << "Gaia 3683687763520080256: moved from Gaia-only to rows (astrometry patch)\n";
+				std::cout << "Gaia " + GAIA_STAR_1_MISSING_SID + ": moved from Gaia-only to rows (astrometry patch)\n";
 				break;
 			}
 		}
@@ -1000,7 +1040,7 @@ int main(int argc, char** argv)
 					std::cout << "  NOTE: appended otype '" << ot << "' at index " << ot_i << "\n";
 				}
 				cr.objtype = (uint8_t)ot_i;
-				int hip_pack = (r.hip == 9999999) ? 0 : r.hip;
+				int hip_pack = (r.hip == ROSS_248_FAKE_HIP) ? 0 : r.hip;
 				uint32_t comb = ((uint32_t)hip_pack << 5) | (uint32_t)(r.comp & 31);
 				cr.hip[0] = (uint8_t)comb;
 				cr.hip[1] = (uint8_t)(comb >> 8);

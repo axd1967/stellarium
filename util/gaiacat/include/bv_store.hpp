@@ -14,6 +14,8 @@
 #include <string>
 #include <vector>
 
+// is there some online reference for these magic constants?
+// https://rosettacode.org/wiki/Pseudo-random_numbers/Splitmix64 ?
 inline constexpr uint32_t BV_MAGIC = 0x42564231;
 
 // Fast mixing hash used for bucketing. The consumer must use the exact same

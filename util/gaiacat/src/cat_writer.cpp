@@ -31,13 +31,13 @@ static CatRecord1 to_cat_record1(const BucketRecord& r)
 
 	cr.x0 = static_cast<int32_t>(std::lround(cdec * cra * 2e9));
 	cr.x1 = static_cast<int32_t>(std::lround(cdec * sra * 2e9));
-	cr.x2 = static_cast<int32_t>(std::lround(sdec        * 2e9));
+	cr.x2 = static_cast<int32_t>(std::lround(sdec       * 2e9));
 
 	const double pmra  = (r.pmra_i / 1000.0) * cdec;   // mas/yr, Gaia-native (with cos(dec))
 	const double pmdec =  r.pmdec_i / 1000.0;          // mas/yr
 	cr.dx0 = static_cast<int32_t>(std::lround((pmra * -sra + pmdec * -sdec * cra) * 1000.0));
 	cr.dx1 = static_cast<int32_t>(std::lround((pmra *  cra + pmdec * -sdec * sra) * 1000.0));
-	cr.dx2 = static_cast<int32_t>(std::lround((               pmdec *  cdec      ) * 1000.0));
+	cr.dx2 = static_cast<int32_t>(std::lround((               pmdec *  cdec     ) * 1000.0));
 
 	cr.b_v  = r.bv;
 	cr.vmag = r.vmag;

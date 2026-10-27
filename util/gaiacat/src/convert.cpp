@@ -5,6 +5,8 @@
 #include <cmath>
 #include <algorithm>
 
+// https://gea.esac.esa.int/archive/documentation/GEDR3/Data_processing/chap_cu5pho/cu5pho_sec_photSystem/cu5pho_ssec_photRelations.html
+// https://github.com/pchev/skychart/blob/b2e4038f70bdff0cf994846aea39dff2c05a03bc/skychart/cu_catalog.pas#L6572-L6586
 double g_to_v(double g, double c)
 {
 	if (std::isnan(c))

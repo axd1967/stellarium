@@ -39,7 +39,8 @@ struct alignas(1) Rec {
 	float    g, bprp, rv, rve;
 };
 #pragma pack(pop)
-static_assert(sizeof(Rec) == 68, "output record must be 68 bytes");
+static constexpr REC_SZ = 68;
+static_assert(sizeof(Rec) == REC_SZ, "output record must be " + REC_SZ + " bytes");
 
 static const double POW10[] = {
 	1e0, 1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9,
@@ -98,10 +99,22 @@ static inline bool parse_i64(const char* p, const char* end, int64_t& out)
 }
 
 // Column indices in CSV order of the fields we extract
-enum { C_SID = 0, C_RA, C_DEC, C_PLX, C_PLXE, C_PMRA, C_PMDEC, C_G, C_BPRP, C_RV, C_RVE, C_N };
+enum {
+	C_SID = 0,
+	C_RA, C_DEC,
+	C_PLX, C_PLXE,
+	C_PMRA, C_PMDEC,
+	C_G, C_BPRP,
+	C_RV, C_RVE,
+	C_N
+	};
 static const char* COL_NAMES[C_N] = {
-	"source_id", "ra", "dec", "parallax", "parallax_error",
-	"pmra", "pmdec", "phot_g_mean_mag", "bp_rp", "radial_velocity", "radial_velocity_error"
+	"source_id",
+	"ra", "dec",
+	"parallax", "parallax_error",
+	"pmra", "pmdec",
+	"phot_g_mean_mag", "bp_rp",
+	"radial_velocity", "radial_velocity_error"
 };
 
 struct Parser {
@@ -335,10 +348,11 @@ static bool write_job_output(const Job& job, const std::string& out_dir, LineSin
 	g_stars.fetch_add(sink.out.size() / sizeof(Rec));
 	{
 		static std::mutex log_mtx;
-		double el = std::chrono::duration<double>(std::chrono::steady_clock::now() - g_t0).count();
+		double time_s = std::chrono::duration<double>(std::chrono::steady_clock::now() - g_t0).count();
 		std::lock_guard<std::mutex> lk(log_mtx);
-		std::cout << "  wrote " << out_name << " (" << (sink.out.size() / sizeof(Rec))
-			  << " stars, t=" << el << "s)\n";
+		std::cout << "  wrote " << out_name
+			<< " (" << (sink.out.size() / sizeof(Rec))
+			<< " stars, t=" << time_s << "s)\n";
 	}
 	return true;
 }
@@ -431,8 +445,8 @@ int main(int argc, char** argv)
 			read_done = true;
 		}
 		cv_get.notify_all();
-		double el = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
-		std::cout << "  [reader finished at " << el << "s]\n";
+		double time_s = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
+		std::cout << "  [reader finished at " << time_s << "s]\n";
 	});
 
 	std::vector<std::thread> threads;
@@ -461,8 +475,8 @@ int main(int argc, char** argv)
 		size_t total = todo.size();
 		while (g_files_done.load() < static_cast<int>(total)) {
 			std::this_thread::sleep_for(std::chrono::seconds(5));
-			double el = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
-			std::cout << "  [" << g_files_done.load() << "/" << total << "] " << el << "s\n";
+			double time_s = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
+			std::cout << "  [" << g_files_done.load() << "/" << total << "] " << time_s << "s\n";
 		}
 	});
 
@@ -470,8 +484,8 @@ int main(int argc, char** argv)
 	for (auto& t : threads) t.join();
 	progress.join();
 
-	double el = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
+	double time_s = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
 	std::cout << "Done: " << g_stars.load() << " stars, " << g_errors.load()
-		  << " errors, " << el << "s\n";
+		  << " errors, " << time_s << "s\n";
 	return g_errors.load() > 0 ? 1 : 0;
 }

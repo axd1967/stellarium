@@ -1529,7 +1529,7 @@ SphericalConvexPolygon getSphericalSearchSquare(const Vec3d& vv, double radiusDe
 
 	// Now we have h0*v=h1*v=h0*h1=0.
 	// Construct a region with 4 corners e0,e1,e2,e3 inside which all desired stars must be:
-	double f = 1.4142136 * tan(radiusDeg * M_PI_180);
+	double f = M_SQRT2 * tan(radiusDeg * M_PI_180);
 	h0 *= f;
 	h1 *= f;
 	Vec3d e0 = v + h0;

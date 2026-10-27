@@ -211,6 +211,7 @@ int main(int argc, char** argv) {
 	int    level_lo    = 4;   // default: generate levels 4-10 (lv4 overlaps lv3 by 0.25 mag for dedup)
 	int    level_hi    = 10;
 
+	// TODO: replace with getopt_long()
 	for (int i = 1; i < argc; ++i) {
 		std::string arg = argv[i];
 		if      (arg == "--gaia-bin"    && i+1 < argc) { input_dir  = argv[++i]; }
@@ -292,7 +293,7 @@ int main(int argc, char** argv) {
 		{"stars_1",   1,  6.00,  7.50},
 		{"stars_2",   2,  7.50,  9.00},
 		{"stars_3",   3,  9.00, 10.50},
-		{"stars_4",   4, 10.25, 12.00},
+		{"stars_4",   4, 10.25, 12.00}, // deliberate overlap
 		{"stars_5",   5, 12.00, 13.75},
 		{"stars_6",   6, 13.75, 15.50},
 		{"stars_7",   7, 15.50, 16.75},

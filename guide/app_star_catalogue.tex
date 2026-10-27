@@ -1930,8 +1930,8 @@ repositories:
 
 \begin{itemize}
   \item \textbf{SIMBAD preparation} --- Python scripts from the companion
-        fork\footnote{Fork of \url{https://github.com/henrysky/stellarium_star_catalogs},
-        maintained at \url{https://github.com/SceneryMC/stellarium_star_catalogs}}
+        fork\footnote{Fork of Henry Leung's \url{https://github.com/henrysky/stellarium_star_catalogs},
+        also maintained at \url{https://github.com/SceneryMC/stellarium_star_catalogs}}
         (GPLv3, by Henry Leung, University of Toronto). These query SIMBAD
         online, resolve binary systems and cross-match every HIP entry to a
         Gaia DR3 \texttt{source\_id}. They only prepare the data table
@@ -2040,6 +2040,7 @@ requirements differ per script:
         (section~\ref{sec:StarCatalogues:Generating:lv03}).
 \end{description}
 
+% DRY: create a requirements.txt and then document here `pip install -r requirements.txt`.
 \begin{commands}
 pip install numpy astropy pandas
 \end{commands}
@@ -2093,7 +2094,7 @@ stored individually, so an interrupted run resumes where it stopped; the
 newest batch is always re-fetched for safety, and failed queries are
 retried automatically.
 
-\program{parse\_hip\_catalog.py} (converted from the
+\program{parse\_hip\_catalog.py} (converted from Henry Leung's
 \texttt{Parse\_HIP\_Catalog.ipynb} notebook) cleans the SIMBAD result,
 splits binary systems that Gaia resolved but Hipparcos did not into
 A/B components, cross-matches every entry to a Gaia DR3

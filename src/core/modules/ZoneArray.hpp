@@ -179,7 +179,7 @@ public:
 
 protected:
 	//! Draw stars and their names onto the viewport.
-	//! @param sPainter the painter to use 
+	//! @param sPainter the painter to use
 	//! @param index zone index to draw
 	//! @param isInsideViewport whether the zone is inside the current viewport. If false, we need to test more to skip stars.
 	//! @param rcmag_table table of magnitudes

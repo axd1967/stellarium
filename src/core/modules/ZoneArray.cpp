@@ -31,6 +31,12 @@
 #include <Windows.h>
 #endif
 
+// DRY
+static constexpr float
+	base_mag = 7000,
+	mag_res = 0.02,
+	;
+
 static unsigned int stel_bswap_32(unsigned int val)
 {
 	return (((val) & 0xff000000) >> 24) | (((val) & 0x00ff0000) >>  8) |
@@ -543,7 +549,7 @@ void SpecialZoneArray<Star>::draw(StelPainter* sPainter, int index, bool isInsid
 
 	const Extinction& extinction=core->getSkyDrawer()->getExtinction();
 	const bool withExtinction=drawer->getFlagHasAtmosphere() && extinction.getExtinctionCoefficient()>=0.01f;
-	
+
 	// Allow artificial cutoff:
 	// find the (integer) mag at which is just bright enough to be drawn.
 	int cutoffMagStep=limitMagIndex;  // for steps
@@ -551,14 +557,14 @@ void SpecialZoneArray<Star>::draw(StelPainter* sPainter, int index, bool isInsid
 	if (drawer->getFlagStarMagnitudeLimit())
 	{
 		cutoffMag = drawer->getCustomStarMagnitudeLimit() * 1000.0f;  // in milli-mag
-		cutoffMagStep = static_cast<int>((cutoffMag - (mag_min - 7000.))*0.02);  // 1/(50 milli-mag)
+		cutoffMagStep = static_cast<int>((cutoffMag - (mag_min - base_mag) * mag_res);  // 1/(50 milli-mag)
 		if (cutoffMagStep>limitMagIndex)
 			cutoffMagStep = limitMagIndex;
 	}
 	Q_ASSERT_X(cutoffMagStep<=RCMAG_TABLE_SIZE, "ZoneArray.cpp",
 		   QString("RCMAG_TABLE_SIZE: %1, cutoffmagStep: %2").arg(QString::number(RCMAG_TABLE_SIZE), QString::number(cutoffMagStep)).toLatin1());
 
-	const int minMagIndex = static_cast<int>((mag_min - (mag_min - 7000.)) * 0.02);
+	const int minMagIndex = static_cast<int>((mag_min - (mag_min - base_mag.)) * mag_res);
 	const bool isGlobalZone = (static_cast<unsigned int>(index) == nr_of_zones - 1);
 	if (!isGlobalZone && ((minMagIndex > cutoffMagStep) || (mag_min > cutoffMag)))
 		return;
@@ -572,7 +578,7 @@ void SpecialZoneArray<Star>::draw(StelPainter* sPainter, int index, bool isInsid
 		// check if this is a global zone
 		globalzone = zoneToDraw.isGlobal;
 		float starMag = s->getMag();
-		int magIndex = static_cast<int>((starMag - (mag_min - 7000.)) * 0.02);  // 1 / (50 milli-mag)
+		int magIndex = static_cast<int>((starMag - (mag_min - base_mag)) * mag_res);  // 1 / (50 milli-mag)
 
 		// first part is check for Star1 and is global zone, so to keep looping for long-range prediction
 		// second part is old behavior, to skip stars below you that are too faint to display for Star2 and Star3
@@ -603,7 +609,7 @@ void SpecialZoneArray<Star>::draw(StelPainter* sPainter, int index, bool isInsid
 			v.set(u[0], u[1], u[2]);
 		}
 		// recompute magIndex with the new magnitude
-		magIndex = static_cast<int>((starMag - (mag_min - 7000.)) * 0.02);  // 1 / (50 milli-mag)
+		magIndex = static_cast<int>((starMag - (mag_min - base_mag)) * mag_res);  // 1 / (50 milli-mag)
 
 		if ((magIndex > cutoffMagStep) || (starMag > cutoffMag)) {  // check again with the new magIndex
 				continue;  // allow continue for other star that might became bright enough in the future

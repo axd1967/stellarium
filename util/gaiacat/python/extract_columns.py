@@ -8,8 +8,15 @@ import gzip
 import glob
 from multiprocessing import Pool
 
-COLS = ['source_id', 'ra', 'dec', 'parallax', 'parallax_error', 'pmra', 'pmdec',
-        'phot_g_mean_mag', 'bp_rp', 'radial_velocity', 'radial_velocity_error']
+COLS = [
+	'source_id',
+	'ra', 'dec',
+	'parallax', 'parallax_error',
+	'pmra', 'pmdec',
+	'phot_g_mean_mag', 'bp_rp',
+	'radial_velocity', 'radial_velocity_error'
+	]
+
 REC_FMT = '<q d d d f d d f f f f'
 REC_SZ = 68
 

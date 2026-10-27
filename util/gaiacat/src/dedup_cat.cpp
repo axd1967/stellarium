@@ -121,7 +121,7 @@ static void dedup_stream(CatReader& in, FILE* fout,
 	if (!dry_run) {
 		fseeko(fout, 28, SEEK_SET);
 		std::fwrite(out_counts.data(), sizeof(uint32_t), nz, fout);
-		auto size_mb = static_cast<double>(28 + nz*4 + r.total_out*rec_size) / 1048576.0;
+		auto size_mb = static_cast<double>(28 + nz*4 + r.total_out*rec_size) / 1<<20;
 		std::cout << "  Written: " << size_mb << " MB\n";
 	}
 	std::cout << "  Removed: " << r.removed << " (" << (100.0*r.removed/(total_in?total_in:1)) << "%)\n";

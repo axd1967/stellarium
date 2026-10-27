@@ -79,7 +79,7 @@ struct alignas(1) CatRecord3 {
 static_assert(sizeof(CatRecord3) == 16, "CatRecord3 must be 16 bytes");
 
 // .cat file header constants
-inline constexpr uint32_t  FILE_MAGIC         = 0x835F040A;
+inline constexpr uint32_t  FILE_MAGIC         = 0x835F040A; //
 inline constexpr uint32_t  CATALOG_TYPE_STAR1 = 0;      // Star1
 inline constexpr uint32_t  CATALOG_TYPE_STAR2 = 1;      // Star2
 inline constexpr uint32_t  CATALOG_TYPE_STAR3 = 2;      // Star3

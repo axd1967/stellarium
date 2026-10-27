@@ -1,4 +1,4 @@
-// Geodesic grid zone computation — matches StelGeodesicGrid / Python GeodesicGrid
+// Geodesic grid zone computation — matches src/core/StelGeodesicGrid.cpp / Python [henrysky] GeodesicGrid (geodesic.py)
 
 #include "geodesic.hpp"
 #include <cmath>
