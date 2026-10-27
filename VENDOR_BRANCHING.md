@@ -6,7 +6,7 @@
 
 *In short: copy-pasting artefacts is a seemingly easy way to get things imported in a project. The problem is the maintainance effort that will follow. Do not assume the data is "written in stone" and will never change any more (be it inside your project or externally). Instead, every time you import anything from outside Stellarium, be it code or data, ***do not bluntly copy-paste***; don't just create a "fork" of foreign artefacts unless there really is no other way. Following describes the recommended way to import such external artefacts. The procedure looks daunting, but that is only appearance.*
 
-Artefacts can be source code, data files, PDF files, ...
+Artefacts can be source code, data files, PDF files, supporting documentation...
 
 Artefacts that can be managed by package managers are not discussed here. An inconvenience of package managers might be that local modifications might be more difficult to manage. This is precisely what vendor branching has been designed for.
 
@@ -16,7 +16,7 @@ The concept actually dates from the venerable [CVS](https://www.gnu.org/software
 
 - How I discovered vendor branches: https://svnbook.red-bean.com/en/1.8/svn.advanced.vendorbr.html
 - and I indeed remember CVS already mentioned it long time ago in the Cederqvist PDF: https://www.gnu.org/software/trans-coord/manual/cvs/html_node/Tracking-sources.html (although it didn't mention how to contribute back)
- 
+
 If you don't know about vendor branching, skip following section and go straight to the "Discussion" section.
 
 ## SHORT HOW-TO
@@ -25,7 +25,7 @@ If you don't know about vendor branching, skip following section and go straight
 
 Follow these steps in order to import external artefacts for the first time.
 
-1. **create a vendor branch** to import the vendor (e.g. ``vendor/CELESTRAK``). If the vendor provides multiple products, create the needed subbranches. (e.g. ``vendor/CELESTRAK/SGP4``). The "``vendor/`` segment is meant to draw the attention to the concept.
+1. **create a vendor branch** to import the vendor (e.g. ``vendor/CELESTRAK``). If the vendor provides multiple products, create the needed subbranches. (e.g. ``vendor/CELESTRAK/SGP4``). The "``vendor/``" segment is only meant to draw the attention to the concept.
 1. create a suitable **vendor directory** tree (e.g. ``vendor/CELESTRAK``) that will hold the external vendor artefacts. The vendor directory can also reside inside a normal directory, such as e.g. [this directory](https://github.com/axd1967/stellarium/tree/b4343449a1d4e66dcc4c2a468dfa068282519687/plugins/Satellites/src/gsatellite).
 1. unzip/copy/import/**explode**... the external data into the (until now empty) vendor directory. This is called a *vendor drop*.
 1. Make sure that extracted file/directory *names* do not contain version information as a kind of implicit versioning scheme. Rename when needed. (Example: ``geonames.2.3.tgz`` might untar into ``geonames-2.3/ ``)
