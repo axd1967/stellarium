@@ -125,6 +125,7 @@ Usually references of some form are added to the source code, e.g. ftp, snail ma
 
 Here are several existing artifacts that (still) get copy-pasted in Stellarium:
 
+- the upcoming [Gaia DR3](https://github.com/Stellarium/stellarium/pull/4991)...
 - [CPM.cmake](https://github.com/cpm-cmake/CPM.cmake) [cmake/modules/CPM.cmake)](cmake/modules/CPM.cmake). This is a simple example where vendoring can further simplify things. For example, the history of [CPM.cmake](https://github.com/Stellarium/stellarium/commits/master/cmake/modules/CPM.cmake) is no more than a series of *manual* updates that can perfectly be done with successive vendor drops.
 - copying code
 	- from [Celestia](https://github.com/Stellarium/stellarium/blob/e0750c36b5becfe8704424edb6fd40e5c51531af/ChangeLog#L1444) *(TODO: find out which code that is)*
