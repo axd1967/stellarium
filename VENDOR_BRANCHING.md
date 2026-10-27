@@ -125,7 +125,13 @@ Usually references of some form are added to the source code, e.g. ftp, snail ma
 
 Here are several existing artifacts that (still) get copy-pasted in Stellarium:
 
-- the upcoming [Gaia DR3](https://github.com/Stellarium/stellarium/pull/4991)...
+- the upcoming [Gaia DR3 PR](https://github.com/Stellarium/stellarium/pull/4991)... It refers to forked code from
+	- Henry Leung (https://github.com/henrysky/stellarium_star_catalogs)
+	- "SceneryMC" (https://github.com/SceneryMC/stellarium_star_catalogs) (which - sic - forks off Leung's...)
+	- `parse_hip_catalog.py`
+	- `simbad_query_hipsaohdhr.py`
+	- `py/geodesic.py`
+	- references to CdC (eg https://github.com/pchev/skychart/blob/b2e4038f70bdff0cf994846aea39dff2c05a03bc/skychart/cu_catalog.pas#L6572-L6586)
 - [CPM.cmake](https://github.com/cpm-cmake/CPM.cmake) [cmake/modules/CPM.cmake)](cmake/modules/CPM.cmake). This is a simple example where vendoring can further simplify things. For example, the history of [CPM.cmake](https://github.com/Stellarium/stellarium/commits/master/cmake/modules/CPM.cmake) is no more than a series of *manual* updates that can perfectly be done with successive vendor drops.
 - copying code
 	- from [Celestia](https://github.com/Stellarium/stellarium/blob/e0750c36b5becfe8704424edb6fd40e5c51531af/ChangeLog#L1444) *(TODO: find out which code that is)*
