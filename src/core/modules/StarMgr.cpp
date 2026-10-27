@@ -1493,7 +1493,7 @@ QList<StelObjectP > StarMgr::searchAround(const Vec3d& vv, double limFov, const 
 	}
 
 	// Iterate over the stars inside the region.
-	double f = cos(limFov * M_PI_180.);
+	double f = cos(limFov * M_PI_180);
 	for (auto* z : gridLevels)
 	{
 		//qDebug() << "search inside(" << it->first << "):";
