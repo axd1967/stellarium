@@ -556,7 +556,7 @@ void SpecialZoneArray<Star>::draw(StelPainter* sPainter, int index, bool isInsid
 	if (drawer->getFlagStarMagnitudeLimit())
 	{
 		cutoffMag = drawer->getCustomStarMagnitudeLimit() * 1000.0f;  // in milli-mag
-		cutoffMagStep = static_cast<int>((cutoffMag - (mag_min - base_mag) * mag_res);  // 1/(50 milli-mag)
+		cutoffMagStep = static_cast<int>((cutoffMag - (mag_min - base_mag) * mag_res));  // 1/(50 milli-mag)
 		if (cutoffMagStep>limitMagIndex)
 			cutoffMagStep = limitMagIndex;
 	}
