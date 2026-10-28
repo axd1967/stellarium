@@ -563,7 +563,7 @@ void SpecialZoneArray<Star>::draw(StelPainter* sPainter, int index, bool isInsid
 	Q_ASSERT_X(cutoffMagStep<=RCMAG_TABLE_SIZE, "ZoneArray.cpp",
 		   QString("RCMAG_TABLE_SIZE: %1, cutoffmagStep: %2").arg(QString::number(RCMAG_TABLE_SIZE), QString::number(cutoffMagStep)).toLatin1());
 
-	const int minMagIndex = static_cast<int>((mag_min - (mag_min - base_mag.)) * mag_res);
+	const int minMagIndex = static_cast<int>((mag_min - (mag_min - base_mag)) * mag_res);
 	const bool isGlobalZone = (static_cast<unsigned int>(index) == nr_of_zones - 1);
 	if (!isGlobalZone && ((minMagIndex > cutoffMagStep) || (mag_min > cutoffMag)))
 		return;
