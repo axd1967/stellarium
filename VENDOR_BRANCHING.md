@@ -35,14 +35,15 @@ Follow these steps in order to import external artefacts for the first time.
 
 1. **Tag** the vendor branch, e.g. ``vendor/geonames/1.0``. A path structure allows to group tags in a more structured way. If the vendor does not provide a clear version number, use the UTC date/time of the drop, formatted as ISO: ``vendor/geonames/2021-09-09T1200`` or a date/time as stamped by the vendor.
 1. **Switch** to your task branch
-1. **merge** the vendor branch. *Do not delete the vendor branch.*
-1. Add and commit a ``VENDOR.md`` file to ``vendor/CELESTRAK/`` that contains relevant **metadata** and instructions to help finding back the source. Avoid top-level (domain) adresses, try to make life easy for anyone wanting to update the data. Consider including the keyword "VENDOR" somewhere so that it can be grepped if needed. Make sure to include any PDF or comparable document that documents the vendor artefact, as well as where that PDF,data file, ... can be found.
+1. **merge** (avoid fast forward for clarity) the vendor branch. *Do not delete the vendor branch.*
+`` git merge --no-ff <vendor branch>``
+2. Add and commit a ``VENDOR.md`` file to ``vendor/CELESTRAK/`` that contains relevant **metadata** and instructions to help finding back the source. Avoid top-level (domain) adresses, try to make life easy for anyone wanting to update the data. Consider including the keyword "VENDOR" somewhere so that it can be grepped if needed. Make sure to include any PDF or comparable document that documents the vendor artefact, as well as where that PDF,data file, ... can be found.
 1. Do whatever is needed to **localise** the vendor artefacts (source code, data, ...) into your project. This must be done in your task branch, never in the vendor branch. Often, source code will not run or compile completely. Sometimes, data needs to be transformed; include scripts to run migrations/conversions, because future vendor drops might require them.
 1. Have your task branch **integrated** into your main branch. Your project now contains folowing:
 	- a new vendor directory
 	- a vendor branch
 	- optionally, modified vendor code to make the vendor work seamlessly in your project
-1. **push the vendor branch**
+1. **Remember to also push the *vendor* branch**
 
 ### 2/ perform a **vendor drop**
 
@@ -108,6 +109,10 @@ To make a more clear example how source code can move, we import ONLY the SGP4 f
 
 1. https://celestrak.org/publications/AIAA/2006-6753/AIAA-2006-6753.zip (Assuming it holds an older version)
 1. https://github.com/CelesTrak/fundamentals-of-astrodynamics/tree/main/software/cpp/SGP4/SGP4 (assuming this is the latest version; as there are no tags, we use a specific version)
+
+### 2. SceneryMC's Stellarium-star-catalogs
+This is referenced from the upcoming Gaia DR3 patch.
+Note: Henry Leung - whose repo is forked by SceneryMC - has a bad habit of renaming files...
 
 ## Discussion
 
@@ -210,6 +215,10 @@ Importing external artefacts in vendor branches will also provide insight in wha
 Sometimes, conversion routines need to be written or updated so that external data fits with the project. These routines do not belong in the vendor branch, but in the project itself. Remember that every vendor drop starts with an emptied vendor directory.
 
 ## Notes
+
+### `git archive`
+
+Sometimes, it might be desirable to convert a Git repo to an archive in order to perform the vendor drop.
 
 ### what about `git submodules` (complex, delicate) and `git subtree` (requires a remote git repo)?
 
