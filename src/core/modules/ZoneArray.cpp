@@ -34,8 +34,7 @@
 // DRY
 static constexpr float
 	base_mag = 7000,
-	mag_res = 0.02,
-	;
+	mag_res = 0.02;
 
 static unsigned int stel_bswap_32(unsigned int val)
 {
