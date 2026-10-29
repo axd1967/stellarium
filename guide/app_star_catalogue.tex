@@ -1931,9 +1931,8 @@ repositories:
 \begin{itemize}
   \item \textbf{SIMBAD preparation} --- Python scripts from the companion
         fork\footnote{Fork of \url{https://github.com/henrysky/stellarium_star_catalogs},
-        maintained at \url{https://github.com/SceneryMC/stellarium_star_catalogs}}
-        (GPLv3, by Henry Leung, University of Toronto). These query SIMBAD
-        online, resolve binary systems and cross-match every HIP entry to a
+        (GPLv3, by Henry Leung, University of Toronto) can be found under src/external/stellarium/star/catalogs/henrysky and have been updated in the scenerymc/ folder.
+	These query SIMBAD online, resolve binary systems and cross-match every HIP entry to a
         Gaia DR3 \texttt{source\_id}. They only prepare the data table
         \file{hip\_processed\_with\_binary.dat} that \program{gaiahip2cat}
         consumes; they do \emph{not} produce any catalogue files.
@@ -1950,7 +1949,7 @@ repositories:
 The two parts also differ in scope:
 the SIMBAD preparation is only needed for levels~0--3 (which require
 Hipparcos cross-identifications); if you only need levels~4--10, the
-companion fork is not required at all.
+companion simbad_query_hipsaohdhr.py script is not required at all.
 
 It is recommended to finish all online data acquisition before running
 the offline catalogue generation. All data-acquisition scripts are
@@ -1970,7 +1969,7 @@ The full pipeline looks like this:
   \item For levels 0--3 only: query SIMBAD for all HIP/SAO/HD/HR entries
         (\program{simbad\_query\_hipsaohdhr.py}) and clean/cross-match the
         result against Gaia DR3 (\program{parse\_hip\_catalog.py}).
-        These scripts live in the companion fork described above.
+        These scripts live in the companion script described above.
   \item Generate levels 0--3 (Star1 records) with \program{gaiahip2cat},
         merging the SIMBAD table with the Gaia \file{.bin} files.
         \program{gaiahip2cat} calls \program{erfa\_zone.py} (Python) for the
@@ -2032,16 +2031,16 @@ requirements differ per script:
   \item[\program{analyze\_only.py}] standard library only.
   \item[\program{field\_diff.py}] \texttt{pandas}.
   \item[\program{erfa\_zone.py}] \texttt{numpy} and \texttt{astropy}, plus
-        the \file{py/geodesic.py} module from the companion fork (see the
+        the \file{py/geodesic.py} module from SceneryMC (see the
         section introduction). Set the
         \texttt{STELLARIUM\_\allowbreak STAR\_\allowbreak CATALOGS}
-        environment variable to a local checkout of the fork. The script is not run by hand: \program{gaiahip2cat}
+        environment variable to <installdir>/src/external/stellarium-star-catalogs/... The script is not run by hand: \program{gaiahip2cat}
         invokes it automatically when \program{--erfa-python} is given
         (section~\ref{sec:StarCatalogues:Generating:lv03}).
 \end{description}
 
 \begin{commands}
-pip install numpy astropy pandas
+pip install -r requirements.txt
 \end{commands}
 
 \subsection{Obtaining the Input Data}
@@ -2078,8 +2077,8 @@ A progress line is printed every 5 seconds.
 \subsubsection{SIMBAD data for levels 0--3}
 
 Levels 0--3 additionally need Hipparcos cross-identifications and SIMBAD
-photometry, spectral types and radial velocities. Two Python scripts in the
-companion fork (GPLv3, see the section introduction above) produce them:
+photometry, spectral types and radial velocities. Two Python scripts in src/external/stellarium-star-catalogs
+(GPLv3, see the section introduction above) produce them:
 
 \begin{commands}
 python simbad_query_hipsaohdhr.py
@@ -2118,7 +2117,7 @@ online query on disk, so restarting it skips all completed work.
 \texttt{long} (32-bit on Windows) and raises
 \texttt{OverflowError: Python int too large to convert to C long} on
 64-bit columns such as SIMBAD's \texttt{object\_number\_id} or Gaia's
-\texttt{source\_id}. Copy \file{patches/sitecustomize.py} from the
+\texttt{source\_id}. Copy \file{patches/sitecustomize.py} ***WHERE ARE THESE *** `from the
 companion fork into \file{venv\textbackslash Lib\textbackslash}
 \file{site-packages\textbackslash} of the Python environment after
 creating the virtual environment.
