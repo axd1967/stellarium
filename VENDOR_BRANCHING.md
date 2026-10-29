@@ -37,13 +37,13 @@ Follow these steps in order to import external artefacts for the first time.
 1. **Switch** to your task branch
 1. **merge** (avoid fast forward for clarity) the vendor branch. *Do not delete the vendor branch.*
 `` git merge --no-ff <vendor branch>``
-2. Add and commit a ``VENDOR.md`` file to ``vendor/CELESTRAK/`` that contains relevant **metadata** and instructions to help finding back the source. Avoid top-level (domain) adresses, try to make life easy for anyone wanting to update the data. Consider including the keyword "VENDOR" somewhere so that it can be grepped if needed. Make sure to include any PDF or comparable document that documents the vendor artefact, as well as where that PDF,data file, ... can be found.
+2. Add and commit a ``VENDOR.md`` file to ``vendor/CELESTRAK/`` that contains relevant **metadata** and instructions to help finding back the source. Avoid top-level (domain) adresses, try to make life easy for anyone wanting to update the data. Consider including the keyword "VENDOR" somewhere so that it can be grepped if needed. Make sure to include any PDF or comparable document that documents the vendor artefact, as well as where that PDF, data file, ... can be found.
 1. Do whatever is needed to **localise** the vendor artefacts (source code, data, ...) into your project. This must be done in your task branch, never in the vendor branch. Often, source code will not run or compile completely. Sometimes, data needs to be transformed; include scripts to run migrations/conversions, because future vendor drops might require them.
 1. Have your task branch **integrated** into your main branch. Your project now contains folowing:
 	- a new vendor directory
-	- a vendor branch
+	- a vendor branch and a vendor tag
 	- optionally, modified vendor code to make the vendor work seamlessly in your project
-1. **Remember to also push the *vendor* branch**
+1. **Remember to also push the *vendor* branch and tag**
 
 ### 2/ perform a **vendor drop**
 
@@ -60,7 +60,7 @@ git switch <vendor branch>
 
 ```
 cd <vendor directory>
-git ls-files -z | xargs -0 rm -f # remove everything
+git ls-files -z | xargs -0 rm -f # remove everything. or simply `rm`?
 ```
 (see ``git help git-rm`` for details, search for "[vendor](https://github.com/git/git/blob/master/Documentation/git-rm.adoc#using-git-add--a)". *Do notice BTW that the concept is mentioned in Git!*)  
 
@@ -84,16 +84,26 @@ This is also needed when the external data disappears: in that case, mention tha
 
 It may happen that you find a bug in the vendor artefacts and can provide a fix.
 Here are the steps to follow.
-Local *adaptations* are not meant to be shared with the vendor.
+*Local modifications* are not meant to be shared with the vendor.
 
-1. create a "contribution" branch off a vendor tag
-1. apply changes as necessary
-1. send the contribution branch to the vendor (as a patch, push, bundle, ...)
-1. merge the contribution branch to your local branches (task branch, manin, ...)
+1. create a "contribution" branch **off a vendor tag**. You must always start off an official version that is known by the vendor.
+1. apply changes as necessary. merge and test locally. (this is the most git-intensive part). do not change the vendor branch itself.
+1. send the contribution branch to the vendor as a patch (see Notes on patching)
+1. merge the contribution branch to your local branches (task branch, main, ...)
 
 ### 4/ converting existing copy-pasted artefacts to their original vendor status
 
 This is not discussed for now. You should have followed the vendor branch strategy ;-)
+This requires courage; most will simply continue to dabble in their local copy.
+
+The steps to follow include
+
+1. create the vendor
+1. rip out the old copy-pasta
+1. merge the vendor branch
+1. re-apply all changes that were performed on the original copy-pasta. This is probably a daunting task.
+
+(TODO)
 
 ## Examples
 
@@ -111,8 +121,10 @@ To make a more clear example how source code can move, we import ONLY the SGP4 f
 1. https://github.com/CelesTrak/fundamentals-of-astrodynamics/tree/main/software/cpp/SGP4/SGP4 (assuming this is the latest version; as there are no tags, we use a specific version)
 
 ### 2. SceneryMC's Stellarium-star-catalogs
-This is referenced from the upcoming Gaia DR3 patch.
-Note: Henry Leung - whose repo is forked by SceneryMC - has a bad habit of renaming files...
+An upcoming Gaia DR3 draft patch uses references to two external repositories.
+Note: Henry Leung - whose repo is forked by SceneryMC - has a bad habit of renaming files. This makes vendoring more difficult.
+
+A branch has been pushed [here](https://github.com/axd1967/stellarium/tree/PR-4991-with-vendoring) to convert the Gaia DR3 PR to a "vendor compliant" approach.
 
 ## Discussion
 
@@ -216,7 +228,48 @@ Sometimes, conversion routines need to be written or updated so that external da
 
 ## Notes
 
-### `git archive`
+### patching
+
+In some circumstances you want to also contribute to the vendor's project.
+Even if you vendored into a Git repo, even if the vendor uses a Git repo, you cannot simply create a pull request.
+This is because your vendor drop contains totally different SHA-1 commits, so Git wouldn't know how to create a patch.
+So the only way for now is to wrap your contribution branch into a classic patch.
+
+There are a few ways to handle this situation.
+
+- diff
+
+If your changes don't contain binary files, run a diff and send that to the vendor.
+Remember to generate a diff relative to the vendor directory.
+
+```
+git diff --relative=<vendor path>  <branch base>..<branch head>
+```
+
+It might be good to review the generated text file, you never know... For example, to detect if the patch did touch binary files.
+
+- binaries
+
+If your patch adds/changes binary files, then supply those separately.
+
+TO CONFIRM: edit the patch file, remove the references to binaries, and mention this to the vendor
+
+- archive
+
+The easiest way (also to avoid the binaries issue) is to send an entire archive *of the vendor directory* of your branch.
+The vendor will then ingest that in a branch (actually they are doing a kind of vendor drop...) and run a diff/merge/etc.
+
+```
+git archive --format=tgz --output=<tarfile>.tgz <head>:<path to vendor directory> [path]
+```
+
+This creates a tgz file (run `git archive --list` for the formats) of the commit `<head>` relative to the vendor directory dirname.
+
+Note that this even works for a single vendor file, should you have chosen not to use a directory for the vendor artefact.
+
+TODO: investigate if grafting can help here (to remap git refs to vendor's refs?).
+
+### how to vendor drop a remote git repo
 
 Sometimes, it might be desirable to convert a Git repo to an archive in order to perform the vendor drop.
 
@@ -376,6 +429,7 @@ The vendor branch approach also works for users that want to keep track of other
 	- https://github.com/git/git/blob/master/Documentation/user-manual.adoc#submodules
 
 ### to be evaluated:
+- if you read this far, we need to ingest this: https://talesfromthearmchair.net/a-rebasing-vendor-branch-workflow-for.html
 - https://github.com/brettlangdon/git-vendor (https://medium.com/opsops/git-vendor-295db4bcec3a)
 - https://github.com/thejoshwolfe/git-vendor
 
