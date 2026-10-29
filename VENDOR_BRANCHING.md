@@ -10,7 +10,7 @@ Artefacts can be source code, data files, PDF files, supporting documentation...
 
 Artefacts that can be managed by package managers are not discussed here. An inconvenience of package managers might be that local modifications might be more difficult to manage. This is precisely what vendor branching has been designed for.
 
-Some artefacts are not available as text but in binary formats (eg [Yale Bright Star Catalog](http://tdc-www.harvard.edu/catalogs/catalogsb.html)). Binary artefacts cannot be merged normally; see further.
+Some artefacts are not available as text but in binary formats (eg [Yale Bright Star Catalog](http://tdc-www.harvard.edu/catalogs/catalogsb.html)).
 
 The concept actually dates from the venerable [CVS](https://www.gnu.org/software/trans-coord/manual/cvs/cvs.html) and [SVN](https://subversion.apache.org/blog/)
 
@@ -38,7 +38,7 @@ Follow these steps in order to import external artefacts for the first time.
 1. **merge** (avoid fast forward for clarity) the vendor branch. *Do not delete the vendor branch.*
 `` git merge --no-ff <vendor branch>``
 2. Add and commit a ``VENDOR.md`` file to ``vendor/CELESTRAK/`` that contains relevant **metadata** and instructions to help finding back the source. Avoid top-level (domain) adresses, try to make life easy for anyone wanting to update the data. Consider including the keyword "VENDOR" somewhere so that it can be grepped if needed. Make sure to include any PDF or comparable document that documents the vendor artefact, as well as where that PDF, data file, ... can be found.
-1. Do whatever is needed to **localise** the vendor artefacts (source code, data, ...) into your project. This must be done in your task branch, never in the vendor branch. Often, source code will not run or compile completely. Sometimes, data needs to be transformed; include scripts to run migrations/conversions, because future vendor drops might require them.
+1. Do whatever is needed to **localise** the vendor artefacts (source code, data, ...) into your project. This is done in your task branch, never in the vendor branch. Often, source code will not run or compile completely. Sometimes, data needs to be transformed; include scripts to run migrations/conversions, because future vendor drops might require them.
 1. Have your task branch **integrated** into your main branch. Your project now contains folowing:
 	- a new vendor directory
 	- a vendor branch and a vendor tag
@@ -86,7 +86,7 @@ It may happen that you find a bug in the vendor artefacts and can provide a fix.
 Here are the steps to follow.
 *Local modifications* are not meant to be shared with the vendor.
 
-1. create a "contribution" branch **off a vendor tag**. You must always start off an official version that is known by the vendor.
+1. create a "contribution" branch **off a vendor tag**. Always start off an official version that is known by the vendor.
 1. apply changes as necessary. merge and test locally. (this is the most git-intensive part). do not change the vendor branch itself.
 1. send the contribution branch to the vendor as a patch (see Notes on patching)
 1. merge the contribution branch to your local branches (task branch, main, ...)
@@ -233,11 +233,11 @@ Sometimes, conversion routines need to be written or updated so that external da
 In some circumstances you want to also contribute to the vendor's project.
 Even if you vendored into a Git repo, even if the vendor uses a Git repo, you cannot simply create a pull request.
 This is because your vendor drop contains totally different SHA-1 commits, so Git wouldn't know how to create a patch.
-So the only way for now is to wrap your contribution branch into a classic patch.
+NOTE: `git bundle` might be a possibility to import the SHA-1 too.
 
 There are a few ways to handle this situation.
 
-- diff
+#### create a patch file with `diff`
 
 If your changes don't contain binary files, run a diff and send that to the vendor.
 Remember to generate a diff relative to the vendor directory.
@@ -248,16 +248,24 @@ git diff --relative=<vendor path>  <branch base>..<branch head>
 
 It might be good to review the generated text file, you never know... For example, to detect if the patch did touch binary files.
 
-- binaries
+The vendor will apply your patch (probably via a branch) using `git apply` or the classical `patch` program
+
+```
+git apply <patchfile>
+# alternative for non-Git repos
+patch -p1 < patchfile
+```
+
+#### how to deal with binaries
 
 If your patch adds/changes binary files, then supply those separately.
 
-TO CONFIRM: edit the patch file, remove the references to binaries, and mention this to the vendor
+TO CONFIRM: edit the patch file, remove the references to binaries(?), and mention this to the vendor.
 
-- archive
+#### creating a patch using `git archive`
 
 The easiest way (also to avoid the binaries issue) is to send an entire archive *of the vendor directory* of your branch.
-The vendor will then ingest that in a branch (actually they are doing a kind of vendor drop...) and run a diff/merge/etc.
+The vendor will then ingest that in a branch (actually they are doing a kind of vendor drop...) and run their diff/merge/etc.
 
 ```
 git archive --format=tgz --output=<tarfile>.tgz <head>:<path to vendor directory> [path]
@@ -266,8 +274,6 @@ git archive --format=tgz --output=<tarfile>.tgz <head>:<path to vendor directory
 This creates a tgz file (run `git archive --list` for the formats) of the commit `<head>` relative to the vendor directory dirname.
 
 Note that this even works for a single vendor file, should you have chosen not to use a directory for the vendor artefact.
-
-TODO: investigate if grafting can help here (to remap git refs to vendor's refs?).
 
 ### how to vendor drop a remote git repo
 
