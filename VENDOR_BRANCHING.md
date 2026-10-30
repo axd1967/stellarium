@@ -33,12 +33,16 @@ If the external project is a Git repo, use `git subtree add`:
 
 ```
 git checkout -c <vendor branch>
-# go to to GITROOT
-cd `git rev-parse --show-toplevel`
+cd `git rev-parse --show-toplevel` # (a Git trick to go to to GITROOT)
 git subtree add -P <path to vendor dir> <vendor URL>
+git tag <vendor branch>
+git switch <taskbranch>
+git merge <vendor tag>
+...
 ```
 
 Note: avoid `--squash` otherwise you will not be able to contribute back to the vendor.
+And skip the remainder dealing with vendor dropping.
 
 Otherwise, manually create the vendor directory
 
@@ -48,8 +52,6 @@ Otherwise, manually create the vendor directory
 1. **Commit** the vendor branch. Make sure to add at least some information on the vendor version in the commit message
 
 	``git add -A && git commit``
-
-Then, tag the vendor artefacts:
 
 1. **Tag** the vendor branch, e.g. ``vendor/geonames/1.0``. A path structure allows to group tags in a more structured way. If the vendor does not provide a clear version number, use the UTC date/time of the drop, formatted as ISO: ``vendor/geonames/2021-09-09T1200`` or a date/time as stamped by the vendor.
 1. **Switch** to your task branch
@@ -113,6 +115,8 @@ This is also needed when the external data disappears: in that case, mention tha
 It may happen that you find a bug in the vendor artefacts and can provide a fix.
 Here are the steps to follow.
 *Local modifications* are not meant to be shared with the vendor.
+
+TODO: add the `git subtree` case
 
 1. create a "contribution" branch **off a vendor tag**. Always start off an official version that is known by the vendor.
 1. apply changes as necessary. merge and test locally. (this is the most git-intensive part). do not change the vendor branch itself.
@@ -435,6 +439,12 @@ The vendor branch approach also works for users that want to keep track of other
 - https://portal.perforce.com/s/article/3374
 - https://stackoverflow.com/questions/1710027/arguments-for-and-against-including-3rd-party-libraries-in-version-control/1710050
 
+### Github
+- https://github.com/stars/axd1967/lists/vendor-branching
+- new topic: https://github.com/topics/vendor-branching
+- [a FreeBSD article for committers](https://github.com/freebsd/freebsd-doc/blob/main/documentation/content/en/articles/committers-guide/_index.adoc)
+- this topic probably contains many more examples: https://github.com/topics/vendor
+
 ## external discussions
 - https://github.com/cpm-cmake/CPM.cmake/discussions/720
 - https://github.com/CelesTrak/fundamentals-of-astrodynamics/discussions/173
@@ -463,9 +473,14 @@ The vendor branch approach also works for users that want to keep track of other
 	- https://github.com/git/git/blob/master/Documentation/user-manual.adoc#submodules
 
 ### to be evaluated:
-- if you read this far, we need to ingest this: https://talesfromthearmchair.net/a-rebasing-vendor-branch-workflow-for.html
-- https://github.com/brettlangdon/git-vendor (https://medium.com/opsops/git-vendor-295db4bcec3a)
+- a [rebasing vendor branch workflow](https://talesfromthearmchair.net/a-rebasing-vendor-branch-workflow-for.html)
+	- if you read this far, we need to grok this
+- https://github.com/brettlangdon/git-vendor
+	- recommended (FWIW) by https://medium.com/opsops/git-vendor-295db4bcec3a)
+	- looks dead
 - https://github.com/thejoshwolfe/git-vendor
+	- a script to automate vendor branching:
+	- makes a comparison with submodule, subtree, brettlangdon
 
 Think vendor branching is difficult? Eat [this](https://www.refontelearning.com/blog/tle-to-omm-six-digit-catalog-migration)!
 
