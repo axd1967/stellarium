@@ -25,6 +25,16 @@ If you don't know about vendor branching, skip following section and go straight
 
 Follow these steps in order to import external artefacts for the first time.
 
+Via git subtree
+If the external project is a Git repo:
+
+```
+git checkout -c <vendor branch>
+git subtree add --prefix=<vendor dir> <vendor URL>
+```
+
+Via classic vendor dropping
+
 1. **create a vendor branch** to import the vendor (e.g. ``vendor/CELESTRAK``). If the vendor provides multiple products, create the needed subbranches. (e.g. ``vendor/CELESTRAK/SGP4``). The "``vendor/``" segment is only meant to draw the attention to the concept.
 1. create a suitable **vendor directory** tree (e.g. ``vendor/CELESTRAK``) that will hold the external vendor artefacts. The vendor directory can also reside inside a normal directory, such as e.g. [this directory](https://github.com/axd1967/stellarium/tree/b4343449a1d4e66dcc4c2a468dfa068282519687/plugins/Satellites/src/gsatellite).
 1. unzip/copy/import/**explode**... the external data into the (until now empty) vendor directory. This is called a *vendor drop*.
@@ -233,7 +243,6 @@ Sometimes, conversion routines need to be written or updated so that external da
 In some circumstances you want to also contribute to the vendor's project.
 Even if you vendored into a Git repo, even if the vendor uses a Git repo, you cannot simply create a pull request.
 This is because your vendor drop contains totally different SHA-1 commits, so Git wouldn't know how to create a patch.
-NOTE: `git bundle` might be a possibility to import the SHA-1 too.
 
 There are a few ways to handle this situation.
 
