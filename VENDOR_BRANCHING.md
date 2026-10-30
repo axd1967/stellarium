@@ -2,6 +2,8 @@
 
 **This project is WIP.**
 
+The `git subtree` aspect is also WIP.
+
 *This file is huge due to the resistance against vendor branching. It should be cut in pieces and moved to the wiki.*
 
 *In short: copy-pasting artefacts is a seemingly easy way to get things imported in a project. The problem is the maintainance effort that will follow. Do not assume the data is "written in stone" and will never change any more (be it inside your project or externally). Instead, every time you import anything from outside Stellarium, be it code or data, ***do not bluntly copy-paste***; don't just create a "fork" of foreign artefacts unless there really is no other way. Following describes the recommended way to import such external artefacts. The procedure looks daunting, but that is only appearance.*
@@ -25,23 +27,29 @@ If you don't know about vendor branching, skip following section and go straight
 
 Follow these steps in order to import external artefacts for the first time.
 
-Via git subtree
-If the external project is a Git repo:
+1. **create a vendor branch** to import the vendor (e.g. ``vendor/CELESTRAK``). If the vendor provides multiple products, create the needed subbranches. (e.g. ``vendor/CELESTRAK/SGP4``). The "``vendor/``" segment is only meant to draw the attention to the concept.
+
+If the external project is a Git repo, use `git subtree add`:
 
 ```
 git checkout -c <vendor branch>
-git subtree add --prefix=<vendor dir> <vendor URL>
+# go to to GITROOT
+cd `git rev-parse --show-toplevel`
+git subtree add -P <path to vendor dir> <vendor URL>
 ```
 
-Via classic vendor dropping
+Note: avoid `--squash` otherwise you will not be able to contribute back to the vendor.
 
-1. **create a vendor branch** to import the vendor (e.g. ``vendor/CELESTRAK``). If the vendor provides multiple products, create the needed subbranches. (e.g. ``vendor/CELESTRAK/SGP4``). The "``vendor/``" segment is only meant to draw the attention to the concept.
+Otherwise, manually create the vendor directory
+
 1. create a suitable **vendor directory** tree (e.g. ``vendor/CELESTRAK``) that will hold the external vendor artefacts. The vendor directory can also reside inside a normal directory, such as e.g. [this directory](https://github.com/axd1967/stellarium/tree/b4343449a1d4e66dcc4c2a468dfa068282519687/plugins/Satellites/src/gsatellite).
 1. unzip/copy/import/**explode**... the external data into the (until now empty) vendor directory. This is called a *vendor drop*.
 1. Make sure that extracted file/directory *names* do not contain version information as a kind of implicit versioning scheme. Rename when needed. (Example: ``geonames.2.3.tgz`` might untar into ``geonames-2.3/ ``)
 1. **Commit** the vendor branch. Make sure to add at least some information on the vendor version in the commit message
 
 	``git add -A && git commit``
+
+Then, tag the vendor artefacts:
 
 1. **Tag** the vendor branch, e.g. ``vendor/geonames/1.0``. A path structure allows to group tags in a more structured way. If the vendor does not provide a clear version number, use the UTC date/time of the drop, formatted as ISO: ``vendor/geonames/2021-09-09T1200`` or a date/time as stamped by the vendor.
 1. **Switch** to your task branch
@@ -66,6 +74,15 @@ Via classic vendor dropping
 ```
 git switch <vendor branch>
 ```
+If the vendor provides a Git repository, use `git subtree pull`
+
+```
+cd `git rev-parse --show-toplevel`
+git subtree pull -P <path to vendor dir> <vendor URL>
+```
+
+Otherwise
+
 2: **empty** the vendor directory  
 
 ```
@@ -82,6 +99,7 @@ git ls-files -z | xargs -0 rm -f # remove everything. or simply `rm`?
    git add -A
    git commit
 ```
+
 5: **Tag** the vendor branch with a vendor tag (``vendor/<vendor name>/<vendor product>/<tag>``) where `<tag>` is either a tag available from the vendor, or otherwise the ISO date/time of the vendor drop or a vendor's timestamp.
 
 6: Merge the updated vendor branch to ``master`` (or, more probably, via an intermediate task/feature/bugfix branch, often in order to update local stuff). Run migration scripts if needed.
@@ -98,7 +116,7 @@ Here are the steps to follow.
 
 1. create a "contribution" branch **off a vendor tag**. Always start off an official version that is known by the vendor.
 1. apply changes as necessary. merge and test locally. (this is the most git-intensive part). do not change the vendor branch itself.
-1. send the contribution branch to the vendor as a patch (see Notes on patching)
+1. send the contribution branch to the vendor as a pull request or patch (see Notes on patching)
 1. merge the contribution branch to your local branches (task branch, main, ...)
 
 ### 4/ converting existing copy-pasted artefacts to their original vendor status
@@ -220,7 +238,7 @@ Notice how it is not always obvious to trace back the original files. In the cas
 
 The external (source) version of such artifacts will often continue to evolve, but these modifications obviously will not be magically reflected in the project repository, thus *sometimes, if not often* leading to artifacts slowly getting totally outdated (hence the term "[code rot](https://en.wikipedia.org/wiki/Software_rot)").
 
-Importing external artifacts therefore requires a specific (and in this case a *simple* - believe me, it is not rocket science - as well as generic) approach: the **Vendor Branch** approach. Other approaches exist, such as subtrees (but this is not part of core Git) and submodules (in case the external artifacts are versioned under Git, BUT submodules do not provide the flexibility of vendor branching), but have inconveniences and are not discussed here; the proposed Vendor Branch approach is KISS: *simple to apply to novice programmers*. By the way, the approach is valid in any VCS, such as SVN (where it seems to have emerged), Git, Mercurial, ClearCase, TFS, cvs, you name it.
+Importing external artifacts therefore requires a specific (and in this case a *simple* - believe me, it is not rocket science - as well as generic) approach: the **Vendor Branch** approach. The proposed Vendor Branch approach is KISS: *simple to apply to novice programmers*. By the way, the approach is valid in any VCS, such as SVN (where it seems to have emerged), Git, Mercurial, ClearCase, TFS, CVS (where it already exists), you name it.
 
 Importing external artefacts in vendor branches will also provide insight in what changed in those artefacts, just by inspecting the "diff" between successive vendor versions. Normally such changes should also be announced by the vendor.
 
@@ -241,12 +259,15 @@ Sometimes, conversion routines need to be written or updated so that external da
 ### patching
 
 In some circumstances you want to also contribute to the vendor's project.
-Even if you vendored into a Git repo, even if the vendor uses a Git repo, you cannot simply create a pull request.
-This is because your vendor drop contains totally different SHA-1 commits, so Git wouldn't know how to create a patch.
+
+If the vendor uses a Git repo, create a pull request and skip the remainder of this section on patching.
+
+Otherwise you need to send a patch.
+This is because your vendor directory contains totally different SHA-1 commits, so Git wouldn't know how to create a patch that can be applied on the vendor's side.
 
 There are a few ways to handle this situation.
 
-#### create a patch file with `diff`
+#### create a patch file with `git diff`
 
 If your changes don't contain binary files, run a diff and send that to the vendor.
 Remember to generate a diff relative to the vendor directory.
@@ -257,11 +278,9 @@ git diff --relative=<vendor path>  <branch base>..<branch head>
 
 It might be good to review the generated text file, you never know... For example, to detect if the patch did touch binary files.
 
-The vendor will apply your patch (probably via a branch) using `git apply` or the classical `patch` program
+The vendor will apply your patch (probably via a branch) using the classical `patch` program
 
 ```
-git apply <patchfile>
-# alternative for non-Git repos
 patch -p1 < patchfile
 ```
 
@@ -288,7 +307,7 @@ Note that this even works for a single vendor file, should you have chosen not t
 
 Sometimes, it might be desirable to convert a Git repo to an archive in order to perform the vendor drop.
 
-### what about `git submodules` (complex, delicate) and `git subtree` (requires a remote git repo)?
+### what about `git submodules` (complex, delicate)
 
 These are partial solutions offered by Git but do not provide the flexibility of vendor branching.
 To expand further.
