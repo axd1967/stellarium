@@ -484,6 +484,7 @@ The vendor branch approach also works for users that want to keep track of other
 - https://github.com/thejoshwolfe/git-vendor
 	- a script to automate vendor branching:
 	- makes a comparison with submodule, subtree, brettlangdon
+- how to deal with huge repos, such as the migration of TLE to spacedatastandards OMM: their repo is too big for the average developer to ingest *as a vendor branch*.
 
 Think vendor branching is difficult? Eat [this](https://www.refontelearning.com/blog/tle-to-omm-six-digit-catalog-migration)!
 
