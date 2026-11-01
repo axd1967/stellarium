@@ -209,10 +209,12 @@ Potential candidates for using vendor branching, other examples
 - [DASTCOM](https://ssd.jpl.nasa.gov/horizons/manual.html#dastcom): documentation and Fortran code
 - API documentation, e.g. for [HORIZONS](https://ssd-api.jpl.nasa.gov/doc/horizons_file.html)
 - [SPICE](https://naif.jpl.nasa.gov/naif/) data
-- upcoming [OMM schema](https://spacedatastandards.org/#/schemas/OMM) (although this will be less trivial to deal with : *TODO*)
+- upcoming SDS's [OMM schema](https://spacedatastandards.org/#/schemas/OMM) (although this will be less trivial to deal with : *TODO*)
 	- https://github.com/DigitalArsenal/spacedatastandards.org/tree/main/src/cpp
 	- https://github.com/DigitalArsenal/spacedatastandards.org/tree/main/dist/OMM
 	- https://ccsds.org/publications/moims/
+	- OTOH SDS will not go away soon... so maybe no immediate need for panic. but a vendor drop can also highlight *changes* that might have impact elsewhere in Stellarium
+	- git clone --no-checkout --verbose --shallow-submodules --single-branch --filter=blob:none -o da/sds/gh https://github.com/DigitalArsenal/spacedatastandards.org
 - contributed scripts, see https://stellarium.org/scripts.html. These are very likely to change over time... See also [here](https://github.com/DigitalArsenal/spacedatastandards.org/issues/33).
 
 Some random googling shows that this problem exists in other projects too (e.g. Celestia):
