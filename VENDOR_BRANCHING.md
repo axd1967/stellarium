@@ -8,6 +8,8 @@ The `git subtree` aspect is also WIP.
 
 *In short: copy-pasting artefacts is a seemingly easy way to get things imported in a project. The problem is the maintainance effort that will follow. Do not assume the data is "written in stone" and will never change any more (be it inside your project or externally). Instead, every time you import anything from outside Stellarium, be it code or data, ***do not bluntly copy-paste***; don't just create a "fork" of foreign artefacts unless there really is no other way. Following describes the recommended way to import such external artefacts. The procedure looks daunting, but that is only appearance.*
 
+Here is an interesting issue: https://github.com/tudat-team/tudat-resources/issues/11
+
 Artefacts can be source code, data files, PDF files, supporting documentation...
 
 Artefacts that can be managed by package managers are not discussed here. An inconvenience of package managers might be that local modifications might be more difficult to manage. This is precisely what vendor branching has been designed for.
@@ -215,6 +217,8 @@ Potential candidates for using vendor branching, other examples
 	- https://ccsds.org/publications/moims/
 	- OTOH SDS will not go away soon... so maybe no immediate need for panic. but a vendor drop can also highlight *changes* that might have impact elsewhere in Stellarium
 	- git clone --no-checkout --verbose --shallow-submodules --single-branch --filter=blob:none -o da/sds/gh https://github.com/DigitalArsenal/spacedatastandards.org
+	- what about https://github.com/tudat-team ?
+		- https://github.com/orgs/tudat-team/discussions/120
 - contributed scripts, see https://stellarium.org/scripts.html. These are very likely to change over time... See also [here](https://github.com/DigitalArsenal/spacedatastandards.org/issues/33).
 
 Some random googling shows that this problem exists in other projects too (e.g. Celestia):
