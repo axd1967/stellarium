@@ -2,9 +2,6 @@
 
 # DRAFT #
 
-## BUSY
-## TODO
-
 This file is being reformatted.
 
 This file lists vendor branching issues in Stellarium.
@@ -128,4 +125,9 @@ The vendor branch approach could also works for users that want to keep track of
 - https://github.com/Stellarium/stellarium/pull/1906
 - https://github.com/axd1967/stellarium/blob/contrib/docs/vendor-branching/VENDOR_BRANCHING.md (this file)
 - https://github.com/Stellarium/stellarium/wiki/Branching-Strategy (defunct but a copy exists)
+
+Think vendor branching is difficult? Eat [this](https://www.refontelearning.com/blog/tle-to-omm-six-digit-catalog-migration)!
+
+## BUSY
+## TODO
 
