@@ -2,9 +2,12 @@
 
 **This project is WIP.**
 
-The `git subtree` aspect is also WIP.
+It needs to be split in following:
+1. the recipe for a generic vendor branch (VB) strategy, That is in tself a contradiction, as it is the n-th conceptual fork of the same idea.
+1. VB aspects in Stellarium
+1. VB aspects around SGP4
 
-The SGP4 aspect is an expanding oil stain...
+-- > cut here ... <------------------------------------------------------------------
 
 *This file is huge due to the resistance against vendor branching. It should be cut in pieces and moved to the wiki.*
 
