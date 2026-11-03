@@ -3,9 +3,13 @@
 **This project is WIP.**
 
 It needs to be split in following:
-1. the recipe for a generic vendor branch (VB) strategy, That is in tself a contradiction, as it is the n-th conceptual fork of the same idea.
+
+1. the recipe for a generic vendor branch (VB) strategy, That is in itself a contradiction, as it is the n-th conceptual fork of the same idea.
+	-> see https://github.com/axd1967/vendor-branching
 1. VB aspects in Stellarium
+  (this file)
 1. VB aspects around SGP4
+	-> see https://github.com/axd1967/SGP4-vendor-branching
 
 -- > cut here ... <------------------------------------------------------------------
 
