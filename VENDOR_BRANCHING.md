@@ -4,6 +4,8 @@
 
 The `git subtree` aspect is also WIP.
 
+The SGP4 aspect is an expanding oil stain...
+
 *This file is huge due to the resistance against vendor branching. It should be cut in pieces and moved to the wiki.*
 
 *In short: copy-pasting artefacts is a seemingly easy way to get things imported in a project. The problem is the maintainance effort that will follow. Do not assume the data is "written in stone" and will never change any more (be it inside your project or externally). Instead, every time you import anything from outside Stellarium, be it code or data, ***do not bluntly copy-paste***; don't just create a "fork" of foreign artefacts unless there really is no other way. Following describes the recommended way to import such external artefacts. The procedure looks daunting, but that is only appearance.*
@@ -241,7 +243,9 @@ Some random googling shows that this problem exists in other projects too (e.g. 
 **do notice the phrase** *"According to JPL fortran asc2eph.f (lines 101-102 and 197-198) I added new lines handling RPT and TPT arrays. "*. This is the typical meta issue that vendor branching tries to solve.
 - more SGP4 forks
 	- https://www.projectpluto.com/sat_code.htm
-	- https://pypi.org/project/sgp4/ (unconfirmed...)
+	- https://pypi.org/project/sgp4/ -> https://github.com/brandon-rhodes/python-sgp4/discussions/176#discussion-11217270
+	- https://github.com/dnwrnr/sgp4/
+	- https://github.com/ssmichael1/satkit
 - the KIK case demonstrates what happens when one doesn't vendor: 
 	- https://www.theregister.com/2016/03/23/npm_left_pad_chaos/
 	- https://qz.com/646467/how-one-programmer-broke-the-internet-by-deleting-a-tiny-piece-of-code
