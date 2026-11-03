@@ -1,5 +1,7 @@
 # Vendor artifacts in Stellarium
 
+# DRAFT #
+
 ## BUSY
 ## TODO
 
