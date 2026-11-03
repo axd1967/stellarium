@@ -211,7 +211,7 @@ Potential candidates for using vendor branching, other examples
 - [DASTCOM](https://ssd.jpl.nasa.gov/horizons/manual.html#dastcom): documentation and Fortran code
 - API documentation, e.g. for [HORIZONS](https://ssd-api.jpl.nasa.gov/doc/horizons_file.html)
 - [SPICE](https://naif.jpl.nasa.gov/naif/) data
-- upcoming SDS's [OMM schema](https://spacedatastandards.org/#/schemas/OMM) (although this will be less trivial to deal with : *TODO*)
+- upcoming SDS's [OMM schema](https://spacedatastandards.org/#/schemas/OMM)? (although this will be less trivial to deal with : *TODO*)
 	- https://github.com/DigitalArsenal/spacedatastandards.org/tree/main/src/cpp
 	- https://github.com/DigitalArsenal/spacedatastandards.org/tree/main/dist/OMM
 	- https://ccsds.org/publications/moims/
@@ -219,6 +219,12 @@ Potential candidates for using vendor branching, other examples
 	- git clone --no-checkout --verbose --shallow-submodules --single-branch --filter=blob:none -o da/sds/gh https://github.com/DigitalArsenal/spacedatastandards.org
 	- what about https://github.com/tudat-team ?
 		- https://github.com/orgs/tudat-team/discussions/120
+	- more links...
+		- WASM: https://webassembly.github.io/spec/core/index.html
+		- https://github.com/WebAssembly/wasi-sdk
+		- https://webassembly.fr/en/
+		- https://doc.qt.io/qt-6/wasm.html
+		- https://algodaily.com/lessons/compiling-c-to-wasm-14b05d27
 - contributed scripts, see https://stellarium.org/scripts.html. These are very likely to change over time... See also [here](https://github.com/DigitalArsenal/spacedatastandards.org/issues/33).
 
 Some random googling shows that this problem exists in other projects too (e.g. Celestia):
