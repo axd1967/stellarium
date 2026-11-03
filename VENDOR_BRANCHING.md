@@ -225,6 +225,7 @@ Potential candidates for using vendor branching, other examples
 		- https://webassembly.fr/en/
 		- https://doc.qt.io/qt-6/wasm.html
 		- https://algodaily.com/lessons/compiling-c-to-wasm-14b05d27
+		- https://github.com/google/flatbuffers
 - contributed scripts, see https://stellarium.org/scripts.html. These are very likely to change over time... See also [here](https://github.com/DigitalArsenal/spacedatastandards.org/issues/33).
 
 Some random googling shows that this problem exists in other projects too (e.g. Celestia):
