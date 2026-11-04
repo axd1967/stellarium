@@ -1,17 +1,32 @@
 # Vendor artifacts in Stellarium
 
-# DRAFT #
+# DRAFT
+
+---
+
+Document revisions
+
+2026-11-05 v0.1
+
+---
 
 This file is being reformatted.
 
-This file lists vendor branching issues in Stellarium.
+This document lists vendor branching issues in Stellarium.
+
+- https://github.com/CelesTrak/fundamentals-of-astrodynamics/discussions/173
+- https://github.com/cpm-cmake/CPM.cmake/discussions/720
 
 Related projects:
 
-1. the recipe for a generic vendor branch (VB) strategy: see https://github.com/axd1967/vendor-branching
-1. VB aspects around SGP4: https://github.com/axd1967/SGP4-vendor-branching
+1. the recipe for a generic vendor branch (VB) strategy is explained at https://github.com/axd1967/vendor-branching.
+1. For SGPO4 related VB aspects, see https://github.com/axd1967/SGP4-vendor-branching
 
 ### The problem
+
+The Stellarium project regularly "copy-pastes" files from the outside. 
+
+A solution to this problem is called [Vendor Branching](https://github.com/axd1967/vendor-branching).
 
 Stellarium is constantly benefiting from open source artifacts and being enriched with text/data/source files that are **copy-pasted** from places outside Stellarium.
 Notice how it is not always obvious to trace back the original files. In the case of ephemeride routines, these reside in "ancient", core Stellarium files, it is extremely likely that they were copied (and *maybe* recent changes have been manually  and painfully incorporated in Stellarium). One aspect of the recommended vendor branch procedure details how to include such *meta information* so as to help find back the (original, root) source at all times.
@@ -20,6 +35,10 @@ Sometimes this can be solved by using package managers that automate the importi
 
 ## artefacts that have been copy-pasted into Stellarium
 Please note: this was the common, if not standard approach by most devs. 
+
+https://github.com/Stellarium/stellarium/issues?q=vendor_branching
+
+Notice how it is not always obvious to trace back the original files. In the case of ephemeride routines, these reside in "ancient", core Stellarium files, it is extremely likely that they were copied (and *maybe* recent changes have been manually  and painfully incorporated in Stellarium). One aspect of the recommended vendor branch procedure details how to include such *meta information* so as to help find back the (original, root) source at all times.
 
 ## Future candidates
 
@@ -41,6 +60,13 @@ A branch has been pushed [here](https://github.com/axd1967/stellarium/tree/PR-49
 
 Here are several existing artifacts that (still) get copy-pasted in Stellarium:
 
+- several places:
+	- a dependeny to an external repo: https://github.com/axd1967/stellarium/commit/5f334842ec6205f2cc9d33dfbf6f3c5345c66b92
+	- https://github.com/Stellarium/stellarium/commit/7e2d7a952579cb88e214fd5bc275b5cc457dd94e
+	- https://github.com/Stellarium/stellarium/commit/186b06fa215bd28ea03cc291dc861b552af8d99a (especially https://github.com/Stellarium/stellarium/commit/186b06fa215bd28ea03cc291dc861b552af8d99a#diff-1e7de1ae2d059d21e1dd75d5812d5a34b0222cef273b7c3a2af62eb747f9d20aR756)
+	- https://github.com/Stellarium/stellarium/commit/01976bd723b66526f04f4e11bad3a70ec169ac1e
+	- https://github.com/Stellarium/stellarium/commit/b22283f63bbaa21482c66367d4ab325a7855f55a
+	- https://github.com/Stellarium/stellarium/commit/b3d6cee6e7338ec64ac77f79d93742f274fd5cd5
 - various libraries under [src/external](src/external)
 - references to CdC (eg https://github.com/pchev/skychart/blob/b2e4038f70bdff0cf994846aea39dff2c05a03bc/skychart/cu_catalog.pas#L6572-L6586)
 - [CPM.cmake](https://github.com/cpm-cmake/CPM.cmake) [cmake/modules/CPM.cmake)](cmake/modules/CPM.cmake). This is a simple example where vendoring can further simplify things. For example, the history of [CPM.cmake](https://github.com/Stellarium/stellarium/commits/master/cmake/modules/CPM.cmake) is no more than a series of *manual* updates that can perfectly be done with successive vendor drops.
@@ -118,7 +144,6 @@ Should any of those "other readers" be used in any way in Stellarium, then these
 The vendor branch approach could also works for users that want to keep track of other user's configuration data (e.g. Ocular config) or scripts while at the same time apply local changes. However, this works better for file formats that are easily merged because being insensitive to *line numbers*, such as YAML or - even better, but neither are supported by Qt - KVN; a bad example is the (Qt backed) INI numbering format (e.g. [Ocular config files](https://github.com/Stellarium/stellarium/blob/ba80d33d4bc83d72fc15cca53f798cd9439482cf/plugins/Oculars/resources/default_ocular.ini)). An improvement is to use [Qt XML](https://doc.qt.io/qt-6/qtxml-index.html). See also https://www.surfsidemedia.in/post/what-are-some-alternatives-to-ini-files-for-configuration-management
 
 ## external discussions
-- https://github.com/CelesTrak/fundamentals-of-astrodynamics/discussions/173
 
 ### Stellarium
 - https://github.com/Stellarium/stellarium/discussions/1856
