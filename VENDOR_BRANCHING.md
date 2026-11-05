@@ -1,4 +1,4 @@
 # Vendor artifacts in Stellarium
 
-This has been moved to https://github.com/axd1967/vendor-branching
+The Vendor Branching aspect has been moved to [this page](https://github.com/axd1967/vendor-branching/blob/master/cases/Stellarium/README.md).
 
